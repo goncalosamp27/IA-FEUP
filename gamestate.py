@@ -153,7 +153,7 @@ class GameState:
                 jelly.set_position(jelly_x, jelly_y)
                 jelly.draw(screen)
 
-                font = pygame.font.Font("assets/font.ttf", 40)
+        font = pygame.font.Font("assets/font.ttf", 40)
 
         y_offset = 20
         for i in range(1, 4):  
@@ -172,12 +172,11 @@ class GameState:
                 screen.blit(text_surface, (20, y_offset))
                 y_offset += 60  # Espaço entre os textos
 
-        # Draw the playable jellies below the board
-        jelly_y = offset_y + board_height + 50
-        self.playable_jellies[0].set_position(offset_x, jelly_y)
-        self.playable_jellies[1].set_position(offset_x + board_width - Jelly.SIZE, jelly_y)
-        self.playable_jellies[0].draw(screen)
-        self.playable_jellies[1].draw(screen)
-
     def select_jelly(self, jelly):
         self.selected_jelly = None if self.selected_jelly == jelly else jelly
+
+    def check_game_over(self):
+        for row in self.board:
+            if ' ' in row:
+                return False
+        return True
