@@ -14,16 +14,29 @@ class GameState:
         return board
 
     def randomize_jellies(self):
-        for row in self.board:
-            for i in range(len(row)):
-                if row[i] == 'X':
+        for y, row in enumerate(self.board):
+            for x in range(len(row)):
+                if row[x] == 'X':
                     # Randomly choose between a playable empty space (' ') or a jelly
                     if random.choice([True, False]):
-                        row[i] = ' '  # Playable empty space
+                        row[x] = ' '  # Playable empty space
                     else:
                         jelly = Jelly(0, 0, None, None, None, None)
-                        jelly.set_random_colors()
-                        row[i] = jelly
+                        self.set_unique_random_colors(jelly, y, x)
+                        row[x] = jelly
+
+    def set_unique_random_colors(self, jelly, y, x):
+        adjacent_colors = set()
+        if y > 0 and isinstance(self.board[y-1][x], Jelly):
+            adjacent_colors.update(self.board[y-1][x].get_colors())
+        if x > 0 and isinstance(self.board[y][x-1], Jelly):
+            adjacent_colors.update(self.board[y][x-1].get_colors())
+        
+        available_colors = [color for color in Jelly.COLORS if color not in adjacent_colors]
+        jelly.tl = random.choice(available_colors)
+        jelly.tr = random.choice(available_colors)
+        jelly.bl = random.choice(available_colors)
+        jelly.br = random.choice(available_colors)
 
     def display_board(self):
         for row in self.board:
