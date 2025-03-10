@@ -36,12 +36,21 @@ class GameState:
             print(' '.join(display_row))
 
     def draw_board(self, screen):
+        board_width = len(self.board[0]) * Jelly.SIZE
+        board_height = len(self.board) * Jelly.SIZE
+        screen_width, screen_height = screen.get_size()
+
+        offset_x = (screen_width - board_width) // 2
+        offset_y = (screen_height - board_height) // 2
+
         for y, row in enumerate(self.board):
             for x, cell in enumerate(row):
-                if cell == '_':
-                    pygame.draw.rect(screen, (0, 0, 0), (x * Jelly.SIZE, y * Jelly.SIZE, Jelly.SIZE, Jelly.SIZE))
+                draw_x = x * Jelly.SIZE + offset_x
+                draw_y = y * Jelly.SIZE + offset_y
+                if cell == '':
+                    pygame.draw.rect(screen, (0, 0, 0), (draw_x, draw_y, Jelly.SIZE, Jelly.SIZE))
                 elif cell == ' ':
-                    pygame.draw.rect(screen, (255, 255, 255), (x * Jelly.SIZE, y * Jelly.SIZE, Jelly.SIZE, Jelly.SIZE))
+                    pygame.draw.rect(screen, (255, 255, 255), (draw_x, draw_y, Jelly.SIZE, Jelly.SIZE))
                 elif isinstance(cell, Jelly):
-                    cell.set_position(x * Jelly.SIZE, y * Jelly.SIZE)
+                    cell.set_position(draw_x, draw_y)
                     cell.draw(screen)
