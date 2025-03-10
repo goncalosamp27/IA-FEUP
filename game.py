@@ -12,9 +12,6 @@ BG = pygame.image.load("assets/Background.png")
 def get_font(size):
     return pygame.font.Font("assets/font.ttf", size)
 
-def start_game():
-    game_state = GameState('levels/level1.txt', 'easy')
-
     while True:
         PLAY_MOUSE_POS = pygame.mouse.get_pos()
 
