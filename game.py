@@ -12,8 +12,9 @@ BG = pygame.image.load("assets/Background.png")
 def get_font(size):
     return pygame.font.Font("assets/font.ttf", size)
 
-def start_game():
-    game_state = GameState('levels/level1.txt', 'easy')
+def start_game(level, difficulty):
+    level_path = f'levels/level{level}.txt'
+    game_state = GameState(level_path, difficulty)
     selected_jelly = None
 
     while True:
