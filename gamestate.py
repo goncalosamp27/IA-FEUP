@@ -44,9 +44,19 @@ class GameState:
         jelly.br = random.choice(available_colors)
 
     def generate_playable_jellies(self):
-        self.playable_jellies = [Jelly(0, 0, None, None, None, None), Jelly(0, 0, None, None, None, None)]
-        for jelly in self.playable_jellies:
-            jelly.set_random_colors()
+        self.playable_jellies = [self.create_random_jelly(), self.create_random_jelly()]
+
+    def create_random_jelly(self):
+        jelly = Jelly(0, 0, None, None, None, None)
+        jelly.set_random_colors()
+        return jelly
+
+    def replace_played_jelly(self, played_jelly):
+        new_jelly = self.create_random_jelly()
+        for i in range(len(self.playable_jellies)):
+            if self.playable_jellies[i] == played_jelly:
+                self.playable_jellies[i] = new_jelly
+                break
 
     def generate_objective(self):
         if self.difficulty == 'easy':
@@ -144,7 +154,4 @@ class GameState:
                 jelly.draw(screen)
 
     def select_jelly(self, jelly):
-        if self.selected_jelly == jelly:
-            self.selected_jelly = None
-        else:
-            self.selected_jelly = jelly
+        self.selected_jelly = None if self.selected_jelly == jelly else jelly

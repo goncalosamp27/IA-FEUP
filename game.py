@@ -50,7 +50,7 @@ def start_game():
                                 draw_y = y * Jelly.SIZE + (SCREEN.get_height() - len(game_state.board) * Jelly.SIZE) // 2 - 100
                                 if draw_x <= PLAY_MOUSE_POS[0] <= draw_x + Jelly.SIZE and draw_y <= PLAY_MOUSE_POS[1] <= draw_y + Jelly.SIZE:
                                     game_state.board[y][x] = game_state.selected_jelly
-                                    game_state.generate_playable_jellies()
+                                    game_state.replace_played_jelly(game_state.selected_jelly)
                                     game_state.selected_jelly = None
                                     break
 
