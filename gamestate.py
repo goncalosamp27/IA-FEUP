@@ -7,6 +7,7 @@ class GameState:
         self.board = self.load_board(level_file)
         self.difficulty = difficulty
         self.randomize_jellies()
+        self.generate_playable_jellies()  # Ensure playable jellies are generated
 
     def load_board(self, level_file):
         with open(level_file, 'r') as file:
@@ -38,6 +39,11 @@ class GameState:
         jelly.bl = random.choice(available_colors)
         jelly.br = random.choice(available_colors)
 
+    def generate_playable_jellies(self):
+        self.playable_jellies = [Jelly(0, 0, None, None, None, None), Jelly(0, 0, None, None, None, None)]
+        for jelly in self.playable_jellies:
+            jelly.set_random_colors()
+
     def display_board(self):
         for row in self.board:
             display_row = []
@@ -60,10 +66,17 @@ class GameState:
             for x, cell in enumerate(row):
                 draw_x = x * Jelly.SIZE + offset_x
                 draw_y = y * Jelly.SIZE + offset_y
-                if cell == '':
-                    pygame.draw.rect(screen, (0, 0, 0), (draw_x, draw_y, Jelly.SIZE, Jelly.SIZE))
+                if cell == '_':
+                    pygame.draw.rect(screen, (0, 0, 0), (draw_x, draw_y, Jelly.SIZE, Jelly.SIZE))  # Non-playable space
                 elif cell == ' ':
-                    pygame.draw.rect(screen, (255, 255, 255), (draw_x, draw_y, Jelly.SIZE, Jelly.SIZE))
+                    pygame.draw.rect(screen, (211, 211, 211), (draw_x, draw_y, Jelly.SIZE, Jelly.SIZE))  # Playable space (light gray)
                 elif isinstance(cell, Jelly):
                     cell.set_position(draw_x, draw_y)
                     cell.draw(screen)
+
+        # Draw the playable jellies below the board
+        jelly_y = offset_y + board_height + 50
+        self.playable_jellies[0].set_position(offset_x, jelly_y)
+        self.playable_jellies[1].set_position(offset_x + board_width - Jelly.SIZE, jelly_y)
+        self.playable_jellies[0].draw(screen)
+        self.playable_jellies[1].draw(screen)
