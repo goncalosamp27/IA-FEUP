@@ -131,4 +131,3 @@ class GameState:
                     cell.set_position(draw_x, draw_y)
                     cell.draw(screen)
 
-
