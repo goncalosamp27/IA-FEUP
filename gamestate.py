@@ -3,14 +3,15 @@ import pygame
 from jelly import Jelly
 
 class GameState:
-    COLORS = ['#be2528', '#2536be', '#7525be', '#3eb34b', '#64bfbe', '#e2d614'] # red, blue, purple, green, cyan, yellow
+    COLORS = ['#be2528', '#2536be', '#7525be', '#3eb34b', '#64bfbe', '#e2d614']  # red, blue, purple, green, cyan, yellow
 
     def __init__(self, level_file, difficulty):
         self.board = self.load_board(level_file)
         self.difficulty = difficulty
-        self.objective = self.generate_objective()  
+        self.objective = self.generate_objective()
         self.randomize_jellies()
         self.generate_playable_jellies()  # Ensure playable jellies are generated
+        self.selected_jelly = None
 
     def load_board(self, level_file):
         with open(level_file, 'r') as file:
@@ -35,7 +36,7 @@ class GameState:
             adjacent_colors.update(self.board[y-1][x].get_colors())
         if x > 0 and isinstance(self.board[y][x-1], Jelly):
             adjacent_colors.update(self.board[y][x-1].get_colors())
-        
+
         available_colors = [color for color in Jelly.COLORS if color not in adjacent_colors]
         jelly.tl = random.choice(available_colors)
         jelly.tr = random.choice(available_colors)
@@ -43,9 +44,19 @@ class GameState:
         jelly.br = random.choice(available_colors)
 
     def generate_playable_jellies(self):
-        self.playable_jellies = [Jelly(0, 0, None, None, None, None), Jelly(0, 0, None, None, None, None)]
-        for jelly in self.playable_jellies:
-            jelly.set_random_colors()
+        self.playable_jellies = [self.create_random_jelly(), self.create_random_jelly()]
+
+    def create_random_jelly(self):
+        jelly = Jelly(0, 0, None, None, None, None)
+        jelly.set_random_colors()
+        return jelly
+
+    def replace_played_jelly(self, played_jelly):
+        new_jelly = self.create_random_jelly()
+        for i in range(len(self.playable_jellies)):
+            if self.playable_jellies[i] == played_jelly:
+                self.playable_jellies[i] = new_jelly
+                break
 
     def generate_objective(self):
         if self.difficulty == 'easy':
@@ -54,7 +65,7 @@ class GameState:
 
             while color2 == color1:
                 color2 = random.choice(self.COLORS)
-            
+
             return {
                 "color1": color1,
                 "count1": 10,
@@ -71,7 +82,7 @@ class GameState:
                 color2 = random.choice(self.COLORS)
             while color3 == color1 or color3 == color2:
                 color3 = random.choice(self.COLORS)
-            
+
             return {
                 "color1": color1,
                 "count1": 10,
@@ -88,8 +99,8 @@ class GameState:
 
             while color2 == color1:
                 color2 = random.choice(self.COLORS)
-            while color3 == color1 or color3 == color2: 
-                color3 = random.choice(self.COLORS) 
+            while color3 == color1 or color3 == color2:
+                color3 = random.choice(self.COLORS)
 
             return {
                 "color1": color1,
@@ -99,7 +110,6 @@ class GameState:
                 "color3": color3,
                 "count3": 7
             }
-
 
     def display_board(self):
         for row in self.board:
@@ -131,37 +141,17 @@ class GameState:
                     cell.set_position(draw_x, draw_y)
                     cell.draw(screen)
 
-
         # Draw the playable jellies below the board
         jelly_y = offset_y + board_height + 50
-        self.playable_jellies[0].set_position(offset_x, jelly_y)
-        self.playable_jellies[1].set_position(offset_x + board_width - Jelly.SIZE, jelly_y)
-        self.playable_jellies[0].draw(screen)
-        self.playable_jellies[1].draw(screen)
+        for i, jelly in enumerate(self.playable_jellies):
+            jelly_x = offset_x if i == 0 else offset_x + board_width - Jelly.SIZE
+            if jelly == self.selected_jelly:
+                # Draw the selected jelly larger
+                jelly.set_position(jelly_x - 10, jelly_y - 10)
+                jelly.draw(screen, size=Jelly.SIZE + 20)
+            else:
+                jelly.set_position(jelly_x, jelly_y)
+                jelly.draw(screen)
 
-
-        font = pygame.font.Font("assets/font.ttf", 40)
-
-        y_offset = 20
-        for i in range(1, 4):  
-            color_key = f"color{i}"
-            count_key = f"count{i}"
-
-            if color_key in self.objective and count_key in self.objective:
-                color_hex = self.objective[color_key]  
-                count = self.objective[count_key]  
-
-                # Converter cor hexadecimal para RGB
-                color_rgb = pygame.Color(color_hex)  
-
-                # Criar texto com a cor correspondente
-                text_surface = font.render(f"Pop {count}", True, color_rgb)
-                screen.blit(text_surface, (20, y_offset))
-                y_offset += 60  # Espaço entre os textos
-
-        # Draw the playable jellies below the board
-        jelly_y = offset_y + board_height + 50
-        self.playable_jellies[0].set_position(offset_x, jelly_y)
-        self.playable_jellies[1].set_position(offset_x + board_width - Jelly.SIZE, jelly_y)
-        self.playable_jellies[0].draw(screen)
-        self.playable_jellies[1].draw(screen)
+    def select_jelly(self, jelly):
+        self.selected_jelly = None if self.selected_jelly == jelly else jelly
