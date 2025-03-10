@@ -14,7 +14,7 @@ class Jelly:
         self.br = br # bottom right
 
     def get_position(self):
-        return self.posX, self.posY 
+        return self.posX, self.posY
 
     def set_position(self, posX, posY):
         self.posX = posX
@@ -25,7 +25,7 @@ class Jelly:
         self.tr = tr
         self.bl = bl
         self.br = br
-        
+
     def set_random_colors(self):
         self.tl = random.choice(self.COLORS)
         self.tr = random.choice(self.COLORS)
@@ -34,9 +34,10 @@ class Jelly:
 
     def get_colors(self):
         return self.tl, self.tr, self.bl, self.br
-    
-    def draw(self, screen):
-        size = self.SIZE
+
+    def draw(self, screen, size=None):
+        if size is None:
+            size = self.SIZE
         x, y = self.posX, self.posY
 
         pygame.draw.rect(screen, self.tl, (x, y, size // 2, size // 2)) # Top-left
