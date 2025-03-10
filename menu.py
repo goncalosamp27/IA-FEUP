@@ -8,10 +8,6 @@ pygame.display.set_caption("Jelly Field Menu")
 
 BG = pygame.image.load("assets/Background.png")
 
-
-selected_board = None
-selected_level = None
-
 def get_font(size):
     return pygame.font.Font("assets/font.ttf", size)
 
