@@ -1,9 +1,9 @@
 import pygame
 import sys
-from button import Button  # Import Button for UI interactions
+from button import Button 
 from gamestate import GameState
+from jelly import Jelly
 
-# Removed import of main_menu to avoid circular imports
 pygame.init()
 SCREEN = pygame.display.set_mode((1280, 720))
 
@@ -14,6 +14,7 @@ def get_font(size):
 
 def start_game():
     game_state = GameState('levels/level1.txt', 'easy')
+    selected_jelly = None
 
     while True:
         PLAY_MOUSE_POS = pygame.mouse.get_pos()
@@ -35,6 +36,23 @@ def start_game():
             if event.type == pygame.MOUSEBUTTONDOWN:
                 if PLAY_BACK.checkForInput(PLAY_MOUSE_POS):
                     return  # Go back to the menu (you can modify this to call main_menu() in menu.py)
+                # Check if a playable jelly is selected
+                for i, jelly in enumerate(game_state.playable_jellies):
+                    jelly_x, jelly_y = jelly.get_position()
+                    if jelly_x <= PLAY_MOUSE_POS[0] <= jelly_x + Jelly.SIZE and jelly_y <= PLAY_MOUSE_POS[1] <= jelly_y + Jelly.SIZE:
+                        selected_jelly = jelly
+                        break
+                # Check if a playable slot is clicked
+                if selected_jelly:
+                    for y, row in enumerate(game_state.board):
+                        for x, cell in enumerate(row):
+                            if cell == ' ':
+                                draw_x = x * Jelly.SIZE + (SCREEN.get_width() - len(game_state.board[0]) * Jelly.SIZE) // 2
+                                draw_y = y * Jelly.SIZE + (SCREEN.get_height() - len(game_state.board) * Jelly.SIZE) // 2 - 100
+                                if draw_x <= PLAY_MOUSE_POS[0] <= draw_x + Jelly.SIZE and draw_y <= PLAY_MOUSE_POS[1] <= draw_y + Jelly.SIZE:
+                                    game_state.board[y][x] = selected_jelly
+                                    game_state.generate_playable_jellies()
+                                    selected_jelly = None
+                                    break
 
         pygame.display.update()
-        
