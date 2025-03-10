@@ -41,7 +41,7 @@ class GameState:
         screen_width, screen_height = screen.get_size()
 
         offset_x = (screen_width - board_width) // 2
-        offset_y = (screen_height - board_height) // 2
+        offset_y = (screen_height - board_height) // 2 - 100
 
         for y, row in enumerate(self.board):
             for x, cell in enumerate(row):
