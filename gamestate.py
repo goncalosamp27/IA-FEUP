@@ -133,9 +133,8 @@ class GameState:
             for x, cell in enumerate(row):
                 draw_x = x * Jelly.SIZE + offset_x
                 draw_y = y * Jelly.SIZE + offset_y
-                if cell == '_':
-                    pygame.draw.rect(screen, (0, 0, 0), (draw_x, draw_y, Jelly.SIZE, Jelly.SIZE))  # Non-playable space
-                elif cell == ' ':
+                
+                if cell == ' ':
                     pygame.draw.rect(screen, (211, 211, 211), (draw_x, draw_y, Jelly.SIZE, Jelly.SIZE))  # Playable space (light gray)
                 elif isinstance(cell, Jelly):
                     cell.set_position(draw_x, draw_y)
