@@ -30,6 +30,8 @@ class GameState:
                         self.set_unique_random_colors(jelly, y, x)
                         row[x] = jelly
 
+    # def check_color_collisions(self):
+
     def set_unique_random_colors(self, jelly, y, x):
         adjacent_colors = set()
         if y > 0 and isinstance(self.board[y-1][x], Jelly):
@@ -179,3 +181,21 @@ class GameState:
             if ' ' in row:
                 return False
         return True
+    
+    
+    def check_game_win(self):
+        for i in range(1, 4):
+            count_key = f"count{i}"
+            if count_key in self.objective and self.objective[count_key] > 0:
+                return False
+        return True
+    
+    def decrement_objective(self, destroyed_color1, destroyed_color2, destroyed_color3):
+        destroyed_colors = [destroyed_color1, destroyed_color2, destroyed_color3]  
+
+        for i in range(3):  
+            count_key = f"count{i+1}"
+
+            if count_key in self.objective:
+                self.objective[count_key] = max(0, self.objective[count_key] - destroyed_colors[i]) 
+

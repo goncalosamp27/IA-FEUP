@@ -6,14 +6,12 @@ pygame.init()
 SCREEN = pygame.display.set_mode((1280, 720))
 pygame.display.set_caption("Jelly Field Menu")
 
-BG = pygame.image.load("assets/Background7.png")
+BG = pygame.image.load("assets/Background.png")
 
 def get_font(size):
     return pygame.font.Font("assets/font.ttf", size)
 
 def play():
-    choose_level_and_difficulty()
-def choose_level_and_difficulty():
     selected_level = 1
     selected_difficulty = 'easy'
 
@@ -82,55 +80,28 @@ def choose_level_and_difficulty():
         pygame.display.update()
 
 
-def choose_ai():
+def options():
     while True:
         SCREEN.blit(BG, (0, 0))
+        OPTIONS_MOUSE_POS = pygame.mouse.get_pos()
 
-        MENU_MOUSE_POS = pygame.mouse.get_pos()
+        OPTIONS_TEXT = get_font(45).render("This is the OPTIONS screen.", True, "Black")
+        OPTIONS_RECT = OPTIONS_TEXT.get_rect(center=(640, 260))
+        SCREEN.blit(OPTIONS_TEXT, OPTIONS_RECT)
 
-        MENU_TEXT = get_font(100).render("COMPUTER", True, "#38055D")
-        MENU_RECT = MENU_TEXT.get_rect(center=(640, 100))
+        OPTIONS_BACK = Button(image=None, pos=(640, 460), 
+                            text_input="BACK", font=get_font(75), base_color="Black", hovering_color="Green")
 
-        AI_1_BUTTON = Button(image=None, pos=(640, 250), 
-                            text_input="AI 1", font=get_font(75), base_color="#d7fcd4", hovering_color="White")
-        AI_2_BUTTON = Button(image=None, pos=(640, 350), 
-                            text_input="AI 2", font=get_font(75), base_color="#d7fcd4", hovering_color="White")
-        AI_3_BUTTON = Button(image=None, pos=(640, 450), 
-                            text_input="AI 3", font=get_font(75), base_color="#d7fcd4", hovering_color="White")
-        AI_4_BUTTON = Button(image=None, pos=(640, 550), 
-                            text_input="AI 4", font=get_font(75), base_color="#d7fcd4", hovering_color="White")
-        BACK_BUTTON = Button(image=None, pos=(640, 650), 
-                            text_input="Back", font=get_font(75), base_color="#a87bc7", hovering_color="White")
+        OPTIONS_BACK.changeColor(OPTIONS_MOUSE_POS)
+        OPTIONS_BACK.update(SCREEN)
 
-        SCREEN.blit(MENU_TEXT, MENU_RECT)
-
-        for button in [AI_1_BUTTON, AI_2_BUTTON, AI_3_BUTTON, AI_4_BUTTON, BACK_BUTTON]:
-            button.changeColor(MENU_MOUSE_POS)
-            button.update(SCREEN)
-        
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 pygame.quit()
                 sys.exit()
             if event.type == pygame.MOUSEBUTTONDOWN:
-                if AI_1_BUTTON.checkForInput(MENU_MOUSE_POS):
-                    # Handle easy AI selection
-                    print("AI1 selected")  # You can start the game with easy AI
-                    choose_level_and_difficulty()
-                if AI_2_BUTTON.checkForInput(MENU_MOUSE_POS):
-                    # Handle medium AI selection
-                    print("AI2 selected")  # You can start the game with medium AI
-                    choose_level_and_difficulty()
-                if AI_3_BUTTON.checkForInput(MENU_MOUSE_POS):
-                    # Handle hard AI selection
-                    print("AI3 selected")  # You can start the game with hard AI
-                    choose_level_and_difficulty()
-                if AI_4_BUTTON.checkForInput(MENU_MOUSE_POS):
-                    # Handle hard AI selection
-                    print("AI4 selected")  # You can start the game with hard AI
-                    choose_level_and_difficulty()
-                if BACK_BUTTON.checkForInput(MENU_MOUSE_POS):
-                    main_menu()  # Go back to the main menu
+                if OPTIONS_BACK.checkForInput(OPTIONS_MOUSE_POS):
+                    main_menu()
 
         pygame.display.update()
 
@@ -138,50 +109,26 @@ def how_to_play():
     while True:
         OPTIONS_MOUSE_POS = pygame.mouse.get_pos()
 
-        SCREEN.fill("pink")
+        SCREEN.fill("white")
 
-        # Title Text: "How to Play"
-        TITLE_TEXT = get_font(100).render("HOW TO PLAY", True, "#FFFFFF")
-        TITLE_RECT = TITLE_TEXT.get_rect(center=(640, 100))
-        SCREEN.blit(TITLE_TEXT, TITLE_RECT)
+        OPTIONS_TEXT = get_font(45).render("HOW TO PLAY screen.", True, "Black")
+        OPTIONS_RECT = OPTIONS_TEXT.get_rect(center=(640, 260))
+        SCREEN.blit(OPTIONS_TEXT, OPTIONS_RECT)
 
-        # Instruction Text: Explanation of Jelly Field Game
-        INSTRUCTION_TEXT = get_font(25).render("1. The game consists of --------.", True, "#FFFFFF")
-        INSTRUCTION_TEXT_RECT = INSTRUCTION_TEXT.get_rect(center=(640, 200))
-        SCREEN.blit(INSTRUCTION_TEXT, INSTRUCTION_TEXT_RECT)
+        OPTIONS_BACK = Button(image=None, pos=(640, 460), 
+                            text_input="BACK", font=get_font(75), base_color="Black", hovering_color="Green")
 
-        INSTRUCTION_TEXT2 = get_font(25).render("2. Fill the board -------", True, "#FFFFFF")
-        INSTRUCTION_TEXT_RECT2 = INSTRUCTION_TEXT2.get_rect(center=(640, 270))
-        SCREEN.blit(INSTRUCTION_TEXT2, INSTRUCTION_TEXT_RECT2)
+        OPTIONS_BACK.changeColor(OPTIONS_MOUSE_POS)
+        OPTIONS_BACK.update(SCREEN)
 
-        INSTRUCTION_TEXT3 = get_font(25).render("3. --------", True, "#FFFFFF")
-        INSTRUCTION_TEXT_RECT3 = INSTRUCTION_TEXT3.get_rect(center=(640, 340))
-        SCREEN.blit(INSTRUCTION_TEXT3, INSTRUCTION_TEXT_RECT3)
-
-        INSTRUCTION_TEXT4 = get_font(25).render("4. -------", True, "#FFFFFF")
-        INSTRUCTION_TEXT_RECT4 = INSTRUCTION_TEXT4.get_rect(center=(640, 410))
-        SCREEN.blit(INSTRUCTION_TEXT4, INSTRUCTION_TEXT_RECT4)
-
-        INSTRUCTION_TEXT5 = get_font(25).render("5. ---------", True, "#FFFFFF")
-        INSTRUCTION_TEXT_RECT5 = INSTRUCTION_TEXT5.get_rect(center=(640, 480))
-        SCREEN.blit(INSTRUCTION_TEXT5, INSTRUCTION_TEXT_RECT5)
-
-        # Button for Back: Allows going back to the main menu
-        BACK_BUTTON = Button(image=None, pos=(640, 600), 
-                             text_input="BACK", font=get_font(75), base_color="#c98895", hovering_color="White")
-        BACK_BUTTON.changeColor(OPTIONS_MOUSE_POS)
-        BACK_BUTTON.update(SCREEN)
-
-        # Event handling: If the back button is clicked, go back to main menu
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 pygame.quit()
                 sys.exit()
             if event.type == pygame.MOUSEBUTTONDOWN:
-                if BACK_BUTTON.checkForInput(OPTIONS_MOUSE_POS):
+                if OPTIONS_BACK.checkForInput(OPTIONS_MOUSE_POS):
                     main_menu()
 
-        # Update the display
         pygame.display.update()
 
 def main_menu():
@@ -190,7 +137,7 @@ def main_menu():
 
         MENU_MOUSE_POS = pygame.mouse.get_pos()
 
-        MENU_TEXT = get_font(100).render("JELLY FIELD", True, "#4c5f6c")
+        MENU_TEXT = get_font(100).render("MAIN MENU", True, "#b68f40")
         MENU_RECT = MENU_TEXT.get_rect(center=(640, 100))
 
         PLAY_BUTTON = Button(image=None, pos=(640, 250), 
@@ -216,7 +163,7 @@ def main_menu():
                 if PLAY_BUTTON.checkForInput(MENU_MOUSE_POS):
                     play()  # Trigger the game menu
                 if OPTIONS_BUTTON.checkForInput(MENU_MOUSE_POS):
-                    choose_ai()
+                    options()
                 if HTP_BUTTON.checkForInput(MENU_MOUSE_POS):
                     how_to_play()
                 if QUIT_BUTTON.checkForInput(MENU_MOUSE_POS):

@@ -53,9 +53,16 @@ def start_game(level, difficulty):
                                     game_state.board[y][x] = game_state.selected_jelly
                                     game_state.replace_played_jelly(game_state.selected_jelly)
                                     game_state.selected_jelly = None
+
+                                    
+
                                     if game_state.check_game_over():
                                         print("Game Over! You lost!")
                                         return  # End the game
+                                    
+                                    elif game_state.check_game_win():
+                                        print("You won!")
+                                        return
                                     break
 
         pygame.display.update()
