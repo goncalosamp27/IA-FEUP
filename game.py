@@ -54,7 +54,11 @@ def start_game(level, difficulty):
                                     game_state.replace_played_jelly(game_state.selected_jelly)
                                     game_state.selected_jelly = None
 
-                                    
+                                    while not game_state.is_board_normalized():
+                                        print("Not Normalizado")
+                                        #game_state.check_collisions_and_explode()
+
+                                    print("Normalizado")
 
                                     if game_state.check_game_over():
                                         print("Game Over! You lost!")

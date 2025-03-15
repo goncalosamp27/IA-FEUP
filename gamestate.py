@@ -199,3 +199,77 @@ class GameState:
             if count_key in self.objective:
                 self.objective[count_key] = max(0, self.objective[count_key] - destroyed_colors[i]) 
 
+    def is_board_normalized(self):
+        for y in range(len(self.board)):
+            for x in range(len(self.board[y])):
+                if isinstance(self.board[y][x], Jelly):
+                    jelly = self.board[y][x]
+
+                    # Verificar colisão com a Jelly abaixo
+                    if y + 1 < len(self.board) and isinstance(self.board[y + 1][x], Jelly):
+                        bottom_jelly = self.board[y + 1][x]
+                        if jelly.bl == bottom_jelly.tl or jelly.br == bottom_jelly.tr:
+                            return False  # Ainda há colisões
+
+                    # Verificar colisão com a Jelly à direita
+                    if x + 1 < len(self.board[y]) and isinstance(self.board[y][x + 1], Jelly):
+                        right_jelly = self.board[y][x + 1]
+                        if jelly.tr == right_jelly.tl or jelly.br == right_jelly.bl:
+                            return False  # Ainda há colisões
+
+                    # Verificar colisão com Jelly na diagonal (inferior direita)
+                    if (y + 1 < len(self.board) and x + 1 < len(self.board[y]) and 
+                        isinstance(self.board[y + 1][x + 1], Jelly)):
+                        diagonal_jelly = self.board[y + 1][x + 1]
+                        if jelly.br == diagonal_jelly.tl:
+                            return False  
+
+        return True  
+
+    def check_collisions_and_explode(self):        
+        explosions = []  # Lista para armazenar os cantos que devem explodir
+
+        for y in range(len(self.board)):
+            for x in range(len(self.board[y])):
+                if not isinstance(self.board[y][x], Jelly):  # Se não for uma Jelly, ignora
+                    continue
+
+                jelly = self.board[y][x]
+
+                # Verificar colisão com a Jelly abaixo (y+1) se existir
+                if y + 1 < len(self.board) and isinstance(self.board[y + 1][x], Jelly):
+                    bottom_jelly = self.board[y + 1][x]
+                    if jelly.bl == bottom_jelly.tl:
+                        explosions.append((jelly, "bl"))
+                        explosions.append((bottom_jelly, "tl"))
+                    if jelly.br == bottom_jelly.tr:
+                        explosions.append((jelly, "br"))
+                        explosions.append((bottom_jelly, "tr"))
+
+                # Verificar colisão com a Jelly à direita (x+1) se existir
+                if x + 1 < len(self.board[y]) and isinstance(self.board[y][x + 1], Jelly):
+                    right_jelly = self.board[y][x + 1]
+                    if jelly.tr == right_jelly.tl:
+                        explosions.append((jelly, "tr"))
+                        explosions.append((right_jelly, "tl"))
+                    if jelly.br == right_jelly.bl:
+                        explosions.append((jelly, "br"))
+                        explosions.append((right_jelly, "bl"))
+
+                # Verificar colisão com Jelly na diagonal (inferior direita) se existir
+                if y + 1 < len(self.board) and x + 1 < len(self.board[y]) and isinstance(self.board[y + 1][x + 1], Jelly):
+                    diagonal_jelly = self.board[y + 1][x + 1]
+                    if jelly.br == diagonal_jelly.tl:
+                        explosions.append((jelly, "br"))
+                        explosions.append((diagonal_jelly, "tl"))
+
+        # Se houver pelo menos 3 explosões da mesma cor, confirmar que explodem todas
+        if len(explosions) >= 3:
+            for jelly_obj, corner in explosions:
+                setattr(jelly_obj, corner, None)  # Define o canto como None
+
+        # Agora reconstruímos todas as Jellies afetadas
+        for y in range(len(self.board)):
+            for x in range(len(self.board[y])):
+                if isinstance(self.board[y][x], Jelly):
+                    self.board[y][x].reconstruct()
