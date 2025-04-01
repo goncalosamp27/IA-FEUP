@@ -11,8 +11,8 @@ BG = pygame.image.load("assets/Background7.png")
 #MUTE = pygame.image.load("assets/images/unmute.svg")
 #UNMUTE = pygame.image.load("assets/images/mute.svg")
 
-MUTE = pygame.image.load("assets/images/unmute2.png")
-UNMUTE = pygame.image.load("assets/images/mute2.png")
+UNMUTE = pygame.image.load("assets/images/unmute2.png")
+MUTE = pygame.image.load("assets/images/mute2.png")
 
 # track sound status (on/off)
 sound_on = True
@@ -54,6 +54,7 @@ def draw_microphone_icon():
     if pygame.mouse.get_pressed()[0]: 
         if icon_x <= mouse_x <= icon_x + icon_width and icon_y <= mouse_y <= icon_y + icon_height:
             toggle_sound() 
+            pygame.time.delay(200)
         
    
 def get_font(size):
