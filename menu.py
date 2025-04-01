@@ -8,6 +8,15 @@ pygame.display.set_caption("Jelly Field")
 
 BG = pygame.image.load("assets/Background7.png")
 
+#Background Music
+pygame.mixer.music.load("assets/music/background1.mp3")  
+pygame.mixer.music.set_volume(0.5)  
+pygame.mixer.music.play(-1)  
+
+#Sound Effects
+CLICK_SOUND = pygame.mixer.Sound("assets/music/1.mp3")
+CLICK_SOUND.set_volume(0.7) 
+
 def get_font(size):
     return pygame.font.Font("assets/font.ttf", size)
 
@@ -65,16 +74,22 @@ def play():
                 sys.exit()
             if event.type == pygame.MOUSEBUTTONDOWN:
                 if LEVEL_UP_BUTTON.checkForInput(OPTIONS_MOUSE_POS):
+                    CLICK_SOUND.play()
                     selected_level = min(selected_level + 1, 5)
                 if LEVEL_DOWN_BUTTON.checkForInput(OPTIONS_MOUSE_POS):
+                    CLICK_SOUND.play()
                     selected_level = max(selected_level - 1, 1)
                 if DIFFICULTY_UP_BUTTON.checkForInput(OPTIONS_MOUSE_POS):
+                    CLICK_SOUND.play()
                     selected_difficulty = 'medium' if selected_difficulty == 'easy' else 'hard' if selected_difficulty == 'medium' else 'easy'
                 if DIFFICULTY_DOWN_BUTTON.checkForInput(OPTIONS_MOUSE_POS):
+                    CLICK_SOUND.play()
                     selected_difficulty = 'medium' if selected_difficulty == 'hard' else 'easy' if selected_difficulty == 'medium' else 'hard'
                 if START_BUTTON.checkForInput(OPTIONS_MOUSE_POS):
+                    CLICK_SOUND.play()
                     start_game(selected_level, selected_difficulty)
                 if BACK_BUTTON.checkForInput(OPTIONS_MOUSE_POS):
+                    CLICK_SOUND.play()
                     main_menu()
 
         pygame.display.update()
@@ -139,22 +154,27 @@ def choose_ai():
                 sys.exit()
             if event.type == pygame.MOUSEBUTTONDOWN:
                 if AI_1_BUTTON.checkForInput(MENU_MOUSE_POS):
+                    CLICK_SOUND.play()
                         # Handle easy AI selection
                     print("AI1 selected")  # You can start the game with easy AI
                     play()
                 if AI_2_BUTTON.checkForInput(MENU_MOUSE_POS):
+                    CLICK_SOUND.play()
                         # Handle medium AI selection
                     print("AI2 selected")  # You can start the game with medium AI
                     play()
                 if AI_3_BUTTON.checkForInput(MENU_MOUSE_POS):
+                    CLICK_SOUND.play()
                         # Handle hard AI selection
                     print("AI3 selected")  # You can start the game with hard AI
                     play()
                 if AI_4_BUTTON.checkForInput(MENU_MOUSE_POS):
+                    CLICK_SOUND.play()
                         # Handle hard AI selection
                     print("AI4 selected")  # You can start the game with hard AI
                     play()
                 if BACK_BUTTON.checkForInput(MENU_MOUSE_POS):
+                    CLICK_SOUND.play()
                     main_menu()  # Go back to the main menu
 
             pygame.display.update()
@@ -206,10 +226,76 @@ def how_to_play():
                 sys.exit()
             if event.type == pygame.MOUSEBUTTONDOWN:
                 if BACK_BUTTON.checkForInput(OPTIONS_MOUSE_POS):
+                    CLICK_SOUND.play()
                     main_menu()
 
         # Update the display
         pygame.display.update()
+
+
+def win_screen():
+    while True:
+        SCREEN.blit(BG, (0, 0)) 
+
+        WIN_TEXT = get_font(100).render("YOU WIN!", True, "#99ff99")
+        WIN_RECT = WIN_TEXT.get_rect(center=(640, 200))
+        SCREEN.blit(WIN_TEXT, WIN_RECT)
+
+        REPLAY_BUTTON = Button(image=None, pos=(640, 350), 
+                               text_input="PLAY AGAIN", font=get_font(50), base_color="#99afd7", hovering_color="White")
+        MENU_BUTTON = Button(image=None, pos=(640, 450), 
+                             text_input="MAIN MENU", font=get_font(50), base_color="#99afd7", hovering_color="White")
+
+        for button in [REPLAY_BUTTON, MENU_BUTTON]:
+            button.changeColor(pygame.mouse.get_pos())
+            button.update(SCREEN)
+
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                pygame.quit()
+                sys.exit()
+            if event.type == pygame.MOUSEBUTTONDOWN:
+                if REPLAY_BUTTON.checkForInput(pygame.mouse.get_pos()):
+                    CLICK_SOUND.play()
+                    play()  
+                if MENU_BUTTON.checkForInput(pygame.mouse.get_pos()):
+                    CLICK_SOUND.play()
+                    main_menu()  
+
+        pygame.display.update()
+        
+        
+def game_over_screen():
+    while True:
+        SCREEN.blit(BG, (0, 0))  
+
+        GAME_OVER_TEXT = get_font(100).render("GAME OVER", True, "#ff6666")
+        GAME_OVER_RECT = GAME_OVER_TEXT.get_rect(center=(640, 200))
+        SCREEN.blit(GAME_OVER_TEXT, GAME_OVER_RECT)
+
+        REPLAY_BUTTON = Button(image=None, pos=(640, 350), 
+                               text_input="TRY AGAIN", font=get_font(50), base_color="#99afd7", hovering_color="White")
+        MENU_BUTTON = Button(image=None, pos=(640, 450), 
+                             text_input="MAIN MENU", font=get_font(50), base_color="#99afd7", hovering_color="White")
+
+        for button in [REPLAY_BUTTON, MENU_BUTTON]:
+            button.changeColor(pygame.mouse.get_pos())
+            button.update(SCREEN)
+
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                pygame.quit()
+                sys.exit()
+            if event.type == pygame.MOUSEBUTTONDOWN:
+                if REPLAY_BUTTON.checkForInput(pygame.mouse.get_pos()):
+                    CLICK_SOUND.play()
+                    play()  
+                if MENU_BUTTON.checkForInput(pygame.mouse.get_pos()):
+                    CLICK_SOUND.play()
+                    main_menu() 
+
+        pygame.display.update()
+
 
 def main_menu():
     while True:
@@ -219,6 +305,12 @@ def main_menu():
 
         MENU_TEXT = get_font(100).render("JELLY FIELD", True, "#6888be")
         MENU_RECT = MENU_TEXT.get_rect(center=(640, 100))
+
+#just for testing purposes
+        WIN_TEST_BUTTON = Button(image=None, pos=(640, 150), 
+                            text_input="TEST WIN", font=get_font(15), base_color="#ccdbee", hovering_color="White")
+        LOSE_TEST_BUTTON = Button(image=None, pos=(640, 180), 
+                            text_input="TEST LOSE", font=get_font(15), base_color="#ccdbee", hovering_color="White")
 
         PLAY_BUTTON = Button(image=None, pos=(640, 250), 
                             text_input="PLAY", font=get_font(60), base_color="#ccdbee", hovering_color="White")
@@ -231,7 +323,10 @@ def main_menu():
 
         SCREEN.blit(MENU_TEXT, MENU_RECT)
 
-        for button in [PLAY_BUTTON, OPTIONS_BUTTON, HTP_BUTTON, QUIT_BUTTON]:
+        #for button in [PLAY_BUTTON, OPTIONS_BUTTON, HTP_BUTTON, QUIT_BUTTON]:
+        #    button.changeColor(MENU_MOUSE_POS)
+        #    button.update(SCREEN)
+        for button in [WIN_TEST_BUTTON, LOSE_TEST_BUTTON, PLAY_BUTTON, OPTIONS_BUTTON, HTP_BUTTON, QUIT_BUTTON]:
             button.changeColor(MENU_MOUSE_POS)
             button.update(SCREEN)
         
@@ -240,13 +335,25 @@ def main_menu():
                 pygame.quit()
                 sys.exit()
             if event.type == pygame.MOUSEBUTTONDOWN:
+                #testing purposes
+                if WIN_TEST_BUTTON.checkForInput(MENU_MOUSE_POS):
+                    CLICK_SOUND.play()
+                    win_screen()  # Show win screen
+                if LOSE_TEST_BUTTON.checkForInput(MENU_MOUSE_POS):
+                    CLICK_SOUND.play()
+                    game_over_screen()  # Show game over screen
+                    
                 if PLAY_BUTTON.checkForInput(MENU_MOUSE_POS):
+                    CLICK_SOUND.play()
                     play()  # Trigger the game menu
                 if OPTIONS_BUTTON.checkForInput(MENU_MOUSE_POS):
+                    CLICK_SOUND.play()
                     choose_ai()
                 if HTP_BUTTON.checkForInput(MENU_MOUSE_POS):
+                    CLICK_SOUND.play()
                     how_to_play()
                 if QUIT_BUTTON.checkForInput(MENU_MOUSE_POS):
+                    CLICK_SOUND.play()
                     pygame.quit()
                     sys.exit()
 
