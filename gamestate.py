@@ -216,29 +216,42 @@ class GameState:
     def is_board_normalized(self):
         for y in range(len(self.board)):
             for x in range(len(self.board[y])):
-                if isinstance(self.board[y][x], Jelly):
-                    jelly = self.board[y][x]
+                if not isinstance(self.board[y][x], Jelly):
+                    continue  
 
-                    # Verificar colisão com a Jelly abaixo
-                    if y + 1 < len(self.board) and isinstance(self.board[y + 1][x], Jelly):
-                        bottom_jelly = self.board[y + 1][x]
-                        if jelly.bl == bottom_jelly.tl or jelly.br == bottom_jelly.tr:
-                            return False  # Ainda há colisões
+                jelly = self.board[y][x]
 
-                    # Verificar colisão com a Jelly à direita
-                    if x + 1 < len(self.board[y]) and isinstance(self.board[y][x + 1], Jelly):
-                        right_jelly = self.board[y][x + 1]
-                        if jelly.tr == right_jelly.tl or jelly.br == right_jelly.bl:
-                            return False  # Ainda há colisões
+                left_jelly = None
+                right_jelly = None
+                top_jelly = None
+                bottom_jelly = None
 
-                    # Verificar colisão com Jelly na diagonal (inferior direita)
-                    if (y + 1 < len(self.board) and x + 1 < len(self.board[y]) and 
-                        isinstance(self.board[y + 1][x + 1], Jelly)):
-                        diagonal_jelly = self.board[y + 1][x + 1]
-                        if jelly.br == diagonal_jelly.tl:
-                            return False  
+                if x > 0 and isinstance(self.board[y][x - 1], Jelly):
+                    left_jelly = self.board[y][x - 1]
+                if x < len(self.board[y]) - 1 and isinstance(self.board[y][x + 1], Jelly):
+                    right_jelly = self.board[y][x + 1]
+                if y > 0 and isinstance(self.board[y - 1][x], Jelly):
+                    top_jelly = self.board[y - 1][x]
+                if y < len(self.board) - 1 and isinstance(self.board[y + 1][x], Jelly):
+                    bottom_jelly = self.board[y + 1][x]
 
-        return True  
+                if left_jelly and jelly.tl == left_jelly.tr:
+                    return False
+                if top_jelly and jelly.tl == top_jelly.bl:
+                    return False
+                if right_jelly and jelly.tr == right_jelly.tl:
+                    return False
+                if top_jelly and jelly.tr == top_jelly.br:
+                    return False
+                if left_jelly and jelly.bl == left_jelly.br:
+                    return False
+                if bottom_jelly and jelly.bl == bottom_jelly.tl:
+                    return False
+                if right_jelly and jelly.br == right_jelly.bl:
+                    return False
+                if bottom_jelly and jelly.br == bottom_jelly.tr:
+                    return False
+        return True
 
     def check_collisions_and_explode(self):        
         explosions = []  # Lista para armazenar os cantos que devem explodir

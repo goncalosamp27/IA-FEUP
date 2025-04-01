@@ -29,6 +29,8 @@ def start_game(level, difficulty):
 
         game_state.draw_board(SCREEN)
 
+        if not game_state.is_board_normalized(): print("Not Normalizado")
+
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 pygame.quit()
@@ -53,10 +55,6 @@ def start_game(level, difficulty):
                                     game_state.board[y][x] = game_state.selected_jelly
                                     game_state.replace_played_jelly(game_state.selected_jelly)
                                     game_state.selected_jelly = None
-
-                                    while not game_state.is_board_normalized():
-                                        print("Not Normalizado")
-                                        #game_state.check_collisions_and_explode()
 
                                     print("Normalizado")
 
