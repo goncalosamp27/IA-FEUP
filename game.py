@@ -13,6 +13,70 @@ BG = pygame.image.load("assets/Background7.png")
 def get_font(size):
     return pygame.font.Font("assets/font.ttf", size)
 
+def win_screen():
+    while True:
+        SCREEN.blit(BG, (0, 0)) 
+
+        WIN_TEXT = get_font(100).render("YOU WIN!", True, "#99ff99")
+        WIN_RECT = WIN_TEXT.get_rect(center=(640, 200))
+        SCREEN.blit(WIN_TEXT, WIN_RECT)
+
+        REPLAY_BUTTON = Button(image=None, pos=(640, 350), 
+                               text_input="PLAY AGAIN", font=get_font(50), base_color="#99afd7", hovering_color="White")
+        MENU_BUTTON = Button(image=None, pos=(640, 450), 
+                             text_input="MAIN MENU", font=get_font(50), base_color="#99afd7", hovering_color="White")
+
+        for button in [REPLAY_BUTTON, MENU_BUTTON]:
+            button.changeColor(pygame.mouse.get_pos())
+            button.update(SCREEN)
+
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                pygame.quit()
+                sys.exit()
+            if event.type == pygame.MOUSEBUTTONDOWN:
+                if REPLAY_BUTTON.checkForInput(pygame.mouse.get_pos()):
+                    CLICK_SOUND.play()
+                    play()  
+                if MENU_BUTTON.checkForInput(pygame.mouse.get_pos()):
+                    CLICK_SOUND.play()
+                    main_menu()  
+
+        pygame.display.update()
+        
+        
+def game_over_screen():
+    while True:
+        SCREEN.blit(BG, (0, 0))  
+
+        GAME_OVER_TEXT = get_font(100).render("GAME OVER", True, "#ff6666")
+        GAME_OVER_RECT = GAME_OVER_TEXT.get_rect(center=(640, 200))
+        SCREEN.blit(GAME_OVER_TEXT, GAME_OVER_RECT)
+
+        REPLAY_BUTTON = Button(image=None, pos=(640, 350), 
+                               text_input="TRY AGAIN", font=get_font(50), base_color="#99afd7", hovering_color="White")
+        MENU_BUTTON = Button(image=None, pos=(640, 450), 
+                             text_input="MAIN MENU", font=get_font(50), base_color="#99afd7", hovering_color="White")
+
+        for button in [REPLAY_BUTTON, MENU_BUTTON]:
+            button.changeColor(pygame.mouse.get_pos())
+            button.update(SCREEN)
+
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                pygame.quit()
+                sys.exit()
+            if event.type == pygame.MOUSEBUTTONDOWN:
+                if REPLAY_BUTTON.checkForInput(pygame.mouse.get_pos()):
+                    CLICK_SOUND.play()
+                    play()  
+                if MENU_BUTTON.checkForInput(pygame.mouse.get_pos()):
+                    CLICK_SOUND.play()
+                    main_menu() 
+
+        pygame.display.update()
+
+
 def start_game(level, difficulty):
     level_path = f'levels/level{level}.txt'
     game_state = GameState(level_path, difficulty)
@@ -44,9 +108,11 @@ def start_game(level, difficulty):
             if event.type == pygame.USEREVENT:
                 if event.result == "win":
                     print("Returning to menu after win")
+                    win_screen()
                     return
                 elif event.result == "lose":
                     print("Returning to menu after loss")
+                    game_over_screen()
                     return
             if event.type == pygame.MOUSEBUTTONDOWN:
                 if game_state.scheduled_actions:
