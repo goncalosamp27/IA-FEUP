@@ -7,6 +7,7 @@ from jelly import Jelly
 pygame.init()
 SCREEN = pygame.display.set_mode((1280, 720))
 
+
 BG = pygame.image.load("assets/Background7.png") 
 
 def get_font(size):
@@ -28,14 +29,28 @@ def start_game(level, difficulty):
         PLAY_BACK.update(SCREEN)
 
         game_state.draw_board(SCREEN)
+        game_state.update_scheduled_actions()
 
-        if not game_state.is_board_normalized(): print("Not Normalizado")
+
+        if not game_state.is_board_normalized() and not game_state.scheduled_actions:
+            game_state.schedule_board_normalization_sequence()
+            print("Not Normalizado")
 
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 pygame.quit()
                 sys.exit()
+
+            if event.type == pygame.USEREVENT:
+                if event.result == "win":
+                    print("Returning to menu after win")
+                    return
+                elif event.result == "lose":
+                    print("Returning to menu after loss")
+                    return
             if event.type == pygame.MOUSEBUTTONDOWN:
+                if game_state.scheduled_actions:
+                    continue  # ignorar inputs até finalizar açoes (isto é banger)
                 if PLAY_BACK.checkForInput(PLAY_MOUSE_POS):
                     return  # Go back to the menu (you can modify this to call main_menu() in menu.py)
                 # Check if a playable jelly is selected
@@ -57,14 +72,6 @@ def start_game(level, difficulty):
                                     game_state.selected_jelly = None
 
                                     print("Normalizado")
-
-                                    if game_state.check_game_over():
-                                        print("Game Over! You lost!")
-                                        return  # End the game
-                                    
-                                    elif game_state.check_game_win():
-                                        print("You won!")
-                                        return
                                     break
 
         pygame.display.update()
