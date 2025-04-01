@@ -26,6 +26,7 @@ class GameState:
         self.randomize_jellies()
         self.generate_playable_jellies()  # Ensure playable jellies are generated
         self.selected_jelly = None
+        self.scheduled_actions = []
 
     def load_board(self, level_file):
         with open(level_file, 'r') as file:
@@ -252,51 +253,138 @@ class GameState:
                 if bottom_jelly and jelly.br == bottom_jelly.tr:
                     return False
         return True
-
-    def check_collisions_and_explode(self):        
-        explosions = []  # Lista para armazenar os cantos que devem explodir
+    
+    def normalize_board(self):
+        to_destroy = set()
 
         for y in range(len(self.board)):
             for x in range(len(self.board[y])):
-                if not isinstance(self.board[y][x], Jelly):  # Se não for uma Jelly, ignora
+                if not isinstance(self.board[y][x], Jelly):
                     continue
 
                 jelly = self.board[y][x]
 
-                # Verificar colisão com a Jelly abaixo (y+1) se existir
-                if y + 1 < len(self.board) and isinstance(self.board[y + 1][x], Jelly):
-                    bottom_jelly = self.board[y + 1][x]
-                    if jelly.bl == bottom_jelly.tl:
-                        explosions.append((jelly, "bl"))
-                        explosions.append((bottom_jelly, "tl"))
-                    if jelly.br == bottom_jelly.tr:
-                        explosions.append((jelly, "br"))
-                        explosions.append((bottom_jelly, "tr"))
+                def get_jelly(nx, ny):
+                    if 0 <= ny < len(self.board) and 0 <= nx < len(self.board[ny]):
+                        neighbor = self.board[ny][nx]
+                        if isinstance(neighbor, Jelly):
+                            return neighbor
+                    return None
 
-                # Verificar colisão com a Jelly à direita (x+1) se existir
-                if x + 1 < len(self.board[y]) and isinstance(self.board[y][x + 1], Jelly):
-                    right_jelly = self.board[y][x + 1]
-                    if jelly.tr == right_jelly.tl:
-                        explosions.append((jelly, "tr"))
-                        explosions.append((right_jelly, "tl"))
-                    if jelly.br == right_jelly.bl:
-                        explosions.append((jelly, "br"))
-                        explosions.append((right_jelly, "bl"))
+                directions = [
+                    ('tl', -1,  0, 'tr'),  # left
+                    ('tl',  0, -1, 'bl'),  # top
+                    ('tr',  1,  0, 'tl'),  # right
+                    ('tr',  0, -1, 'br'),  # top
+                    ('bl', -1,  0, 'br'),  # left
+                    ('bl',  0,  1, 'tl'),  # bottom
+                    ('br',  1,  0, 'bl'),  # right
+                    ('br',  0,  1, 'tr'),  # bottom
+                ]
 
-                # Verificar colisão com Jelly na diagonal (inferior direita) se existir
-                if y + 1 < len(self.board) and x + 1 < len(self.board[y]) and isinstance(self.board[y + 1][x + 1], Jelly):
-                    diagonal_jelly = self.board[y + 1][x + 1]
-                    if jelly.br == diagonal_jelly.tl:
-                        explosions.append((jelly, "br"))
-                        explosions.append((diagonal_jelly, "tl"))
+                for own_corner, dx, dy, neighbor_corner in directions:
+                    neighbor = get_jelly(x + dx, y + dy)
 
-        # Se houver pelo menos 3 explosões da mesma cor, confirmar que explodem todas
-        if len(explosions) >= 3:
-            for jelly_obj, corner in explosions:
-                setattr(jelly_obj, corner, None)  # Define o canto como None
+                    if neighbor:
+                        own_color = getattr(jelly, own_corner)
+                        neighbor_color = getattr(neighbor, neighbor_corner)
 
-        # Agora reconstruímos todas as Jellies afetadas
+                        if own_color is not None and own_color == neighbor_color:
+                            to_destroy.add((jelly, own_corner))
+                            to_destroy.add((neighbor, neighbor_corner))
+
+        # Agora: expansão apenas dentro da mesma jelly por adjacência (não diagonal)
+        def expand_inside_jelly(jelly, start_corner):
+            visited = set()
+            stack = [start_corner]
+            color = getattr(jelly, start_corner)
+
+            internal_adjacents = {
+                'tl': ['tr', 'bl'],
+                'tr': ['tl', 'br'],
+                'bl': ['tl', 'br'],
+                'br': ['tr', 'bl'],
+            }
+
+            while stack:
+                current = stack.pop()
+                if current in visited:
+                    continue
+                visited.add(current)
+
+                for neighbor in internal_adjacents[current]:
+                    if getattr(jelly, neighbor) == color and (jelly, neighbor) not in visited:
+                        stack.append(neighbor)
+
+            return {(jelly, corner) for corner in visited}
+
+        # Aplicar expansão em todos os candidatos iniciais
+        expanded = set()
+        for jelly, corner in to_destroy:
+            expanded |= expand_inside_jelly(jelly, corner)
+
+        to_destroy.update(expanded)
+
+        from collections import Counter
+
+        # Conta cores antes de destruir
+        destroyed_colors = Counter()
+        for jelly, corner in to_destroy:
+            color = getattr(jelly, corner)
+            if color:
+                destroyed_colors[color] += 1
+
+        # Agora sim, destrói
+        for jelly, corner in to_destroy:
+            setattr(jelly, corner, None)
+
+        # Atualiza objetivo
+        color1 = self.objective.get("color1")
+        color2 = self.objective.get("color2")
+        color3 = self.objective.get("color3")
+
+        self.decrement_objective(
+            destroyed_colors.get(color1, 0),
+            destroyed_colors.get(color2, 0),
+            destroyed_colors.get(color3, 0)
+        )
+
+    def reconstruct_all(self):
         for y in range(len(self.board)):
             for x in range(len(self.board[y])):
-                if isinstance(self.board[y][x], Jelly):
-                    self.board[y][x].reconstruct()
+                jelly = self.board[y][x]
+                if isinstance(jelly, Jelly):
+                    corners = [jelly.tl, jelly.tr, jelly.bl, jelly.br]
+
+                    if all(c is None for c in corners):
+                        self.board[y][x] = ' '  
+                    elif any(c is None for c in corners):
+                        jelly.reconstruct()  
+
+    def update_scheduled_actions(self):
+        now = pygame.time.get_ticks()
+        remaining = []
+
+        for exec_time, action in self.scheduled_actions:
+            if now >= exec_time:
+                action()
+            else:
+                remaining.append((exec_time, action))
+
+        self.scheduled_actions = remaining
+
+        if not self.scheduled_actions and self.check_game_win():
+            print("You won!")
+            pygame.time.set_timer(pygame.USEREVENT, 1000)
+
+
+    def schedule_board_normalization_sequence(self):
+        now = pygame.time.get_ticks()
+        delay = 250  
+
+        self.scheduled_actions = []  
+
+        self.scheduled_actions.append((now + delay * 1, lambda: print("Not Normalizado")))
+        self.scheduled_actions.append((now + delay * 2, self.normalize_board))
+        self.scheduled_actions.append((now + delay * 3, self.reconstruct_all))
+
