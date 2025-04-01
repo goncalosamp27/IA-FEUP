@@ -128,16 +128,6 @@ class GameState:
                 "count3": 7
             }
 
-    def display_board(self):
-        for row in self.board:
-            display_row = []
-            for cell in row:
-                if isinstance(cell, Jelly):
-                    display_row.append('J')  # Represent jelly with 'J'
-                else:
-                    display_row.append(cell)
-            print(' '.join(display_row))
-
     def draw_board(self, screen):
         board_width = len(self.board[0]) * Jelly.SIZE
         board_height = len(self.board) * Jelly.SIZE

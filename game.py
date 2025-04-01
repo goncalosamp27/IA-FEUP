@@ -1,5 +1,6 @@
 import pygame
 import sys
+import menu
 from button import Button 
 from gamestate import GameState
 from jelly import Jelly
@@ -36,11 +37,11 @@ def win_screen():
                 sys.exit()
             if event.type == pygame.MOUSEBUTTONDOWN:
                 if REPLAY_BUTTON.checkForInput(pygame.mouse.get_pos()):
-                    CLICK_SOUND.play()
-                    play()  
+                    menu.CLICK_SOUND.play()
+                    menu.play()  
                 if MENU_BUTTON.checkForInput(pygame.mouse.get_pos()):
-                    CLICK_SOUND.play()
-                    main_menu()  
+                    menu.CLICK_SOUND.play()
+                    menu.main_menu()  
 
         pygame.display.update()
         
@@ -68,11 +69,11 @@ def game_over_screen():
                 sys.exit()
             if event.type == pygame.MOUSEBUTTONDOWN:
                 if REPLAY_BUTTON.checkForInput(pygame.mouse.get_pos()):
-                    CLICK_SOUND.play()
-                    play()  
+                    menu.CLICK_SOUND.play()
+                    menu.play()  
                 if MENU_BUTTON.checkForInput(pygame.mouse.get_pos()):
-                    CLICK_SOUND.play()
-                    main_menu() 
+                    menu.CLICK_SOUND.play()
+                    menu.main_menu() 
 
         pygame.display.update()
 
@@ -96,6 +97,15 @@ def start_game(level, difficulty):
         game_state.update_scheduled_actions()
 
 
+        if game_state.check_game_win():
+            print("Returning to menu after win")
+            win_screen()
+            return
+        elif game_state.check_game_over():
+            print("Returning to menu after loss")
+            game_over_screen()
+            return
+
         if not game_state.is_board_normalized() and not game_state.scheduled_actions:
             game_state.schedule_board_normalization_sequence()
             print("Not Normalizado")
@@ -105,15 +115,6 @@ def start_game(level, difficulty):
                 pygame.quit()
                 sys.exit()
 
-            if event.type == pygame.USEREVENT:
-                if event.result == "win":
-                    print("Returning to menu after win")
-                    win_screen()
-                    return
-                elif event.result == "lose":
-                    print("Returning to menu after loss")
-                    game_over_screen()
-                    return
             if event.type == pygame.MOUSEBUTTONDOWN:
                 if game_state.scheduled_actions:
                     continue  # ignorar inputs até finalizar açoes (isto é banger)
