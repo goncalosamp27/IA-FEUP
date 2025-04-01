@@ -22,7 +22,7 @@ def start_game(level, difficulty):
         SCREEN.blit(BG, (0, 0))
 
         PLAY_BACK = Button(image=None, pos=(640, 680), 
-                           text_input="BACK", font=get_font(30), base_color="White", hovering_color="Green")
+                           text_input="Back", font=get_font(30), base_color="White", hovering_color="#99afd7")
 
         PLAY_BACK.changeColor(PLAY_MOUSE_POS)
         PLAY_BACK.update(SCREEN)

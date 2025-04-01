@@ -2,7 +2,22 @@ import random
 import pygame
 
 class Jelly:
-    COLORS = ['#be2528', '#2536be', '#7525be', '#3eb34b', '#64bfbe', '#e2d614'] # red, blue, purple, green, cyan, yellow
+    #COLORS = ['#be2528', '#2536be', '#7525be', '#3eb34b', '#64bfbe', '#e2d614'] # red, blue, purple, green, cyan, yellow
+    
+    #COLORS = ['#f7b7b7',  # Soft pastel red
+    #      '#a2c7e0',  # Soft pastel blue
+    #      '#d1a1e7',  # Soft pastel purple
+     #     '#b6e4b1',  # Soft pastel green
+     #     '#a4d9d3',  # Soft pastel cyan
+     #     '#f9f2a1']  # Soft pastel yellow
+     
+    COLORS = ['#e08b8b',  # Darker pastel red
+          '#5b97c2',  # Darker pastel blue
+          '#9a64c0',  # Darker pastel purple
+          '#7fc57b',  # Darker pastel green
+          '#5fb5ae',  # Darker pastel cyan
+          '#e0c750']  # Darker pastel yellow
+
     SIZE = 80
 
     def __init__(self, posX, posY, tl, tr, bl, br):

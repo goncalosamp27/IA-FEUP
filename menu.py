@@ -19,7 +19,7 @@ def play():
         SCREEN.blit(BG, (0, 0))
         OPTIONS_MOUSE_POS = pygame.mouse.get_pos()
 
-        OPTIONS_TEXT = get_font(45).render("Choose Level and Difficulty", True, "Cyan")
+        OPTIONS_TEXT = get_font(45).render("Choose Level and Difficulty", True, "#99afd7")
         OPTIONS_RECT = OPTIONS_TEXT.get_rect(center=(640, 100))
         SCREEN.blit(OPTIONS_TEXT, OPTIONS_RECT)
 
@@ -32,19 +32,19 @@ def play():
         SCREEN.blit(DIFFICULTY_TEXT, DIFFICULTY_RECT)
 
         LEVEL_UP_BUTTON = Button(image=None, pos=(800, 200), 
-                                 text_input=">", font=get_font(30), base_color="White", hovering_color="Green")
+                                 text_input=">", font=get_font(30), base_color="#6888be", hovering_color="White")
         LEVEL_DOWN_BUTTON = Button(image=None, pos=(480, 200), 
-                                   text_input="<", font=get_font(30), base_color="White", hovering_color="Green")
+                                   text_input="<", font=get_font(30), base_color="#6888be", hovering_color="White")
 
         DIFFICULTY_UP_BUTTON = Button(image=None, pos=(940, 300), 
-                                      text_input=">", font=get_font(30), base_color="White", hovering_color="Green")
+                                      text_input=">", font=get_font(30), base_color="#6888be", hovering_color="White")
         DIFFICULTY_DOWN_BUTTON = Button(image=None, pos=(340, 300), 
-                                        text_input="<", font=get_font(30), base_color="White", hovering_color="Green")
+                                        text_input="<", font=get_font(30), base_color="#6888be", hovering_color="White")
 
         START_BUTTON = Button(image=None, pos=(640, 450), 
-                              text_input="START", font=get_font(50), base_color="White", hovering_color="Green")
-        BACK_BUTTON = Button(image=None, pos=(640, 550), 
-                             text_input="BACK", font=get_font(30), base_color="White", hovering_color="Green")
+                              text_input="START", font=get_font(50), base_color="#6888be", hovering_color="White")
+        BACK_BUTTON = Button(image=None, pos=(640, 640), 
+                             text_input="Back", font=get_font(40), base_color="#99afd7", hovering_color="White")
 
         LEVEL_UP_BUTTON.changeColor(OPTIONS_MOUSE_POS)
         LEVEL_UP_BUTTON.update(SCREEN)
@@ -111,48 +111,51 @@ def choose_ai():
 
         MENU_MOUSE_POS = pygame.mouse.get_pos()
 
-        MENU_TEXT = get_font(100).render("COMPUTER", True, "#38055D")
+        MENU_TEXT = get_font(100).render("COMPUTER", True, "#ccdbee")
         MENU_RECT = MENU_TEXT.get_rect(center=(640, 100))
 
-        AI_1_BUTTON = Button(image=None, pos=(640, 250), 
-                            text_input="AI 1", font=get_font(75), base_color="#d7fcd4", hovering_color="White")
-        AI_2_BUTTON = Button(image=None, pos=(640, 350), 
-                            text_input="AI 2", font=get_font(75), base_color="#d7fcd4", hovering_color="White")
-        AI_3_BUTTON = Button(image=None, pos=(640, 450), 
-                            text_input="AI 3", font=get_font(75), base_color="#d7fcd4", hovering_color="White")
-        AI_4_BUTTON = Button(image=None, pos=(640, 550), 
-                            text_input="AI 4", font=get_font(75), base_color="#d7fcd4", hovering_color="White")
+
+        AI_1_BUTTON = Button(image=None, pos=(640, 240), 
+                            text_input="AI 1", font=get_font(50), base_color="#99afd7", hovering_color="White")
+        AI_2_BUTTON = Button(image=None, pos=(640, 340), 
+                            text_input="AI 2", font=get_font(50), base_color="#99afd7", hovering_color="White")
+        AI_3_BUTTON = Button(image=None, pos=(640, 440), 
+                            text_input="AI 3", font=get_font(50), base_color="#99afd7", hovering_color="White")
+        AI_4_BUTTON = Button(image=None, pos=(640, 540), 
+                            text_input="AI 4", font=get_font(50), base_color="#99afd7", hovering_color="White")
         BACK_BUTTON = Button(image=None, pos=(640, 650), 
-                            text_input="Back", font=get_font(75), base_color="#a87bc7", hovering_color="White")
+                            text_input="Back", font=get_font(40), base_color="#99afd7", hovering_color="White")
 
         SCREEN.blit(MENU_TEXT, MENU_RECT)
+        
+        
 
         for button in [AI_1_BUTTON, AI_2_BUTTON, AI_3_BUTTON, AI_4_BUTTON, BACK_BUTTON]:
             button.changeColor(MENU_MOUSE_POS)
             button.update(SCREEN)
-            for event in pygame.event.get():
-                if event.type == pygame.QUIT:
-                    pygame.quit()
-                    sys.exit()
-                if event.type == pygame.MOUSEBUTTONDOWN:
-                    if AI_1_BUTTON.checkForInput(MENU_MOUSE_POS):
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                pygame.quit()
+                sys.exit()
+            if event.type == pygame.MOUSEBUTTONDOWN:
+                if AI_1_BUTTON.checkForInput(MENU_MOUSE_POS):
                         # Handle easy AI selection
-                        print("AI1 selected")  # You can start the game with easy AI
-                        play()
-                    if AI_2_BUTTON.checkForInput(MENU_MOUSE_POS):
+                    print("AI1 selected")  # You can start the game with easy AI
+                    play()
+                if AI_2_BUTTON.checkForInput(MENU_MOUSE_POS):
                         # Handle medium AI selection
-                        print("AI2 selected")  # You can start the game with medium AI
-                        play()
-                    if AI_3_BUTTON.checkForInput(MENU_MOUSE_POS):
+                    print("AI2 selected")  # You can start the game with medium AI
+                    play()
+                if AI_3_BUTTON.checkForInput(MENU_MOUSE_POS):
                         # Handle hard AI selection
-                        print("AI3 selected")  # You can start the game with hard AI
-                        play()
-                    if AI_4_BUTTON.checkForInput(MENU_MOUSE_POS):
+                    print("AI3 selected")  # You can start the game with hard AI
+                    play()
+                if AI_4_BUTTON.checkForInput(MENU_MOUSE_POS):
                         # Handle hard AI selection
-                        print("AI4 selected")  # You can start the game with hard AI
-                        play()
-                    if BACK_BUTTON.checkForInput(MENU_MOUSE_POS):
-                        main_menu()  # Go back to the main menu
+                    print("AI4 selected")  # You can start the game with hard AI
+                    play()
+                if BACK_BUTTON.checkForInput(MENU_MOUSE_POS):
+                    main_menu()  # Go back to the main menu
 
             pygame.display.update()
 
@@ -191,7 +194,8 @@ def how_to_play():
 
         # Button for Back: Allows going back to the main menu
         BACK_BUTTON = Button(image=None, pos=(640, 600), 
-                             text_input="BACK", font=get_font(75), base_color="#c98895", hovering_color="White")
+                             text_input="Back", font=get_font(50), base_color="#99afd7", hovering_color="White")
+        
         BACK_BUTTON.changeColor(OPTIONS_MOUSE_POS)
         BACK_BUTTON.update(SCREEN)
 
@@ -213,17 +217,17 @@ def main_menu():
 
         MENU_MOUSE_POS = pygame.mouse.get_pos()
 
-        MENU_TEXT = get_font(100).render("JELLY FIELD", True, "#ccdbee")
+        MENU_TEXT = get_font(100).render("JELLY FIELD", True, "#6888be")
         MENU_RECT = MENU_TEXT.get_rect(center=(640, 100))
 
         PLAY_BUTTON = Button(image=None, pos=(640, 250), 
-                            text_input="PLAY", font=get_font(75), base_color="#99afd7", hovering_color="White")
+                            text_input="PLAY", font=get_font(60), base_color="#ccdbee", hovering_color="White")
         OPTIONS_BUTTON = Button(image=None, pos=(640, 350), 
-                            text_input="COMPUTER", font=get_font(75), base_color="#99afd7", hovering_color="White")
+                            text_input="COMPUTER", font=get_font(60), base_color="#ccdbee", hovering_color="White")
         HTP_BUTTON = Button(image=None, pos=(640, 450), 
-                            text_input="How To Play", font=get_font(75), base_color="#99afd7", hovering_color="White")
-        QUIT_BUTTON = Button(image=None, pos=(640, 650), 
-                            text_input="QUIT", font=get_font(75), base_color="#6888be", hovering_color="White")
+                            text_input="HOW TO PLAY", font=get_font(60), base_color="#ccdbee", hovering_color="White")
+        QUIT_BUTTON = Button(image=None, pos=(640, 640), 
+                            text_input="EXIT", font=get_font(60), base_color="#99afd7", hovering_color="White")
 
         SCREEN.blit(MENU_TEXT, MENU_RECT)
 
