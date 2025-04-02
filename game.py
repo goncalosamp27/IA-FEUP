@@ -96,19 +96,18 @@ def start_game(level, difficulty):
         game_state.draw_board(SCREEN)
         game_state.update_scheduled_actions()
 
-
-        if game_state.check_game_win():
-            print("Returning to menu after win")
-            win_screen()
-            return
-        elif game_state.check_game_over():
-            print("Returning to menu after loss")
-            game_over_screen()
-            return
-
         if not game_state.is_board_normalized() and not game_state.scheduled_actions:
             game_state.schedule_board_normalization_sequence()
             print("Not Normalizado")
+
+        if game_state.is_board_normalized() and game_state.check_game_win():
+            print("Returning to menu after win")
+            win_screen()
+            return
+        elif game_state.is_board_normalized() and game_state.check_game_over():
+            print("Returning to menu after loss")
+            game_over_screen()
+            return
 
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
