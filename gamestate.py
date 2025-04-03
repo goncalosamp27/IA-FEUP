@@ -1,6 +1,8 @@
 import random
 import pygame
 from jelly import Jelly
+import copy
+
 
 class GameState:
     #COLORS = ['#be2528', '#2536be', '#7525be', '#3eb34b', '#64bfbe', '#e2d614']  # red, blue, purple, green, cyan, yellow
@@ -379,7 +381,7 @@ class GameState:
         self.scheduled_actions.append((now + delay * 3, self.reconstruct_all))
 
     def make_move(self, x, y, jelly):
-        if self.board[y][x] == ' ':  # Ensure the slot is empty
+        if self.board[y][x] == ' ':  
             self.board[y][x] = jelly
             self.replace_played_jelly(jelly)
             self.selected_jelly = None
@@ -388,4 +390,52 @@ class GameState:
         else:
             print(f"Invalid move at ({x}, {y})")
             return False
+        
+    def simulate_move(self, x, y, jelly):
+        if self.board[y][x] != ' ':  
+            return None 
+
+        simulated_state = copy.deepcopy(self)
+
+        simulated_state.board[y][x] = jelly
+        simulated_state.replace_played_jelly(jelly)
+        simulated_state.update_scheduled_actions()
+        normalization_triggered = False
+        freed_cells = 0
+
+        if not simulated_state.is_board_normalized() and not simulated_state.scheduled_actions:
+            normalization_triggered = True
+            pre_normalization_empty_cells = sum(row.count(' ') for row in simulated_state.board)
+            simulated_state.schedule_board_normalization_sequence()
+            post_normalization_empty_cells = sum(row.count(' ') for row in simulated_state.board)
+            freed_cells = post_normalization_empty_cells - pre_normalization_empty_cells
+
+        score = simulated_state.evaluate_state(normalization_triggered, freed_cells)
+
+        return score
+    
+    def evaluate_state(self, normalization_triggered=False, freed_cells=0):
+        WIN_SCORE = 1_000_000  
+        LOSS_SCORE = -1_000_000  
+        OBJECTIVE_WEIGHT = 100 
+        NORMALIZATION_WEIGHT = 50  
+        FREED_CELL_BONUS = 10  
+
+        if self.check_game_win():
+            return WIN_SCORE
+        if self.check_game_over():
+            return LOSS_SCORE
+    
+        score = 0
+
+        for i in range(1, 4):
+            count_key = f"count{i}"
+            if count_key in self.objective and self.objective[count_key] > 0:
+                score += (15 - self.objective[count_key]) * OBJECTIVE_WEIGHT
+
+        if normalization_triggered:
+            score += NORMALIZATION_WEIGHT
+            score += freed_cells * FREED_CELL_BONUS
+
+        return score
 

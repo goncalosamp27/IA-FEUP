@@ -4,7 +4,6 @@ import menu
 from button import Button 
 from gamestate import GameState
 from jelly import Jelly
-from eval import value
 
 pygame.init()
 SCREEN = pygame.display.set_mode((1280, 720))
@@ -78,6 +77,20 @@ def game_over_screen():
 
         pygame.display.update()
 
+def value(game_state):
+    best_score = float('-inf')
+    best_move = None
+
+    for y, row in enumerate(game_state.board):
+        for x, cell in enumerate(row):
+            if cell == ' ':  # Only consider empty slots
+                for jelly in game_state.playable_jellies:
+                    score = game_state.simulate_move(x, y, jelly)
+                    if score is not None and score > best_score:
+                        best_score = score
+                        best_move = (x, y, jelly)
+
+    return best_move
 
 def start_game(level, difficulty, is_ai=False):
     level_path = f'levels/level{level}.txt'
@@ -87,23 +100,19 @@ def start_game(level, difficulty, is_ai=False):
         PLAY_MOUSE_POS = pygame.mouse.get_pos()
         SCREEN.blit(BG, (0, 0))
 
-        # Draw the back button
         PLAY_BACK = Button(image=None, pos=(640, 680), 
                            text_input="Back", font=get_font(30), base_color="White", hovering_color="#99afd7")
         PLAY_BACK.changeColor(PLAY_MOUSE_POS)
         PLAY_BACK.update(SCREEN)
 
-        # Draw the board and update scheduled actions
         game_state.draw_board(SCREEN)
         game_state.update_scheduled_actions()
 
-        # Handle board normalization
         if not game_state.is_board_normalized() and not game_state.scheduled_actions:
             game_state.schedule_board_normalization_sequence()
             print("Not Normalized")
 
 
-        # Check for win or game over
         if game_state.is_board_normalized():
             if game_state.check_game_win():
                 win_screen()
@@ -112,16 +121,18 @@ def start_game(level, difficulty, is_ai=False):
                 game_over_screen()
                 return
 
-        # Handle events
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 pygame.quit()
                 sys.exit()
 
             if is_ai:  # AI Mode
+                if event.type == pygame.MOUSEBUTTONDOWN:
+                    if PLAY_BACK.checkForInput(PLAY_MOUSE_POS):
+                        return  # Go back to the menu
                 if event.type == pygame.KEYDOWN and event.key == pygame.K_RETURN:
                     if game_state.is_board_normalized() and not game_state.scheduled_actions:
-                        best_move = value(game_state)  # AI calculates the best move
+                        best_move = value(game_state)  
                         if best_move:
                             x, y, jelly = best_move
                             game_state.make_move(x, y, jelly)
