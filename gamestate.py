@@ -111,8 +111,6 @@ class GameState:
                 "count3": 7
             }
         
-    """ Drawing Functions """
-
     def get_board_offsets(self, screen):
         board_width = len(self.board[0]) * Jelly.SIZE
         board_height = len(self.board) * Jelly.SIZE
@@ -390,7 +388,6 @@ class GameState:
         self.scheduled_actions.append((now + delay * 3, self.reconstruct_all))
         
     """ Eval Functions """
-        
     def simulate_move(self, x, y, jelly):
         if self.board[y][x] != ' ':  
             return None 

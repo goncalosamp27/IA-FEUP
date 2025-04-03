@@ -1,9 +1,66 @@
 import pygame, sys
 from button import Button
-from utils import get_font, SCREEN, BG, CLICK_SOUND, draw_microphone_icon
-from game import start_game  
+from game import start_game  # Import start_game directly from game.py
 
-def play(is_ai=False):
+pygame.init()
+SCREEN = pygame.display.set_mode((1280, 720))
+pygame.display.set_caption("Jelly Field")
+
+BG = pygame.image.load("assets/Background7.png")
+
+#MUTE = pygame.image.load("assets/images/unmute.svg")
+#UNMUTE = pygame.image.load("assets/images/mute.svg")
+
+UNMUTE = pygame.image.load("assets/images/unmute2.png")
+MUTE = pygame.image.load("assets/images/mute2.png")
+
+# track sound status (on/off)
+sound_on = True
+
+#Background Music
+pygame.mixer.music.load("assets/music/background1.mp3")  
+pygame.mixer.music.set_volume(0.5)  
+pygame.mixer.music.play(-1)  
+
+#Sound Effects
+CLICK_SOUND = pygame.mixer.Sound("assets/music/1.mp3")
+CLICK_SOUND.set_volume(0.7) 
+
+
+def toggle_sound():
+    global sound_on
+    if sound_on:
+        pygame.mixer.music.pause()  # Pause music
+        print("Sound Paused")  # Debug message
+    else:
+        pygame.mixer.music.unpause()  # Unpause music
+        print("Sound Unpaused")  # Debug message
+    sound_on = not sound_on  # Toggle sound state
+
+
+def draw_microphone_icon():
+    icon_width, icon_height = 50, 50
+    icon_x, icon_y = 10, SCREEN.get_height() - icon_height - 10  # bottom-left corner
+
+    resized_unmute = pygame.transform.scale(UNMUTE, (icon_width, icon_height))
+    resized_mute = pygame.transform.scale(MUTE, (icon_width, icon_height))
+
+    if sound_on:
+        SCREEN.blit(resized_unmute, (icon_x, icon_y))
+    else:
+        SCREEN.blit(resized_mute, (icon_x, icon_y))
+
+    mouse_x, mouse_y = pygame.mouse.get_pos()
+    if pygame.mouse.get_pressed()[0]: 
+        if icon_x <= mouse_x <= icon_x + icon_width and icon_y <= mouse_y <= icon_y + icon_height:
+            toggle_sound() 
+            pygame.time.delay(200)
+        
+   
+def get_font(size):
+    return pygame.font.Font("assets/font.ttf", size)
+
+def play(is_ai = 0):
     selected_level = 1
     selected_difficulty = 'easy'
 
@@ -76,7 +133,7 @@ def play(is_ai=False):
                     main_menu()
 
         pygame.display.update()
-    
+
 def choose_ai():
     while True:
         SCREEN.blit(BG, (0, 0))
@@ -86,21 +143,12 @@ def choose_ai():
         MENU_TEXT = get_font(100).render("COMPUTER", True, "#ccdbee")
         MENU_RECT = MENU_TEXT.get_rect(center=(640, 100))
 
-
-        AI_1_BUTTON = Button(image=None, pos=(640, 240), 
-                            text_input="AI 1", font=get_font(50), base_color="#99afd7", hovering_color="White")
-        AI_2_BUTTON = Button(image=None, pos=(640, 340), 
-                            text_input="AI 2", font=get_font(50), base_color="#99afd7", hovering_color="White")
-        AI_3_BUTTON = Button(image=None, pos=(640, 440), 
-                            text_input="AI 3", font=get_font(50), base_color="#99afd7", hovering_color="White")
-        AI_4_BUTTON = Button(image=None, pos=(640, 540), 
-                            text_input="AI 4", font=get_font(50), base_color="#99afd7", hovering_color="White")
-        BACK_BUTTON = Button(image=None, pos=(640, 650), 
-                            text_input="Back", font=get_font(40), base_color="#99afd7", hovering_color="White")
-
+        AI_1_BUTTON = Button(image=None, pos=(640, 240), text_input="Greedy", font=get_font(50), base_color="#99afd7", hovering_color="White")
+        AI_2_BUTTON = Button(image=None, pos=(640, 340), text_input="DFS", font=get_font(50), base_color="#99afd7", hovering_color="White")
+        AI_3_BUTTON = Button(image=None, pos=(640, 440), text_input="BFS", font=get_font(50), base_color="#99afd7", hovering_color="White")
+        AI_4_BUTTON = Button(image=None, pos=(640, 540), text_input="A*", font=get_font(50), base_color="#99afd7", hovering_color="White")
+        BACK_BUTTON = Button(image=None, pos=(640, 650), text_input="Back", font=get_font(40), base_color="#99afd7", hovering_color="White")
         SCREEN.blit(MENU_TEXT, MENU_RECT)
-        
-        
 
         for button in [AI_1_BUTTON, AI_2_BUTTON, AI_3_BUTTON, AI_4_BUTTON, BACK_BUTTON]:
             button.changeColor(MENU_MOUSE_POS)
@@ -114,22 +162,22 @@ def choose_ai():
                     CLICK_SOUND.play()
                         # Handle easy AI selection
                     print("AI1 selected")  # You can start the game with easy AI
-                    play(is_ai=True)
+                    play(1)
                 if AI_2_BUTTON.checkForInput(MENU_MOUSE_POS):
                     CLICK_SOUND.play()
                         # Handle medium AI selection
                     print("AI2 selected")  # You can start the game with medium AI
-                    play(is_ai=True)
+                    play(2)
                 if AI_3_BUTTON.checkForInput(MENU_MOUSE_POS):
                     CLICK_SOUND.play()
                         # Handle hard AI selection
                     print("AI3 selected")  # You can start the game with hard AI
-                    play(is_ai=True)
+                    play(3)
                 if AI_4_BUTTON.checkForInput(MENU_MOUSE_POS):
                     CLICK_SOUND.play()
                         # Handle hard AI selection
                     print("AI4 selected")  # You can start the game with hard AI
-                    play(is_ai=True)
+                    play(4)
                 if BACK_BUTTON.checkForInput(MENU_MOUSE_POS):
                     CLICK_SOUND.play()
                     main_menu()  # Go back to the main menu
@@ -149,23 +197,23 @@ def how_to_play():
         SCREEN.blit(TITLE_TEXT, TITLE_RECT)
 
         # Instruction Text: Explanation of Jelly Field Game
-        INSTRUCTION_TEXT = get_font(25).render("1. The game consists of --------.", True, "#FFFFFF")
+        INSTRUCTION_TEXT = get_font(25).render("Jelly field is about merging Jellies!", True, "#FFFFFF")
         INSTRUCTION_TEXT_RECT = INSTRUCTION_TEXT.get_rect(center=(640, 200))
         SCREEN.blit(INSTRUCTION_TEXT, INSTRUCTION_TEXT_RECT)
 
-        INSTRUCTION_TEXT2 = get_font(25).render("2. Fill the board -------", True, "#FFFFFF")
+        INSTRUCTION_TEXT2 = get_font(20).render("Merge Jellies of the same color to make them explode!", True, "#FFFFFF")
         INSTRUCTION_TEXT_RECT2 = INSTRUCTION_TEXT2.get_rect(center=(640, 270))
         SCREEN.blit(INSTRUCTION_TEXT2, INSTRUCTION_TEXT_RECT2)
 
-        INSTRUCTION_TEXT3 = get_font(25).render("3. --------", True, "#FFFFFF")
+        INSTRUCTION_TEXT3 = get_font(20).render("You must explode Jellies of the colors in the objective", True, "#FFFFFF")
         INSTRUCTION_TEXT_RECT3 = INSTRUCTION_TEXT3.get_rect(center=(640, 340))
         SCREEN.blit(INSTRUCTION_TEXT3, INSTRUCTION_TEXT_RECT3)
 
-        INSTRUCTION_TEXT4 = get_font(25).render("4. -------", True, "#FFFFFF")
+        INSTRUCTION_TEXT4 = get_font(20).render("If the whole map is filled with Jellies, you lose :(", True, "#FFFFFF")
         INSTRUCTION_TEXT_RECT4 = INSTRUCTION_TEXT4.get_rect(center=(640, 410))
         SCREEN.blit(INSTRUCTION_TEXT4, INSTRUCTION_TEXT_RECT4)
 
-        INSTRUCTION_TEXT5 = get_font(25).render("5. ---------", True, "#FFFFFF")
+        INSTRUCTION_TEXT5 = get_font(25).render("Have fun :D", True, "#FFFFFF")
         INSTRUCTION_TEXT_RECT5 = INSTRUCTION_TEXT5.get_rect(center=(640, 480))
         SCREEN.blit(INSTRUCTION_TEXT5, INSTRUCTION_TEXT_RECT5)
 
@@ -189,7 +237,8 @@ def how_to_play():
         # Update the display
         pygame.display.update()
 
-def win_screen():
+
+def win_screen(is_ai = 0):
     while True:
         SCREEN.blit(BG, (0, 0)) 
 
@@ -213,7 +262,7 @@ def win_screen():
             if event.type == pygame.MOUSEBUTTONDOWN:
                 if REPLAY_BUTTON.checkForInput(pygame.mouse.get_pos()):
                     CLICK_SOUND.play()
-                    play()  
+                    play(is_ai)  
                 if MENU_BUTTON.checkForInput(pygame.mouse.get_pos()):
                     CLICK_SOUND.play()
                     main_menu()  
@@ -221,7 +270,7 @@ def win_screen():
         pygame.display.update()
         
         
-def game_over_screen():
+def game_over_screen(is_ai = 0):
     while True:
         SCREEN.blit(BG, (0, 0))  
 
@@ -245,7 +294,7 @@ def game_over_screen():
             if event.type == pygame.MOUSEBUTTONDOWN:
                 if REPLAY_BUTTON.checkForInput(pygame.mouse.get_pos()):
                     CLICK_SOUND.play()
-                    play()  
+                    play(is_ai)  
                 if MENU_BUTTON.checkForInput(pygame.mouse.get_pos()):
                     CLICK_SOUND.play()
                     main_menu() 
@@ -262,12 +311,6 @@ def main_menu():
         MENU_TEXT = get_font(100).render("JELLY FIELD", True, "#6888be")
         MENU_RECT = MENU_TEXT.get_rect(center=(640, 100))
 
-#just for testing purposes
-        WIN_TEST_BUTTON = Button(image=None, pos=(640, 150), 
-                            text_input="TEST WIN", font=get_font(15), base_color="#ccdbee", hovering_color="White")
-        LOSE_TEST_BUTTON = Button(image=None, pos=(640, 180), 
-                            text_input="TEST LOSE", font=get_font(15), base_color="#ccdbee", hovering_color="White")
-
         PLAY_BUTTON = Button(image=None, pos=(640, 250), 
                             text_input="PLAY", font=get_font(60), base_color="#ccdbee", hovering_color="White")
         OPTIONS_BUTTON = Button(image=None, pos=(640, 350), 
@@ -281,10 +324,7 @@ def main_menu():
         
         draw_microphone_icon()
 
-        #for button in [PLAY_BUTTON, OPTIONS_BUTTON, HTP_BUTTON, QUIT_BUTTON]:
-        #    button.changeColor(MENU_MOUSE_POS)
-        #    button.update(SCREEN)
-        for button in [WIN_TEST_BUTTON, LOSE_TEST_BUTTON, PLAY_BUTTON, OPTIONS_BUTTON, HTP_BUTTON, QUIT_BUTTON]:
+        for button in [PLAY_BUTTON, OPTIONS_BUTTON, HTP_BUTTON, QUIT_BUTTON]:
             button.changeColor(MENU_MOUSE_POS)
             button.update(SCREEN)
         
@@ -293,14 +333,6 @@ def main_menu():
                 pygame.quit()
                 sys.exit()
             if event.type == pygame.MOUSEBUTTONDOWN:
-                #testing purposes
-                if WIN_TEST_BUTTON.checkForInput(MENU_MOUSE_POS):
-                    CLICK_SOUND.play()
-                    win_screen()  # Show win screen
-                if LOSE_TEST_BUTTON.checkForInput(MENU_MOUSE_POS):
-                    CLICK_SOUND.play()
-                    game_over_screen()  # Show game over screen
-                    
                 if PLAY_BUTTON.checkForInput(MENU_MOUSE_POS):
                     CLICK_SOUND.play()
                     play()  # Trigger the game menu
