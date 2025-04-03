@@ -1,64 +1,7 @@
 import pygame, sys
 from button import Button
-from game import start_game  # Import start_game directly from game.py
-
-pygame.init()
-SCREEN = pygame.display.set_mode((1280, 720))
-pygame.display.set_caption("Jelly Field")
-
-BG = pygame.image.load("assets/Background7.png")
-
-#MUTE = pygame.image.load("assets/images/unmute.svg")
-#UNMUTE = pygame.image.load("assets/images/mute.svg")
-
-UNMUTE = pygame.image.load("assets/images/unmute2.png")
-MUTE = pygame.image.load("assets/images/mute2.png")
-
-# track sound status (on/off)
-sound_on = True
-
-#Background Music
-pygame.mixer.music.load("assets/music/background1.mp3")  
-pygame.mixer.music.set_volume(0.5)  
-pygame.mixer.music.play(-1)  
-
-#Sound Effects
-CLICK_SOUND = pygame.mixer.Sound("assets/music/1.mp3")
-CLICK_SOUND.set_volume(0.7) 
-
-
-def toggle_sound():
-    global sound_on
-    if sound_on:
-        pygame.mixer.music.pause()  # Pause music
-        print("Sound Paused")  # Debug message
-    else:
-        pygame.mixer.music.unpause()  # Unpause music
-        print("Sound Unpaused")  # Debug message
-    sound_on = not sound_on  # Toggle sound state
-
-
-def draw_microphone_icon():
-    icon_width, icon_height = 50, 50
-    icon_x, icon_y = 10, SCREEN.get_height() - icon_height - 10  # bottom-left corner
-
-    resized_unmute = pygame.transform.scale(UNMUTE, (icon_width, icon_height))
-    resized_mute = pygame.transform.scale(MUTE, (icon_width, icon_height))
-
-    if sound_on:
-        SCREEN.blit(resized_unmute, (icon_x, icon_y))
-    else:
-        SCREEN.blit(resized_mute, (icon_x, icon_y))
-
-    mouse_x, mouse_y = pygame.mouse.get_pos()
-    if pygame.mouse.get_pressed()[0]: 
-        if icon_x <= mouse_x <= icon_x + icon_width and icon_y <= mouse_y <= icon_y + icon_height:
-            toggle_sound() 
-            pygame.time.delay(200)
-        
-   
-def get_font(size):
-    return pygame.font.Font("assets/font.ttf", size)
+from utils import get_font, SCREEN, BG, CLICK_SOUND, draw_microphone_icon
+from game import start_game  
 
 def play(is_ai=False):
     selected_level = 1
@@ -133,33 +76,7 @@ def play(is_ai=False):
                     main_menu()
 
         pygame.display.update()
-
-"""
-def options():
-    while True:
-        SCREEN.blit(BG, (0, 0))
-        OPTIONS_MOUSE_POS = pygame.mouse.get_pos()
-
-        OPTIONS_TEXT = get_font(45).render("This is the OPTIONS screen.", True, "Black")
-        OPTIONS_RECT = OPTIONS_TEXT.get_rect(center=(640, 260))
-        SCREEN.blit(OPTIONS_TEXT, OPTIONS_RECT)
-
-        OPTIONS_BACK = Button(image=None, pos=(640, 460), 
-                            text_input="BACK", font=get_font(75), base_color="Black", hovering_color="Green")
-
-        OPTIONS_BACK.changeColor(OPTIONS_MOUSE_POS)
-        OPTIONS_BACK.update(SCREEN)
-
-        for event in pygame.event.get():
-            if event.type == pygame.QUIT:
-                pygame.quit()
-                sys.exit()
-            if event.type == pygame.MOUSEBUTTONDOWN:
-                if OPTIONS_BACK.checkForInput(OPTIONS_MOUSE_POS):
-                    main_menu()
-
-        pygame.display.update()
-   """     
+    
 def choose_ai():
     while True:
         SCREEN.blit(BG, (0, 0))
@@ -271,7 +188,6 @@ def how_to_play():
 
         # Update the display
         pygame.display.update()
-
 
 def win_screen():
     while True:

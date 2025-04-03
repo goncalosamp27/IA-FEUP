@@ -1,14 +1,8 @@
-import random
-import pygame
+import random, pygame
+from utils import COLORS
 
 class Jelly:
-    COLORS = ['#e08b8b',  # Darker pastel red
-          '#5b97c2',  # Darker pastel blue
-          '#9a64c0',  # Darker pastel purple
-          '#7fc57b',  # Darker pastel green
-          '#5fb5ae',  # Darker pastel cyan
-          '#e0c750']  # Darker pastel yellow
-
+    COLORS = COLORS
     SIZE = 80
 
     def __init__(self, posX, posY, tl, tr, bl, br):

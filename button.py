@@ -8,8 +8,6 @@ class Button:
         self.hovering_color = hovering_color
         self.text_input = text_input
         self.text = self.font.render(self.text_input, True, self.base_color)
-        #self.text = self.font.render(self.text_input, True, pygame.Color(self.base_color))
-
         self.rect = self.text.get_rect(center=(self.x_pos, self.y_pos))
 
     def update(self, screen):

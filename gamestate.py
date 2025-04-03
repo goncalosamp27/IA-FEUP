@@ -1,34 +1,20 @@
-import random
-import pygame
+import random, pygame, copy
 from jelly import Jelly
-import copy
-
+from utils import COLORS
 
 class GameState:
-    #COLORS = ['#be2528', '#2536be', '#7525be', '#3eb34b', '#64bfbe', '#e2d614']  # red, blue, purple, green, cyan, yellow
-    
-    #COLORS = ['#f7b7b7',  # Soft pastel red
-     #     '#a2c7e0',  # Soft pastel blue
-     #     '#d1a1e7',  # Soft pastel purple
-     #     '#b6e4b1',  # Soft pastel green
-      #    '#a4d9d3',  # Soft pastel cyan
-     #     '#f9f2a1']  # Soft pastel yellow
-    
-    COLORS = ['#e08b8b',  # Darker pastel red
-          '#5b97c2',  # Darker pastel blue
-          '#9a64c0',  # Darker pastel purple
-          '#7fc57b',  # Darker pastel green
-          '#5fb5ae',  # Darker pastel cyan
-          '#e0c750']  # Darker pastel yellow
+    COLORS = COLORS
 
     def __init__(self, level_file, difficulty):
         self.board = self.load_board(level_file)
         self.difficulty = difficulty
         self.objective = self.generate_objective()
         self.randomize_jellies()
-        self.generate_playable_jellies()  # Ensure playable jellies are generated
+        self.generate_playable_jellies() 
         self.selected_jelly = None
         self.scheduled_actions = []
+
+    """ Initialization Functions """
 
     def load_board(self, level_file):
         with open(level_file, 'r') as file:
@@ -71,13 +57,6 @@ class GameState:
         jelly = Jelly(0, 0, None, None, None, None)
         jelly.set_random_colors()
         return jelly
-
-    def replace_played_jelly(self, played_jelly):
-        new_jelly = self.create_random_jelly()
-        for i in range(len(self.playable_jellies)):
-            if self.playable_jellies[i] == played_jelly:
-                self.playable_jellies[i] = new_jelly
-                break
 
     def generate_objective(self):
         if self.difficulty == 'easy':
@@ -182,8 +161,39 @@ class GameState:
                 screen.blit(text_surface, (20, y_offset))
                 y_offset += 60  # Espaço entre os textos
 
+    """ Movement Functions """
+
     def select_jelly(self, jelly):
         self.selected_jelly = None if self.selected_jelly == jelly else jelly
+
+    def make_move(self, x, y, jelly):
+        if self.board[y][x] == ' ':  
+            self.board[y][x] = jelly
+            self.replace_played_jelly(jelly)
+            self.selected_jelly = None
+            print(f"Move made at ({x}, {y}) with jelly {jelly}")
+            return True
+        else:
+            print(f"Invalid move at ({x}, {y})")
+            return False
+        
+    def replace_played_jelly(self, played_jelly):
+        new_jelly = self.create_random_jelly()
+        for i in range(len(self.playable_jellies)):
+            if self.playable_jellies[i] == played_jelly:
+                self.playable_jellies[i] = new_jelly
+                break
+
+    """ Objective and End Game Functions """
+
+    def decrement_objective(self, destroyed_color1, destroyed_color2, destroyed_color3):
+        destroyed_colors = [destroyed_color1, destroyed_color2, destroyed_color3]  
+
+        for i in range(3):  
+            count_key = f"count{i+1}"
+
+            if count_key in self.objective:
+                self.objective[count_key] = max(0, self.objective[count_key] - destroyed_colors[i]) 
 
     def check_game_over(self):
         for row in self.board:
@@ -198,15 +208,8 @@ class GameState:
             if count_key in self.objective and self.objective[count_key] > 0:
                 return False
         return True
-    
-    def decrement_objective(self, destroyed_color1, destroyed_color2, destroyed_color3):
-        destroyed_colors = [destroyed_color1, destroyed_color2, destroyed_color3]  
 
-        for i in range(3):  
-            count_key = f"count{i+1}"
-
-            if count_key in self.objective:
-                self.objective[count_key] = max(0, self.objective[count_key] - destroyed_colors[i]) 
+    """ Normalization Functions """
 
     def is_board_normalized(self):
         for y in range(len(self.board)):
@@ -381,17 +384,8 @@ class GameState:
         self.scheduled_actions.append((now + delay * 1, lambda: print("Not Normalizado")))
         self.scheduled_actions.append((now + delay * 2, self.normalize_board))
         self.scheduled_actions.append((now + delay * 3, self.reconstruct_all))
-
-    def make_move(self, x, y, jelly):
-        if self.board[y][x] == ' ':  
-            self.board[y][x] = jelly
-            self.replace_played_jelly(jelly)
-            self.selected_jelly = None
-            print(f"Move made at ({x}, {y}) with jelly {jelly}")
-            return True
-        else:
-            print(f"Invalid move at ({x}, {y})")
-            return False
+        
+    """ Eval Functions """
         
     def simulate_move(self, x, y, jelly):
         if self.board[y][x] != ' ':  
