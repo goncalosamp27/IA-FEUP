@@ -22,16 +22,22 @@ class GameState:
         return board
 
     def randomize_jellies(self):
+        if self.difficulty == 'easy':
+            jelly_probability = 0.15
+        elif self.difficulty == 'medium':
+            jelly_probability = 0.3
+        else:  
+            jelly_probability = 0.7
+
         for y, row in enumerate(self.board):
             for x in range(len(row)):
                 if row[x] == 'X':
-                    # Randomly choose between a playable empty space (' ') or a jelly
-                    if random.choice([True, False]):
-                        row[x] = ' '  # Playable empty space
-                    else:
+                    if random.random() < jelly_probability:
                         jelly = Jelly(0, 0, None, None, None, None)
                         self.set_unique_random_colors(jelly, y, x)
                         row[x] = jelly
+                    else:
+                        row[x] = ' '
 
     def set_unique_random_colors(self, jelly, y, x):
         adjacent_colors = set()
@@ -411,28 +417,44 @@ class GameState:
 
         return score
     
-    def evaluate_state(self, normalization_triggered=False, freed_cells=0):
+    def evaluate_state(self, normalization_triggered=False, freed_cells=0, destroyed_colors=None):
         WIN_SCORE = 1_000_000  
         LOSS_SCORE = -1_000_000  
         OBJECTIVE_WEIGHT = 100 
         NORMALIZATION_WEIGHT = 50  
-        FREED_CELL_BONUS = 10  
+        FREED_CELL_BONUS = 10
+        DESTRUCTION_WEIGHT = 15  
 
         if self.check_game_win():
             return WIN_SCORE
         if self.check_game_over():
             return LOSS_SCORE
-    
+
         score = 0
 
         for i in range(1, 4):
             count_key = f"count{i}"
             if count_key in self.objective and self.objective[count_key] > 0:
-                score += (15 - self.objective[count_key]) * OBJECTIVE_WEIGHT
+                initial_target = {
+                    "easy": [10, 5],
+                    "medium": [10, 7, 5],
+                    "hard": [15, 10, 7]
+                }[self.difficulty][i - 1]
+                progress = initial_target - self.objective[count_key]
+                score += progress * OBJECTIVE_WEIGHT
 
         if normalization_triggered:
             score += NORMALIZATION_WEIGHT
             score += freed_cells * FREED_CELL_BONUS
 
+        if destroyed_colors:
+            for i in range(1, 4):
+                color_key = f"color{i}"
+                if color_key in self.objective:
+                    color = self.objective[color_key]
+                    count = destroyed_colors.get(color, 0)
+                    score += (count ** 2) * DESTRUCTION_WEIGHT
+
         return score
+
 
