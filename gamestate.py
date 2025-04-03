@@ -13,6 +13,7 @@ class GameState:
         self.generate_playable_jellies() 
         self.selected_jelly = None
         self.scheduled_actions = []
+        
     """ Initialization Functions """
 
     def load_board(self, level_file):
