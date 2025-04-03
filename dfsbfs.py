@@ -1,3 +1,4 @@
+from collections import deque
 import copy
 
 def count_objective(state):
@@ -59,6 +60,55 @@ def dfs(state, depth):
                 if total_score > best_score:
                     best_score = total_score
                     best_action = (x, y, jelly_index)
+
+    return best_action, best_score
+
+def bfs(state, max_depth=2):
+    queue = deque()
+    best_score = -float('inf')
+    best_action = None  
+
+    for jelly_index in range(len(state.playable_jellies)):
+        for x, y in get_possible_moves(state):
+
+            initial_state = copy.deepcopy(state)
+            jelly = initial_state.playable_jellies[jelly_index]
+
+            if initial_state.make_move(x, y, jelly):
+                initial_state.normalize_board()
+                initial_state.reconstruct_all()
+
+                progresso = compare_game_states(initial_state, state)
+
+                queue.append((initial_state, (x, y, jelly_index), 1, progresso))
+
+                if progresso > best_score:
+                    best_score = progresso
+                    best_action = (x, y, jelly_index)
+
+    while queue:
+        current_state, initial_action, depth, score_so_far = queue.popleft()
+
+        if depth >= max_depth or current_state.check_game_over():
+            continue
+
+        for jelly_index in range(2):
+            for x, y in get_possible_moves(current_state):
+
+                next_state = copy.deepcopy(current_state)
+                jelly = next_state.playable_jellies[jelly_index]
+
+                if next_state.make_move(x, y, jelly):
+                    next_state.normalize_board()
+                    next_state.reconstruct_all()
+                    progresso = compare_game_states(next_state, current_state)
+                    total_score = score_so_far + progresso
+
+                    queue.append((next_state, initial_action, depth + 1, total_score))
+
+                    if total_score > best_score:
+                        best_score = total_score
+                        best_action = initial_action
 
     return best_action, best_score
 

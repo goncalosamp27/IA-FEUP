@@ -32,7 +32,7 @@ HINT_SOUND = pygame.mixer.Sound("assets/music/hint.mp3")
 HINT_SOUND.set_volume(0.7)
 
 JELLY_SOUND = pygame.mixer.Sound("assets/music/jelly.mp3")
-JELLY_SOUND.set_volume(0.7)
+# JELLY_SOUND.set_volume(0.7)
 
 CLICK_SOUND = pygame.mixer.Sound("assets/music/1.mp3")
 CLICK_SOUND.set_volume(0.7) 

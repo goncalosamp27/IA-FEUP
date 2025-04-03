@@ -4,7 +4,7 @@ from gamestate import GameState
 from jelly import Jelly
 from utils import get_font, SCREEN, BG, CLICK_SOUND, HINT_SOUND, JELLY_SOUND
 from informedsearch import value, a_star_best_move
-from dfsbfs import dfs
+from dfsbfs import dfs, bfs
 # from dfsbfs import dfs2
 
 def start_game(level, difficulty, is_ai=0):
@@ -78,7 +78,15 @@ def start_game(level, difficulty, is_ai=0):
                         print(f"DFS -> jelly {jelly_index} em ({x}, {y})")
 
             if is_ai == 3: #BFS
-                break
+                if event.type == pygame.KEYDOWN and event.key == pygame.K_RETURN:
+                    if game_state.is_board_normalized() and not game_state.scheduled_actions:
+                        best_action, _ = bfs(game_state, 2)
+
+                        x, y, jelly_index = best_action
+                        jelly = game_state.playable_jellies[jelly_index]
+
+                        game_state.make_move(x, y, jelly)
+                        print(f"BFS -> jelly {jelly_index} em ({x}, {y})")
 
             if is_ai == 4: # A *
                 if event.type == pygame.MOUSEBUTTONDOWN:
