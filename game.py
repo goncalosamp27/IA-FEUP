@@ -3,7 +3,7 @@ from button import Button
 from gamestate import GameState
 from jelly import Jelly
 from utils import get_font, SCREEN, BG
-from informedsearch import value
+from informedsearch import value, a_star_best_move
 from dfsbfs import dfs
 # from dfsbfs import dfs2
 
@@ -81,7 +81,16 @@ def start_game(level, difficulty, is_ai=0):
                 break
 
             if is_ai == 4: # A *
-                break
+                if event.type == pygame.MOUSEBUTTONDOWN:
+                    if PLAY_BACK.checkForInput(PLAY_MOUSE_POS):
+                        return  # Go back to the menu
+                if event.type == pygame.KEYDOWN and event.key == pygame.K_RETURN:
+                    if game_state.is_board_normalized() and not game_state.scheduled_actions:
+                        best_move = a_star_best_move(game_state)  # Use A* to find the best move
+                        if best_move:
+                            x, y, jelly = best_move
+                            game_state.make_move(x, y, jelly)
+                            print(f"A* played move at ({x}, {y}) with jelly {jelly}")
 
             if is_ai == 5: # Iterative Deepening
                 break

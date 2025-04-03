@@ -117,6 +117,8 @@ class GameState:
                 "count3": 7
             }
         
+    """ Drawing Functions """
+        
     def get_board_offsets(self, screen):
         board_width = len(self.board[0]) * Jelly.SIZE
         board_height = len(self.board) * Jelly.SIZE
