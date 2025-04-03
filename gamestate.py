@@ -262,6 +262,12 @@ class GameState:
         return True
     
     def normalize_board(self):
+        to_destroy = self.find_matching_corners()
+        to_destroy = self.expand_matches_inside_jellies(to_destroy)
+        destroyed_colors = self.destroy_corners(to_destroy)
+        self.update_objective_with_destructions(destroyed_colors)
+
+    def find_matching_corners(self):
         to_destroy = set()
 
         for y in range(len(self.board)):
@@ -279,73 +285,74 @@ class GameState:
                     return None
 
                 directions = [
-                    ('tl', -1,  0, 'tr'),  # left
-                    ('tl',  0, -1, 'bl'),  # top
-                    ('tr',  1,  0, 'tl'),  # right
-                    ('tr',  0, -1, 'br'),  # top
-                    ('bl', -1,  0, 'br'),  # left
-                    ('bl',  0,  1, 'tl'),  # bottom
-                    ('br',  1,  0, 'bl'),  # right
-                    ('br',  0,  1, 'tr'),  # bottom
+                    ('tl', -1,  0, 'tr'),
+                    ('tl',  0, -1, 'bl'),
+                    ('tr',  1,  0, 'tl'),
+                    ('tr',  0, -1, 'br'),
+                    ('bl', -1,  0, 'br'),
+                    ('bl',  0,  1, 'tl'),
+                    ('br',  1,  0, 'bl'),
+                    ('br',  0,  1, 'tr'),
                 ]
 
                 for own_corner, dx, dy, neighbor_corner in directions:
                     neighbor = get_jelly(x + dx, y + dy)
-
                     if neighbor:
                         own_color = getattr(jelly, own_corner)
                         neighbor_color = getattr(neighbor, neighbor_corner)
-
                         if own_color is not None and own_color == neighbor_color:
                             to_destroy.add((jelly, own_corner))
                             to_destroy.add((neighbor, neighbor_corner))
 
-        def expand_inside_jelly(jelly, start_corner):
-            visited = set()
-            stack = [start_corner]
-            color = getattr(jelly, start_corner)
+        return to_destroy
 
-            internal_adjacents = {
-                'tl': ['tr', 'bl'],
-                'tr': ['tl', 'br'],
-                'bl': ['tl', 'br'],
-                'br': ['tr', 'bl'],
-            }
-
-            while stack:
-                current = stack.pop()
-                if current in visited:
-                    continue
-                visited.add(current)
-
-                for neighbor in internal_adjacents[current]:
-                    if getattr(jelly, neighbor) == color and (jelly, neighbor) not in visited:
-                        stack.append(neighbor)
-
-            return {(jelly, corner) for corner in visited}
-
-        # Aplicar expansão em todos os candidatos iniciais
+    def expand_matches_inside_jellies(self, to_destroy):
         expanded = set()
+
         for jelly, corner in to_destroy:
-            expanded |= expand_inside_jelly(jelly, corner)
+            expanded |= self.expand_inside_jelly(jelly, corner)
 
         to_destroy.update(expanded)
+        return to_destroy
 
+    def expand_inside_jelly(self, jelly, start_corner):
+        visited = set()
+        stack = [start_corner]
+        color = getattr(jelly, start_corner)
+
+        internal_adjacents = {
+            'tl': ['tr', 'bl'],
+            'tr': ['tl', 'br'],
+            'bl': ['tl', 'br'],
+            'br': ['tr', 'bl'],
+        }
+
+        while stack:
+            current = stack.pop()
+            if current in visited:
+                continue
+            visited.add(current)
+
+            for neighbor in internal_adjacents[current]:
+                if getattr(jelly, neighbor) == color:
+                    stack.append(neighbor)
+
+        return {(jelly, corner) for corner in visited}
+
+    def destroy_corners(self, to_destroy):
         from collections import Counter
-
-        # Conta cores antes de destruir
         destroyed_colors = Counter()
+
         for jelly, corner in to_destroy:
             color = getattr(jelly, corner)
             if color:
                 destroyed_colors[color] += 1
-
-        # Agora sim, destrói
-        for jelly, corner in to_destroy:
             setattr(jelly, corner, None)
-            POP_SOUND.play()  # Play sound effect
+            POP_SOUND.play()
 
-        # Atualiza objetivo
+        return destroyed_colors
+
+    def update_objective_with_destructions(self, destroyed_colors):
         color1 = self.objective.get("color1")
         color2 = self.objective.get("color2")
         color3 = self.objective.get("color3")
@@ -355,6 +362,7 @@ class GameState:
             destroyed_colors.get(color2, 0),
             destroyed_colors.get(color3, 0)
         )
+
 
     def reconstruct_all(self):
         for y in range(len(self.board)):
