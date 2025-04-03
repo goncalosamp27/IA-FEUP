@@ -4,6 +4,8 @@ from gamestate import GameState
 from jelly import Jelly
 from utils import get_font, SCREEN, BG
 from informedsearch import value
+from dfsbfs import dfs
+# from dfsbfs import dfs2
 
 def start_game(level, difficulty, is_ai=0):
     level_path = f'levels/level{level}.txt'
@@ -27,7 +29,8 @@ def start_game(level, difficulty, is_ai=0):
             HINT_BUTTON.changeColor(PLAY_MOUSE_POS)
             HINT_BUTTON.update(SCREEN)
 
-        game_state.draw_board(SCREEN, hint_move)
+        #game_state.draw_board(SCREEN, hint_move)
+        game_state.draw_board(SCREEN)
         game_state.update_scheduled_actions()
 
         if hint_start_time and time.time() - hint_start_time > 5:
@@ -63,10 +66,17 @@ def start_game(level, difficulty, is_ai=0):
                             game_state.make_move(x, y, jelly)
                             print(f"AI played move at ({x}, {y}) with jelly {jelly}")
 
-            if is_ai == 2: # DFS
+            if is_ai == 2:  # DFS
                 if event.type == pygame.KEYDOWN and event.key == pygame.K_RETURN:
                     if game_state.is_board_normalized() and not game_state.scheduled_actions:
-                        print("FAZER ISTO")
+                        best_action, _ = dfs(game_state, 2)
+                        # versao goofy # best_action, _ = dfs2(game_state)
+
+                        x, y, jelly_index = best_action
+                        jelly = game_state.playable_jellies[jelly_index]
+
+                        game_state.make_move(x, y, jelly)
+                        print(f"DFS -> jelly {jelly_index} em ({x}, {y})")
 
             if is_ai == 3: #BFS
                 break
