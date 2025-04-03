@@ -110,56 +110,60 @@ class GameState:
                 "color3": color3,
                 "count3": 7
             }
+        
+    """ Drawing Functions """
 
-    def draw_board(self, screen):
+    def get_board_offsets(self, screen):
         board_width = len(self.board[0]) * Jelly.SIZE
         board_height = len(self.board) * Jelly.SIZE
         screen_width, screen_height = screen.get_size()
-
         offset_x = (screen_width - board_width) // 2
         offset_y = (screen_height - board_height) // 2 - 100
+        return offset_x, offset_y, board_width, board_height  
 
-        for y, row in enumerate(self.board):
-            for x, cell in enumerate(row):
-                draw_x = x * Jelly.SIZE + offset_x
-                draw_y = y * Jelly.SIZE + offset_y
-                
-                if cell == ' ':
-                    pygame.draw.rect(screen, (211, 211, 211), (draw_x, draw_y, Jelly.SIZE, Jelly.SIZE))  # Playable space (light gray)
-                elif isinstance(cell, Jelly):
-                    cell.set_position(draw_x, draw_y)
-                    cell.draw(screen)
+    def get_cell_position(self, x, y, offset_x, offset_y):
+        return x * Jelly.SIZE + offset_x, y * Jelly.SIZE + offset_y
 
-        # Draw the playable jellies below the board
+    def draw_cell(self, screen, cell, draw_x, draw_y):
+        if cell == ' ':
+            pygame.draw.rect(screen, (211, 211, 211), (draw_x, draw_y, Jelly.SIZE, Jelly.SIZE))
+        elif isinstance(cell, Jelly):
+            cell.set_position(draw_x, draw_y)
+            cell.draw(screen)
+
+    def draw_playable_jellies(self, screen, offset_x, offset_y, board_width, board_height):
         jelly_y = offset_y + board_height + 50
         for i, jelly in enumerate(self.playable_jellies):
             jelly_x = offset_x if i == 0 else offset_x + board_width - Jelly.SIZE
             if jelly == self.selected_jelly:
-                # Draw the selected jelly larger
                 jelly.set_position(jelly_x - 10, jelly_y - 10)
                 jelly.draw(screen, size=Jelly.SIZE + 20)
             else:
                 jelly.set_position(jelly_x, jelly_y)
                 jelly.draw(screen)
 
+    def draw_objectives(self, screen):
         font = pygame.font.Font("assets/font.ttf", 40)
-
         y_offset = 20
-        for i in range(1, 4):  
+        for i in range(1, 4):
             color_key = f"color{i}"
             count_key = f"count{i}"
-
             if color_key in self.objective and count_key in self.objective:
-                color_hex = self.objective[color_key]  
-                count = self.objective[count_key]  
-
-                # Converter cor hexadecimal para RGB
-                color_rgb = pygame.Color(color_hex)  
-
-                # Criar texto com a cor correspondente
-                text_surface = font.render(f"Pop {count}", True, color_rgb)
+                color_rgb = pygame.Color(self.objective[color_key])
+                text_surface = font.render(f"Pop {self.objective[count_key]}", True, color_rgb)
                 screen.blit(text_surface, (20, y_offset))
-                y_offset += 60  # Espaço entre os textos
+                y_offset += 60
+
+    def draw_board(self, screen):
+        offset_x, offset_y, board_width, board_height = self.get_board_offsets(screen)
+        
+        for y, row in enumerate(self.board):
+            for x, cell in enumerate(row):
+                draw_x, draw_y = self.get_cell_position(x, y, offset_x, offset_y)
+                self.draw_cell(screen, cell, draw_x, draw_y)
+
+        self.draw_playable_jellies(screen, offset_x, offset_y, board_width, board_height)
+        self.draw_objectives(screen)
 
     """ Movement Functions """
 
