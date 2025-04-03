@@ -52,7 +52,10 @@ def dfs(state, depth):
 
                 progresso = compare_game_states(simulated_state, state)
                 _, future_score = dfs(simulated_state, depth - 1)
-                total_score = progresso + future_score
+
+                if progresso == 0 and future_score == 0:
+                    total_score = -10  # penalizar jogadas inúteis (?) -> nao sei se devemos por isto, mas escolhe melhor a jogada
+                else: total_score = progresso + future_score
 
                 print(f"Progress: {progresso}") 
                 print(f"Possível Futuro: {future_score}") 
@@ -60,6 +63,8 @@ def dfs(state, depth):
                 if total_score > best_score:
                     best_score = total_score
                     best_action = (x, y, jelly_index)
+
+                print(f"SCORE: {total_score}") 
 
     return best_action, best_score
 
