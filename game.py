@@ -29,8 +29,7 @@ def start_game(level, difficulty, is_ai=0):
             HINT_BUTTON.changeColor(PLAY_MOUSE_POS)
             HINT_BUTTON.update(SCREEN)
 
-        #game_state.draw_board(SCREEN, hint_move)
-        game_state.draw_board(SCREEN)
+        game_state.draw_board(SCREEN, hint_move)
         game_state.update_scheduled_actions()
 
         if hint_start_time and time.time() - hint_start_time > 5:
