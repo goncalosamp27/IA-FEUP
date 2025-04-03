@@ -22,11 +22,26 @@ def value(game_state):
 counter = itertools.count()  # Unique counter to break heap ties
 
 def heuristic(game_state):
-    OBJECTIVE_WEIGHT = 500  
-    remaining_goals = sum(game_state.objective.get(f"count{i}", 0) for i in range(1, 4))
-    return -remaining_goals * OBJECTIVE_WEIGHT  # Lower remaining goals = better score
+    OBJECTIVE_WEIGHT = 250  
+    h = 0
 
-def a_star_best_move(game_state):
+    for i in range(1, 4):
+        count_key = f"count{i}"
+        if count_key in game_state.objective and game_state.objective[count_key] > 0:
+            initial_target = {
+                "easy": [10, 5],
+                "medium": [10, 7, 5],
+                "hard": [15, 10, 7]
+            }[game_state.difficulty][i - 1]
+            remaining = game_state.objective[count_key]
+            progress = initial_target - remaining
+            
+            h -= remaining * OBJECTIVE_WEIGHT
+            h += progress * (OBJECTIVE_WEIGHT // 2)
+
+    return h
+
+def a_star_best_move(game_state, max_depth=2):
     open_set = []  # Priority queue
     best_move = None
     best_score = float('-inf')
@@ -34,25 +49,34 @@ def a_star_best_move(game_state):
     # Add all possible initial moves to the queue
     for y, row in enumerate(game_state.board):
         for x, cell in enumerate(row):
-            if cell == ' ':  # Valid move spot
+            if cell == ' ':  
                 for jelly in game_state.playable_jellies:
-                    score = game_state.simulate_move(x, y, jelly)
-                    
-                    if score is not None:
-                        g_score = score  # Use score from simulate_move()
-                        h_score = heuristic(game_state)
-                        f_score = g_score + h_score
+                    score = game_state.simulate_move(x, y, jelly)  
 
-                        heapq.heappush(open_set, (f_score, next(counter), (x, y, jelly), g_score))
+                    if score is not None:
+                        h_score = heuristic(game_state)  # Estimate future cost
+                        f_score = score + h_score  # A* f = g + h
+
+                        heapq.heappush(open_set, (f_score, next(counter), (x, y, jelly), score, 1))
 
     while open_set:
-        _, _, move, g_score = heapq.heappop(open_set)
-
+        _, _, move, g_score, depth = heapq.heappop(open_set)
         x, y, jelly = move
-        score = game_state.simulate_move(x, y, jelly)  # Simulate the move again
 
-        if score is not None and score > best_score:
-            best_score = score
-            best_move = move  # Store the best move found
+        if g_score > best_score:
+            best_score = g_score
+            best_move = move
+
+        # Expand further moves if below depth limit
+        if depth < max_depth:
+            for y2, row in enumerate(game_state.board):
+                for x2, cell in enumerate(row):
+                    if cell == ' ':
+                        for next_jelly in game_state.playable_jellies:
+                            new_score = game_state.simulate_move(x2, y2, next_jelly)  
+                            
+                            if new_score is not None:
+                                new_f = g_score + new_score + heuristic(game_state)  # Accumulate score
+                                heapq.heappush(open_set, (new_f, next(counter), (x2, y2, next_jelly), new_score, depth + 1))
 
     return best_move
