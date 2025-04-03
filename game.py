@@ -25,7 +25,7 @@ def start_game(level, difficulty, is_ai=0):
         PLAY_BACK.update(SCREEN)
 
         if is_ai == 0:  # Human mode
-            HINT_BUTTON = Button(image=None, pos=(640, 600), text_input="Hint", font=get_font(30), base_color="White", hovering_color="#99afd7")
+            HINT_BUTTON = Button(image=None, pos=(640, 550), text_input="Hint", font=get_font(30), base_color="White", hovering_color="#99afd7")
             HINT_BUTTON.changeColor(PLAY_MOUSE_POS)
             HINT_BUTTON.update(SCREEN)
 
