@@ -414,13 +414,12 @@ class GameState:
 
         return score
     
-    def evaluate_state(self, normalization_triggered=False, freed_cells=0, destroyed_colors=None):
+    def evaluate_state(self, normalization_triggered=False, freed_cells=0):
         WIN_SCORE = 1_000_000  
         LOSS_SCORE = -1_000_000  
         OBJECTIVE_WEIGHT = 200 
         NORMALIZATION_WEIGHT = 50  
         FREED_CELL_BONUS = 10
-        DESTRUCTION_WEIGHT = 15  
 
         if self.check_game_win():
             return WIN_SCORE
@@ -443,14 +442,6 @@ class GameState:
         if normalization_triggered:
             score += NORMALIZATION_WEIGHT
             score += freed_cells * FREED_CELL_BONUS
-
-        if destroyed_colors:
-            for i in range(1, 4):
-                color_key = f"color{i}"
-                if color_key in self.objective:
-                    color = self.objective[color_key]
-                    count = destroyed_colors.get(color, 0)
-                    score += (count ** 2) * DESTRUCTION_WEIGHT
 
         return score
 
