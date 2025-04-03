@@ -378,3 +378,14 @@ class GameState:
         self.scheduled_actions.append((now + delay * 2, self.normalize_board))
         self.scheduled_actions.append((now + delay * 3, self.reconstruct_all))
 
+    def make_move(self, x, y, jelly):
+        if self.board[y][x] == ' ':  # Ensure the slot is empty
+            self.board[y][x] = jelly
+            self.replace_played_jelly(jelly)
+            self.selected_jelly = None
+            print(f"Move made at ({x}, {y}) with jelly {jelly}")
+            return True
+        else:
+            print(f"Invalid move at ({x}, {y})")
+            return False
+
