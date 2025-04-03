@@ -11,7 +11,7 @@ def value(game_state):
 
     for y, row in enumerate(game_state.board):
         for x, cell in enumerate(row):
-            if cell == ' ':  # Only consider empty slots
+            if cell == ' ':  
                 for jelly in game_state.playable_jellies:
                     score = game_state.simulate_move(x, y, jelly)
                     if score is not None and score > best_score:
@@ -22,18 +22,20 @@ def value(game_state):
 
 def dfs(game_state, depth, max_depth):
     if depth == max_depth or game_state.check_game_win() or game_state.check_game_over():
+        print(f"EVALUATE_STATE: {game_state.evaluate_state()}!")
         return game_state.evaluate_state()
 
     best_score = float('-inf')
 
-    for jelly_index in range(len(game_state.playable_jellies)):
+    for jelly in game_state.playable_jellies:
         for y, row in enumerate(game_state.board):
             for x, cell in enumerate(row):
+                # checkar apenas jogadas em cenas vazias
                 if cell == ' ':
                     simulated = copy.deepcopy(game_state)
-                    jelly = simulated.playable_jellies[jelly_index]
 
                     if simulated.make_move(x, y, jelly):
+
                         simulated.schedule_board_normalization_sequence()
                         simulated.reconstruct_all()
 
@@ -47,25 +49,26 @@ def dfs_best_move(game_state, max_depth):
     best_score = float('-inf')
     best_move = None
 
-    for jelly_index in range(len(game_state.playable_jellies)):
+    for jelly in game_state.playable_jellies:
         for y, row in enumerate(game_state.board):
             for x, cell in enumerate(row):
                 if cell == ' ':
                     simulated = copy.deepcopy(game_state)
-                    jelly = simulated.playable_jellies[jelly_index]  # usa a jelly equivalente no clone
 
                     if simulated.make_move(x, y, jelly):
-                        simulated.schedule_board_normalization_sequence()
-                        simulated.reconstruct_all()
+                        while simulated.scheduled_actions:
+                            simulated.update_scheduled_actions()
 
                         score = dfs(simulated, 1, max_depth)
-
-                        print(f"Testing move at ({x}, {y}) with jelly index {jelly_index} → score: {score}")
+                        print(f"SCORE DESTA -> {score}") 
 
                         if score > best_score or best_move is None:
                             best_score = score
-                            best_move = (x, y, jelly_index)
+                            best_move = (x, y, jelly)
 
+    # so da return depois de computar tudo
+    x, y, jelly = best_move
+    print(f"DFS -> A melhor jogada que encontrei foi meter {jelly} em {x},{y}")
     return best_move
 
 def start_game(level, difficulty, is_ai=0):
@@ -119,11 +122,9 @@ def start_game(level, difficulty, is_ai=0):
                     if game_state.is_board_normalized() and not game_state.scheduled_actions:
                         best_move = dfs_best_move(game_state, max_depth=2)
                         if best_move:
-                            x, y, jelly_index = best_move
-                            jelly = game_state.playable_jellies[jelly_index]  
+                            x, y, jelly = best_move
 
                             game_state.make_move(x, y, jelly)
-                            print(f"DFS -> jelly {jelly_index} na posição ({x},{y})")
 
             if is_ai == 3: #BFS
                 break

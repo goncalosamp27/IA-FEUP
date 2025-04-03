@@ -13,7 +13,6 @@ class GameState:
         self.generate_playable_jellies() 
         self.selected_jelly = None
         self.scheduled_actions = []
-
     """ Initialization Functions """
 
     def load_board(self, level_file):
@@ -179,10 +178,8 @@ class GameState:
             self.board[y][x] = jelly
             self.replace_played_jelly(jelly)
             self.selected_jelly = None
-            print(f"Move made at ({x}, {y}) with jelly {jelly}")
             return True
         else:
-            print(f"Invalid move at ({x}, {y})")
             return False
         
     def replace_played_jelly(self, played_jelly):
@@ -420,7 +417,7 @@ class GameState:
     def evaluate_state(self, normalization_triggered=False, freed_cells=0, destroyed_colors=None):
         WIN_SCORE = 1_000_000  
         LOSS_SCORE = -1_000_000  
-        OBJECTIVE_WEIGHT = 100 
+        OBJECTIVE_WEIGHT = 200 
         NORMALIZATION_WEIGHT = 50  
         FREED_CELL_BONUS = 10
         DESTRUCTION_WEIGHT = 15  
@@ -439,7 +436,7 @@ class GameState:
                     "easy": [10, 5],
                     "medium": [10, 7, 5],
                     "hard": [15, 10, 7]
-                }[self.difficulty][i - 1]
+                } [self.difficulty][i - 1]
                 progress = initial_target - self.objective[count_key]
                 score += progress * OBJECTIVE_WEIGHT
 
