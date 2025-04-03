@@ -2,27 +2,8 @@ import pygame, sys, menu
 from button import Button 
 from gamestate import GameState
 from jelly import Jelly
-from utils import SCREEN, BG, get_font
-import copy
-
-def value(game_state):
-    best_score = float('-inf')
-    best_move = None
-
-    for y, row in enumerate(game_state.board):
-        for x, cell in enumerate(row):
-            if cell == ' ':  
-                for jelly_index in range(len(game_state.playable_jellies)):
-
-                    jelly = game_state.playable_jellies[jelly_index]
-                    score = game_state.simulate_move(x, y, jelly)
-                    print(f"Colocar a Jelly {jelly_index} em {x}, {y} dá {score} pontos")
-                
-                    if score is not None and score > best_score:
-                        best_score = score
-                        best_move = (x, y, jelly)
-
-    return best_move
+from utils import get_font, SCREEN, BG
+from informedsearch import value
 
 def start_game(level, difficulty, is_ai=0):
     level_path = f'levels/level{level}.txt'
