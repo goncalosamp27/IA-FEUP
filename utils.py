@@ -21,10 +21,19 @@ sound_on = True
 
 #Background Music
 pygame.mixer.music.load("assets/music/background1.mp3")  
-pygame.mixer.music.set_volume(0.5)  
+pygame.mixer.music.set_volume(0.1)  
 pygame.mixer.music.play(-1)  
 
 #Sound Effects
+POP_SOUND = pygame.mixer.Sound("assets/music/pop.mp3")
+POP_SOUND.set_volume(0.7)
+
+HINT_SOUND = pygame.mixer.Sound("assets/music/hint.mp3")
+HINT_SOUND.set_volume(0.7)
+
+JELLY_SOUND = pygame.mixer.Sound("assets/music/jelly.mp3")
+JELLY_SOUND.set_volume(0.7)
+
 CLICK_SOUND = pygame.mixer.Sound("assets/music/1.mp3")
 CLICK_SOUND.set_volume(0.7) 
 

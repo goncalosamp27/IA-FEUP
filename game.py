@@ -2,7 +2,7 @@ import pygame, sys, menu, time
 from button import Button 
 from gamestate import GameState
 from jelly import Jelly
-from utils import get_font, SCREEN, BG
+from utils import get_font, SCREEN, BG, CLICK_SOUND, HINT_SOUND, JELLY_SOUND
 from informedsearch import value, a_star_best_move
 from dfsbfs import dfs
 # from dfsbfs import dfs2
@@ -102,6 +102,7 @@ def start_game(level, difficulty, is_ai=0):
                     if PLAY_BACK.checkForInput(PLAY_MOUSE_POS):
                         return  # Go back to the menu
                     if HINT_BUTTON.checkForInput(PLAY_MOUSE_POS):
+                        HINT_SOUND.play()
                         hint_move = value(game_state)
                         hint_start_time = time.time()
                         continue
@@ -110,6 +111,7 @@ def start_game(level, difficulty, is_ai=0):
                     for jelly in game_state.playable_jellies:
                         jelly_x, jelly_y = jelly.get_position()
                         if jelly_x <= PLAY_MOUSE_POS[0] <= jelly_x + Jelly.SIZE and jelly_y <= PLAY_MOUSE_POS[1] <= jelly_y + Jelly.SIZE:
+                            CLICK_SOUND.play()
                             game_state.select_jelly(jelly)
                             break
 
@@ -122,6 +124,7 @@ def start_game(level, difficulty, is_ai=0):
                                     draw_y = y * Jelly.SIZE + (SCREEN.get_height() - len(game_state.board) * Jelly.SIZE) // 2 - 100
                                     if draw_x <= PLAY_MOUSE_POS[0] <= draw_x + Jelly.SIZE and draw_y <= PLAY_MOUSE_POS[1] <= draw_y + Jelly.SIZE:
                                         if game_state.make_move(x, y, game_state.selected_jelly):
+                                            JELLY_SOUND.play()
                                             hint_move = None  
                                             hint_start_time = None
                                             print("Normalized")

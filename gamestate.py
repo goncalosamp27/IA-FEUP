@@ -1,6 +1,6 @@
 import random, pygame, copy
 from jelly import Jelly
-from utils import COLORS
+from utils import COLORS, POP_SOUND
 
 class GameState:
     COLORS = COLORS
@@ -345,6 +345,7 @@ class GameState:
         # Agora sim, destrói
         for jelly, corner in to_destroy:
             setattr(jelly, corner, None)
+            POP_SOUND.play()  # Play sound effect
 
         # Atualiza objetivo
         color1 = self.objective.get("color1")
