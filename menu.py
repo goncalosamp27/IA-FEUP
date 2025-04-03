@@ -60,7 +60,7 @@ def draw_microphone_icon():
 def get_font(size):
     return pygame.font.Font("assets/font.ttf", size)
 
-def play():
+def play(is_ai=False):
     selected_level = 1
     selected_difficulty = 'easy'
 
@@ -127,7 +127,7 @@ def play():
                     selected_difficulty = 'medium' if selected_difficulty == 'hard' else 'easy' if selected_difficulty == 'medium' else 'hard'
                 if START_BUTTON.checkForInput(OPTIONS_MOUSE_POS):
                     CLICK_SOUND.play()
-                    start_game(selected_level, selected_difficulty)
+                    start_game(selected_level, selected_difficulty, is_ai)
                 if BACK_BUTTON.checkForInput(OPTIONS_MOUSE_POS):
                     CLICK_SOUND.play()
                     main_menu()
@@ -197,22 +197,22 @@ def choose_ai():
                     CLICK_SOUND.play()
                         # Handle easy AI selection
                     print("AI1 selected")  # You can start the game with easy AI
-                    play()
+                    play(is_ai=True)
                 if AI_2_BUTTON.checkForInput(MENU_MOUSE_POS):
                     CLICK_SOUND.play()
                         # Handle medium AI selection
                     print("AI2 selected")  # You can start the game with medium AI
-                    play()
+                    play(is_ai=True)
                 if AI_3_BUTTON.checkForInput(MENU_MOUSE_POS):
                     CLICK_SOUND.play()
                         # Handle hard AI selection
                     print("AI3 selected")  # You can start the game with hard AI
-                    play()
+                    play(is_ai=True)
                 if AI_4_BUTTON.checkForInput(MENU_MOUSE_POS):
                     CLICK_SOUND.play()
                         # Handle hard AI selection
                     print("AI4 selected")  # You can start the game with hard AI
-                    play()
+                    play(is_ai=True)
                 if BACK_BUTTON.checkForInput(MENU_MOUSE_POS):
                     CLICK_SOUND.play()
                     main_menu()  # Go back to the main menu

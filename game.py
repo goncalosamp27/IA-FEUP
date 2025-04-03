@@ -4,6 +4,7 @@ import menu
 from button import Button 
 from gamestate import GameState
 from jelly import Jelly
+from eval import value
 
 pygame.init()
 SCREEN = pygame.display.set_mode((1280, 720))
@@ -78,7 +79,7 @@ def game_over_screen():
         pygame.display.update()
 
 
-def start_game(level, difficulty):
+def start_game(level, difficulty, is_ai=False):
     level_path = f'levels/level{level}.txt'
     game_state = GameState(level_path, difficulty)
 
@@ -114,30 +115,41 @@ def start_game(level, difficulty):
                 pygame.quit()
                 sys.exit()
 
-            if event.type == pygame.MOUSEBUTTONDOWN:
-                if game_state.scheduled_actions:
-                    continue  # ignorar inputs até finalizar açoes (isto é banger)
-                if PLAY_BACK.checkForInput(PLAY_MOUSE_POS):
-                    return  # Go back to the menu (you can modify this to call main_menu() in menu.py)
-                # Check if a playable jelly is selected
-                for i, jelly in enumerate(game_state.playable_jellies):
-                    jelly_x, jelly_y = jelly.get_position()
-                    if jelly_x <= PLAY_MOUSE_POS[0] <= jelly_x + Jelly.SIZE and jelly_y <= PLAY_MOUSE_POS[1] <= jelly_y + Jelly.SIZE:
-                        game_state.select_jelly(jelly)
-                        break
-                # Check if a playable slot is clicked
-                if game_state.selected_jelly:
-                    for y, row in enumerate(game_state.board):
-                        for x, cell in enumerate(row):
-                            if cell == ' ':
-                                draw_x = x * Jelly.SIZE + (SCREEN.get_width() - len(game_state.board[0]) * Jelly.SIZE) // 2
-                                draw_y = y * Jelly.SIZE + (SCREEN.get_height() - len(game_state.board) * Jelly.SIZE) // 2 - 100
-                                if draw_x <= PLAY_MOUSE_POS[0] <= draw_x + Jelly.SIZE and draw_y <= PLAY_MOUSE_POS[1] <= draw_y + Jelly.SIZE:
-                                    game_state.board[y][x] = game_state.selected_jelly
-                                    game_state.replace_played_jelly(game_state.selected_jelly)
-                                    game_state.selected_jelly = None
+            if is_ai:  # AI Mode
+                if event.type == pygame.KEYDOWN and event.key == pygame.K_RETURN:  # Enter key triggers AI move
+                    if game_state.is_board_normalized() and not game_state.scheduled_actions:
+                        best_move = value(game_state)  
+                        if best_move:
+                            x, y, jelly = best_move
+                            game_state.board[y][x] = jelly
+                            game_state.replace_played_jelly(jelly)
+                            game_state.selected_jelly = None
+                            print(f"AI played move at ({x}, {y}) with jelly {jelly}")
+            else:  # Human Mode
+                if event.type == pygame.MOUSEBUTTONDOWN:
+                    if game_state.scheduled_actions:
+                        continue  # Ignore inputs until actions are finished
+                    if PLAY_BACK.checkForInput(PLAY_MOUSE_POS):
+                        return  # Go back to the menu
+                    # Check if a playable jelly is selected
+                    for i, jelly in enumerate(game_state.playable_jellies):
+                        jelly_x, jelly_y = jelly.get_position()
+                        if jelly_x <= PLAY_MOUSE_POS[0] <= jelly_x + Jelly.SIZE and jelly_y <= PLAY_MOUSE_POS[1] <= jelly_y + Jelly.SIZE:
+                            game_state.select_jelly(jelly)
+                            break
+                    # Check if a playable slot is clicked
+                    if game_state.selected_jelly:
+                        for y, row in enumerate(game_state.board):
+                            for x, cell in enumerate(row):
+                                if cell == ' ':
+                                    draw_x = x * Jelly.SIZE + (SCREEN.get_width() - len(game_state.board[0]) * Jelly.SIZE) // 2
+                                    draw_y = y * Jelly.SIZE + (SCREEN.get_height() - len(game_state.board) * Jelly.SIZE) // 2 - 100
+                                    if draw_x <= PLAY_MOUSE_POS[0] <= draw_x + Jelly.SIZE and draw_y <= PLAY_MOUSE_POS[1] <= draw_y + Jelly.SIZE:
+                                        game_state.board[y][x] = game_state.selected_jelly
+                                        game_state.replace_played_jelly(game_state.selected_jelly)
+                                        game_state.selected_jelly = None
 
-                                    print("Normalizado")
-                                    break
+                                        print("Normalizado")
+                                        break
 
         pygame.display.update()
