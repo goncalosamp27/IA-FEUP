@@ -13,7 +13,7 @@ def value(game_state):
         for x, cell in enumerate(row):
             if cell == ' ':  
                 for jelly_index in range(len(game_state.playable_jellies)):
-                    
+
                     jelly = game_state.playable_jellies[jelly_index]
                     score = game_state.simulate_move(x, y, jelly)
                     print(f"Colocar a Jelly {jelly_index} em {x}, {y} dá {score} pontos")
@@ -22,57 +22,6 @@ def value(game_state):
                         best_score = score
                         best_move = (x, y, jelly)
 
-    return best_move
-
-def dfs(game_state, depth, max_depth):
-    if depth == max_depth or game_state.check_game_win() or game_state.check_game_over():
-        print(f"EVALUATE_STATE: {game_state.evaluate_state()}!")
-        return game_state.evaluate_state()
-
-    best_score = float('-inf')
-
-    for jelly in game_state.playable_jellies:
-        for y, row in enumerate(game_state.board):
-            for x, cell in enumerate(row):
-                # checkar apenas jogadas em cenas vazias
-                if cell == ' ':
-                    simulated = copy.deepcopy(game_state)
-
-                    if simulated.make_move(x, y, jelly):
-
-                        simulated.schedule_board_normalization_sequence()
-                        simulated.reconstruct_all()
-
-                        score = dfs(simulated, depth + 1, max_depth)
-                        best_score = max(best_score, score)
-
-    return best_score
-
-
-def dfs_best_move(game_state, max_depth):
-    best_score = float('-inf')
-    best_move = None
-
-    for jelly in game_state.playable_jellies:
-        for y, row in enumerate(game_state.board):
-            for x, cell in enumerate(row):
-                if cell == ' ':
-                    simulated = copy.deepcopy(game_state)
-
-                    if simulated.make_move(x, y, jelly):
-                        while simulated.scheduled_actions:
-                            simulated.update_scheduled_actions()
-
-                        score = dfs(simulated, 1, max_depth)
-                        print(f"SCORE DESTA -> {score}") 
-
-                        if score > best_score or best_move is None:
-                            best_score = score
-                            best_move = (x, y, jelly)
-
-    # so da return depois de computar tudo
-    x, y, jelly = best_move
-    print(f"DFS -> A melhor jogada que encontrei foi meter {jelly} em {x},{y}")
     return best_move
 
 def start_game(level, difficulty, is_ai=0):
@@ -124,11 +73,7 @@ def start_game(level, difficulty, is_ai=0):
             if is_ai == 2: # DFS
                 if event.type == pygame.KEYDOWN and event.key == pygame.K_RETURN:
                     if game_state.is_board_normalized() and not game_state.scheduled_actions:
-                        best_move = dfs_best_move(game_state, max_depth=2)
-                        if best_move:
-                            x, y, jelly = best_move
-
-                            game_state.make_move(x, y, jelly)
+                        print("FAZER ISTO")
 
             if is_ai == 3: #BFS
                 break

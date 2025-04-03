@@ -295,7 +295,6 @@ class GameState:
                             to_destroy.add((jelly, own_corner))
                             to_destroy.add((neighbor, neighbor_corner))
 
-        # Agora: expansão apenas dentro da mesma jelly por adjacência (não diagonal)
         def expand_inside_jelly(jelly, start_corner):
             visited = set()
             stack = [start_corner]
