@@ -47,8 +47,6 @@ class GameState:
                         self.set_unique_random_colors(jelly, y, x)
                         row[x] = jelly
 
-    # def check_color_collisions(self):
-
     def set_unique_random_colors(self, jelly, y, x):
         adjacent_colors = set()
         if y > 0 and isinstance(self.board[y-1][x], Jelly):
@@ -57,6 +55,10 @@ class GameState:
             adjacent_colors.update(self.board[y][x-1].get_colors())
 
         available_colors = [color for color in Jelly.COLORS if color not in adjacent_colors]
+
+        if not available_colors:
+            available_colors = self.COLORS  # fallback
+
         jelly.tl = random.choice(available_colors)
         jelly.tr = random.choice(available_colors)
         jelly.bl = random.choice(available_colors)
