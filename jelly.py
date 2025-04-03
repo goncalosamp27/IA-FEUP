@@ -5,6 +5,15 @@ class Jelly:
     COLORS = COLORS
     SIZE = 80
 
+    COLOR_TEXTURES = {
+        "#e08b8b": pygame.image.load("assets/textures/red.png"),      # vermelho
+        "#7fc57b": pygame.image.load("assets/textures/green.png"),   # verde
+        "#e0c750": pygame.image.load("assets/textures/yellow.png"),  # amarelo
+        "#9a64c0": pygame.image.load("assets/textures/purple.png"),  # roxo
+        "#5fb5ae": pygame.image.load("assets/textures/cyan.png"),    # ciano
+        "#5b97c2": pygame.image.load("assets/textures/blue.png"),    # azul
+    }
+
     def __init__(self, posX, posY, tl, tr, bl, br):
         self.posX = posX
         self.posY = posY
@@ -43,19 +52,26 @@ class Jelly:
     def get_colors(self):
         return self.tl, self.tr, self.bl, self.br
 
-    def draw(self, screen, size=None, board_color=(230, 230, 230)):
+    def draw(self, screen, size=None):
         if size is None:
             size = self.SIZE
         x, y = self.posX, self.posY
+        half = size // 2
 
-        pygame.draw.rect(screen, self.tl if self.tl is not None else (211, 211, 211),
-                        (x, y, size // 2, size // 2))  
-        pygame.draw.rect(screen, self.tr if self.tr is not None else (211, 211, 211),
-                        (x + size // 2, y, size // 2, size // 2))  
-        pygame.draw.rect(screen, self.bl if self.bl is not None else (211, 211, 211),
-                        (x, y + size // 2, size // 2, size // 2))  
-        pygame.draw.rect(screen, self.br if self.br is not None else (211, 211, 211),
-                        (x + size // 2, y + size // 2, size // 2, size // 2))  
+        def draw_corner(color, offset_x, offset_y):
+            texture = self.COLOR_TEXTURES.get(color)
+            if texture:
+                texture_scaled = pygame.transform.scale(texture, (half, half))
+                screen.blit(texture_scaled, (x + offset_x, y + offset_y))
+            else:
+                fallback_color = color if color else (211, 211, 211)
+                pygame.draw.rect(screen, fallback_color, (x + offset_x, y + offset_y, half, half))
+
+        draw_corner(self.tl, 0, 0)
+        draw_corner(self.tr, half, 0)
+        draw_corner(self.bl, 0, half)
+        draw_corner(self.br, half, half)
+
 
     def reconstruct(self):
         tl = self.tl

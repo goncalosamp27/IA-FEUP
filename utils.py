@@ -11,7 +11,13 @@ COLORS = ['#e08b8b',  # Darker pastel red
           '#5fb5ae',  # Darker pastel cyan
           '#e0c750']  # Darker pastel yellow
 
+TILE_TEXTURE = pygame.image.load("assets/textures/quartz.png").convert_alpha()
+HINT_TEXTURE = pygame.image.load("assets/textures/gold.png").convert_alpha()
+
 BG = pygame.image.load("assets/Background7.png")
+
+MUSICOFF = pygame.image.load("assets/images/musicoff.png")
+MUSICON = pygame.image.load("assets/images/musicon.png")
 
 UNMUTE = pygame.image.load("assets/images/unmute2.png")
 MUTE = pygame.image.load("assets/images/mute2.png")

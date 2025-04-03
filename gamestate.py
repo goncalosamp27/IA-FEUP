@@ -1,6 +1,6 @@
 import random, pygame, copy
 from jelly import Jelly
-from utils import COLORS, POP_SOUND
+from utils import COLORS, POP_SOUND, TILE_TEXTURE, HINT_TEXTURE
 
 class GameState:
     COLORS = COLORS
@@ -21,21 +21,35 @@ class GameState:
 
     def randomize_jellies(self):
         if self.difficulty == 'easy':
-            jelly_probability = 0.15
+            fill_percent = 0.2
         elif self.difficulty == 'medium':
-            jelly_probability = 0.3
-        else:  
-            jelly_probability = 0.7
+            fill_percent = 0.4
+        else:  # hard
+            fill_percent = 0.6
+
+        available_positions = []
 
         for y, row in enumerate(self.board):
             for x in range(len(row)):
                 if row[x] == 'X':
-                    if random.random() < jelly_probability:
-                        jelly = Jelly(0, 0, None, None, None, None)
-                        self.set_unique_random_colors(jelly, y, x)
-                        row[x] = jelly
-                    else:
-                        row[x] = ' '
+                    available_positions.append((x, y))
+
+        total_playable = len(available_positions)
+        num_jellies = max(1, int(total_playable * fill_percent))  
+
+        random.shuffle(available_positions)
+        chosen = set(available_positions[:num_jellies])
+
+
+        for y, row in enumerate(self.board):
+            for x in range(len(row)):
+                if (x, y) in chosen:
+                    jelly = Jelly(0, 0, None, None, None, None)
+                    self.set_unique_random_colors(jelly, y, x)
+                    row[x] = jelly
+                elif row[x] == 'X':
+                    row[x] = ' '  
+
 
     def set_unique_random_colors(self, jelly, y, x):
         adjacent_colors = set()
@@ -128,10 +142,12 @@ class GameState:
     def get_cell_position(self, x, y, offset_x, offset_y):
         return x * Jelly.SIZE + offset_x, y * Jelly.SIZE + offset_y
 
-    def draw_cell(self, screen, cell, draw_x, draw_y):
-        if cell == ' ':
-            pygame.draw.rect(screen, (211, 211, 211), (draw_x, draw_y, Jelly.SIZE, Jelly.SIZE))
-        elif isinstance(cell, Jelly):
+    def draw_cell(self, screen, cell, draw_x, draw_y, is_hint=False):
+        texture = HINT_TEXTURE if is_hint else TILE_TEXTURE
+        texture_scaled = pygame.transform.scale(texture, (Jelly.SIZE, Jelly.SIZE))
+        screen.blit(texture_scaled, (draw_x, draw_y))
+
+        if isinstance(cell, Jelly):
             cell.set_position(draw_x, draw_y)
             cell.draw(screen)
 
@@ -165,13 +181,14 @@ class GameState:
 
         for y, row in enumerate(self.board):
             for x, cell in enumerate(row):
-                draw_x, draw_y = self.get_cell_position(x, y, offset_x, offset_y)
-                self.draw_cell(screen, cell, draw_x, draw_y)
-                if hint_move and hint_move[0] == x and hint_move[1] == y:
-                    pygame.draw.rect(screen, (255, 255, 0), (draw_x, draw_y, Jelly.SIZE, Jelly.SIZE), 0)
+                if cell == ' ' or isinstance(cell, Jelly):
+                    draw_x, draw_y = self.get_cell_position(x, y, offset_x, offset_y)
+                    is_hint = hint_move and hint_move[0] == x and hint_move[1] == y
+                    self.draw_cell(screen, cell, draw_x, draw_y, is_hint=is_hint)
 
         self.draw_playable_jellies(screen, offset_x, offset_y, board_width, board_height, hint_move)
         self.draw_objectives(screen)
+
 
     """ Movement Functions """
 
