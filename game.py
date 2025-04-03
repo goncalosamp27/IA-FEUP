@@ -1,4 +1,4 @@
-import pygame, sys, menu
+import pygame, sys, menu, time
 from button import Button 
 from gamestate import GameState
 from jelly import Jelly
@@ -8,6 +8,9 @@ from informedsearch import value
 def start_game(level, difficulty, is_ai=0):
     level_path = f'levels/level{level}.txt'
     game_state = GameState(level_path, difficulty)
+
+    hint_move = None
+    hint_start_time = None
 
     if is_ai: print("AI selecionada: ", is_ai)
 
@@ -19,8 +22,16 @@ def start_game(level, difficulty, is_ai=0):
         PLAY_BACK.changeColor(PLAY_MOUSE_POS)
         PLAY_BACK.update(SCREEN)
 
-        game_state.draw_board(SCREEN)
+        HINT_BUTTON = Button(image=None, pos=(640, 600), text_input="Hint", font=get_font(30), base_color="White", hovering_color="#99afd7")
+        HINT_BUTTON.changeColor(PLAY_MOUSE_POS)
+        HINT_BUTTON.update(SCREEN)
+
+        game_state.draw_board(SCREEN, hint_move)
         game_state.update_scheduled_actions()
+
+        if hint_start_time and time.time() - hint_start_time > 5:
+            hint_move = None
+            hint_start_time = None
 
         if not game_state.is_board_normalized() and not game_state.scheduled_actions:
             game_state.schedule_board_normalization_sequence()
@@ -71,6 +82,10 @@ def start_game(level, difficulty, is_ai=0):
                         continue  # Ignore inputs until actions are finished
                     if PLAY_BACK.checkForInput(PLAY_MOUSE_POS):
                         return  # Go back to the menu
+                    if HINT_BUTTON.checkForInput(PLAY_MOUSE_POS):
+                        hint_move = value(game_state)
+                        hint_start_time = time.time()
+                        continue
 
                     # Handle jelly selection
                     for jelly in game_state.playable_jellies:
@@ -88,6 +103,8 @@ def start_game(level, difficulty, is_ai=0):
                                     draw_y = y * Jelly.SIZE + (SCREEN.get_height() - len(game_state.board) * Jelly.SIZE) // 2 - 100
                                     if draw_x <= PLAY_MOUSE_POS[0] <= draw_x + Jelly.SIZE and draw_y <= PLAY_MOUSE_POS[1] <= draw_y + Jelly.SIZE:
                                         if game_state.make_move(x, y, game_state.selected_jelly):
+                                            hint_move = None  
+                                            hint_start_time = None
                                             print("Normalized")
                                         break
 

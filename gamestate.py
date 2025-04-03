@@ -134,10 +134,12 @@ class GameState:
             cell.set_position(draw_x, draw_y)
             cell.draw(screen)
 
-    def draw_playable_jellies(self, screen, offset_x, offset_y, board_width, board_height):
+    def draw_playable_jellies(self, screen, offset_x, offset_y, board_width, board_height, hint_move=None):
         jelly_y = offset_y + board_height + 50
         for i, jelly in enumerate(self.playable_jellies):
             jelly_x = offset_x if i == 0 else offset_x + board_width - Jelly.SIZE
+            if hint_move and hint_move[2] == jelly:
+                pygame.draw.rect(screen, (255, 255, 0), (jelly_x - 5, jelly_y - 5, Jelly.SIZE + 10, Jelly.SIZE + 10), 5)
             if jelly == self.selected_jelly:
                 jelly.set_position(jelly_x - 10, jelly_y - 10)
                 jelly.draw(screen, size=Jelly.SIZE + 20)
@@ -157,15 +159,17 @@ class GameState:
                 screen.blit(text_surface, (20, y_offset))
                 y_offset += 60
 
-    def draw_board(self, screen):
+    def draw_board(self, screen, hint_move=None):
         offset_x, offset_y, board_width, board_height = self.get_board_offsets(screen)
-        
+
         for y, row in enumerate(self.board):
             for x, cell in enumerate(row):
                 draw_x, draw_y = self.get_cell_position(x, y, offset_x, offset_y)
                 self.draw_cell(screen, cell, draw_x, draw_y)
+                if hint_move and hint_move[0] == x and hint_move[1] == y:
+                    pygame.draw.rect(screen, (255, 255, 0), (draw_x, draw_y, Jelly.SIZE, Jelly.SIZE), 0)
 
-        self.draw_playable_jellies(screen, offset_x, offset_y, board_width, board_height)
+        self.draw_playable_jellies(screen, offset_x, offset_y, board_width, board_height, hint_move)
         self.draw_objectives(screen)
 
     """ Movement Functions """
