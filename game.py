@@ -6,8 +6,18 @@ from utils import get_font, SCREEN, BG, CLICK_SOUND, HINT_SOUND, JELLY_SOUND
 from informedsearch import value, a_star_best_move
 from dfsbfs import dfs, bfs
 # from dfsbfs import dfs2
+from stats import game_stats
+import time
+
 
 def start_game(level, difficulty, is_ai=0):
+    
+    start_time = time.time()
+    game_stats.reset()
+    game_stats.algorithm = ["Human", "Greedy", "DFS", "BFS", "A*", "Iterative"][is_ai]
+    game_stats.depth = 2 if is_ai in [2, 3] else None  # Exemplo para DFS/BFS
+    
+    
     level_path = f'levels/level{level}.txt'
     game_state = GameState(level_path, difficulty)
 
@@ -63,6 +73,8 @@ def start_game(level, difficulty, is_ai=0):
                         if best_move:
                             x, y, jelly = best_move
                             game_state.make_move(x, y, jelly)
+                            
+                            game_stats.moves += 1 
                             print(f"AI played move at ({x}, {y}) with jelly {jelly}")
 
             if is_ai == 2:  # DFS
@@ -75,6 +87,8 @@ def start_game(level, difficulty, is_ai=0):
                         jelly = game_state.playable_jellies[jelly_index]
 
                         game_state.make_move(x, y, jelly)
+                        
+                        game_stats.moves += 1 
                         print(f"DFS -> jelly {jelly_index} em ({x}, {y})")
 
             if is_ai == 3: #BFS
@@ -86,6 +100,8 @@ def start_game(level, difficulty, is_ai=0):
                         jelly = game_state.playable_jellies[jelly_index]
 
                         game_state.make_move(x, y, jelly)
+                        
+                        game_stats.moves += 1 
                         print(f"BFS -> jelly {jelly_index} em ({x}, {y})")
 
             if is_ai == 4: # A *
@@ -98,6 +114,8 @@ def start_game(level, difficulty, is_ai=0):
                         if best_move:
                             x, y, jelly = best_move
                             game_state.make_move(x, y, jelly)
+                            
+                            game_stats.moves += 1 
                             print(f"A* played move at ({x}, {y}) with jelly {jelly}")
 
             if is_ai == 5: # Iterative Deepening

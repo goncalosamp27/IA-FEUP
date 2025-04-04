@@ -2,6 +2,8 @@ import pygame, sys
 from button import Button
 from game import start_game  
 from utils import get_font, draw_microphone_icon, SCREEN, BG, CLICK_SOUND
+from stats import game_stats
+
 
 def play(is_ai = 0):
     selected_level = 1
@@ -189,11 +191,30 @@ def win_screen(is_ai = 0):
         WIN_RECT = WIN_TEXT.get_rect(center=(640, 200))
         SCREEN.blit(WIN_TEXT, WIN_RECT)
 
-        REPLAY_BUTTON = Button(image=None, pos=(640, 350), 
+        REPLAY_BUTTON = Button(image=None, pos=(640, 500), 
                                text_input="PLAY AGAIN", font=get_font(50), base_color="#99afd7", hovering_color="White")
-        MENU_BUTTON = Button(image=None, pos=(640, 450), 
+        MENU_BUTTON = Button(image=None, pos=(640, 600), 
                              text_input="MAIN MENU", font=get_font(50), base_color="#99afd7", hovering_color="White")
 
+        # testing--------------
+        ALGO_TEXT = get_font(30).render(f"Algorithm: {game_stats.algorithm}", True, "White")
+        ALGO_RECT = ALGO_TEXT.get_rect(center=(640, 280))
+        SCREEN.blit(ALGO_TEXT, ALGO_RECT)
+
+        MOVES_TEXT = get_font(30).render(f"Moves: {game_stats.moves}", True, "White")
+        MOVES_RECT = MOVES_TEXT.get_rect(center=(640, 320))
+        SCREEN.blit(MOVES_TEXT, MOVES_RECT)
+
+        TIME_TEXT = get_font(30).render(f"Time: {game_stats.duration}s", True, "White")
+        TIME_RECT = TIME_TEXT.get_rect(center=(640, 360))
+        SCREEN.blit(TIME_TEXT, TIME_RECT)
+
+        if game_stats.depth:
+            DEPTH_TEXT = get_font(30).render(f"Depth: {game_stats.depth}", True, "White")
+            DEPTH_RECT = DEPTH_TEXT.get_rect(center=(640, 400))
+            SCREEN.blit(DEPTH_TEXT, DEPTH_RECT)
+        # testing--------------
+        
         for button in [REPLAY_BUTTON, MENU_BUTTON]:
             button.changeColor(pygame.mouse.get_pos())
             button.update(SCREEN)
