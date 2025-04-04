@@ -57,6 +57,8 @@ def start_game(level, difficulty, is_ai=0):
                 if event.type == pygame.MOUSEBUTTONDOWN:
                     if PLAY_BACK.checkForInput(PLAY_MOUSE_POS):
                         return  # Go back to the menu
+                    else:
+                        continue
                 if event.type == pygame.KEYDOWN and event.key == pygame.K_RETURN:
                     if game_state.is_board_normalized() and not game_state.scheduled_actions:
                         best_move = value(game_state)  
@@ -66,6 +68,11 @@ def start_game(level, difficulty, is_ai=0):
                             print(f"AI played move at ({x}, {y}) with jelly {jelly}")
 
             if is_ai == 2:  # DFS
+                if event.type == pygame.MOUSEBUTTONDOWN:
+                    if PLAY_BACK.checkForInput(PLAY_MOUSE_POS):
+                        return  # Go back to the menu
+                    else:
+                        continue
                 if event.type == pygame.KEYDOWN and event.key == pygame.K_RETURN:
                     if game_state.is_board_normalized() and not game_state.scheduled_actions:
                         best_action, _ = dfs(game_state, 2)
@@ -78,6 +85,11 @@ def start_game(level, difficulty, is_ai=0):
                         print(f"DFS -> jelly {jelly_index} em ({x}, {y})")
 
             if is_ai == 3: #BFS
+                if event.type == pygame.MOUSEBUTTONDOWN:
+                    if PLAY_BACK.checkForInput(PLAY_MOUSE_POS):
+                        return  # Go back to the menu
+                    else:
+                        continue
                 if event.type == pygame.KEYDOWN and event.key == pygame.K_RETURN:
                     if game_state.is_board_normalized() and not game_state.scheduled_actions:
                         best_action, _ = bfs(game_state, 2)
@@ -92,6 +104,8 @@ def start_game(level, difficulty, is_ai=0):
                 if event.type == pygame.MOUSEBUTTONDOWN:
                     if PLAY_BACK.checkForInput(PLAY_MOUSE_POS):
                         return  # Go back to the menu
+                    else:
+                        continue
                 if event.type == pygame.KEYDOWN and event.key == pygame.K_RETURN:
                     if game_state.is_board_normalized() and not game_state.scheduled_actions:
                         best_move = a_star_best_move(game_state)  # Use A* to find the best move
