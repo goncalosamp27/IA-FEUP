@@ -1,18 +1,62 @@
 import random, pygame, copy
 from jelly import Jelly
 from utils import COLORS, POP_SOUND, TILE_TEXTURE, HINT_TEXTURE
+from itertools import cycle
 
 class GameState:
     COLORS = COLORS
 
-    def __init__(self, level_file, difficulty):
+    def __init__(self, level_file, difficulty, is_test=True):
         self.board = self.load_board(level_file)
         self.difficulty = difficulty
         self.objective = self.generate_objective()
-        self.randomize_jellies()
-        self.generate_playable_jellies() 
+        
+        if is_test:
+            print("Tabuleiro de teste carregado.")
+            self.set_fixed_jellies_positions()
+            self.generate_fixed_playable_jellies()
+        else:
+            self.randomize_jellies()
+            self.generate_playable_jellies() 
+            
+        #self.randomize_jellies()
+        #self.generate_playable_jellies() 
         self.selected_jelly = None
         self.scheduled_actions = []
+        
+    #def set_fixed_jellies_positions(self):
+    
+    def set_fixed_jellies_positions(self):
+        jelly1 = Jelly(0, 0, "#e08b8b", "#7fc57b", "#e0c750", "#9a64c0")  # Vermelho, Verde, Amarelo, Roxo
+        jelly2 = Jelly(0, 0, "#5fb5ae", "#5b97c2", "#e08b8b", "#7fc57b")  # Ciano, Azul, Vermelho, Verde
+        jelly3 = Jelly(0, 0, "#9a64c0", "#e08b8b", "#7fc57b", "#e0c750")  # Roxo, Vermelho, Verde, Amarelo
+        jelly4 = Jelly(0, 0, "#5fb5ae", "#9a64c0", "#7fc57b", "#e0c750")  # Ciano, Roxo, Verde, Amarelo
+        jelly5 = Jelly(0, 0, "#7fc57b", "#5b97c2", "#e08b8b", "#9a64c0")  # Verde, Azul, Vermelho, Roxo
+
+        self.fixed_jellies = [jelly1, jelly2, jelly3, jelly4, jelly5]
+
+        self.fixed_jelly_cycle = cycle(self.fixed_jellies)
+
+        # Atribuir as jellies à posição no tabuleiro
+        for y, row in enumerate(self.board):
+            for x in range(len(row)):
+                if row[x] == 'X':  # Se for uma célula jogável
+                    jelly = next(self.fixed_jelly_cycle)
+                    self.board[y][x] = jelly
+                else:
+                    row[x] = ' '  # Deixa as células não jogáveis vazias
+
+    def generate_fixed_playable_jellies(self):
+        # Gerando a lista de 50 jellies usando o ciclo das 5 jellies fixas
+        self.playable_jellies = []
+
+        # Criando uma lista de 50 jellies a partir das 5 fixas
+        for _ in range(50):
+            jelly = next(self.fixed_jelly_cycle)
+            self.playable_jellies.append(jelly)
+        
+        # Usando itertools.cycle para garantir que a sequência de 5 jellies seja cíclica
+        self.playable_jelly_cycle = cycle(self.playable_jellies)
 
     def load_board(self, level_file):
         with open(level_file, 'r') as file:
