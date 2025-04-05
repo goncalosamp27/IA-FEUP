@@ -9,7 +9,7 @@ from dfsbfs import dfs, bfs
 
 def test_ai(level, difficulty, is_ai=0, is_test=True):
     level_path = f'levels/level{level}.txt'
-    game_state = GameState(level_path, difficulty)
+    game_state = GameState(level_path, difficulty, is_ai=is_ai, is_test=is_test)
 
     hint_move = None
     hint_start_time = None
@@ -49,7 +49,7 @@ def test_ai(level, difficulty, is_ai=0, is_test=True):
                 pygame.quit()
                 sys.exit()
 
-            if test_ai == 1:  # GREEDY
+            if is_ai == 1:  # GREEDY
                 if event.type == pygame.MOUSEBUTTONDOWN:
                     if PLAY_BACK.checkForInput(PLAY_MOUSE_POS):
                         return  # Go back to the menu
@@ -63,7 +63,7 @@ def test_ai(level, difficulty, is_ai=0, is_test=True):
                             game_state.make_move(x, y, jelly)
                             print(f"AI played move at ({x}, {y}) with jelly {jelly}")
 
-            if test_ai == 2:  # DFS
+            if is_ai == 2:  # DFS
                 if event.type == pygame.MOUSEBUTTONDOWN:
                     if PLAY_BACK.checkForInput(PLAY_MOUSE_POS):
                         return  # Go back to the menu
@@ -80,7 +80,7 @@ def test_ai(level, difficulty, is_ai=0, is_test=True):
                         game_state.make_move(x, y, jelly)
                         print(f"DFS -> jelly {jelly_index} em ({x}, {y})")
 
-            if test_ai == 3: #BFS
+            if is_ai == 3: #BFS
                 if event.type == pygame.MOUSEBUTTONDOWN:
                     if PLAY_BACK.checkForInput(PLAY_MOUSE_POS):
                         return  # Go back to the menu
@@ -96,7 +96,7 @@ def test_ai(level, difficulty, is_ai=0, is_test=True):
                         game_state.make_move(x, y, jelly)
                         print(f"BFS -> jelly {jelly_index} em ({x}, {y})")
 
-            if test_ai == 4: # A *
+            if is_ai == 4: # A *
                 if event.type == pygame.MOUSEBUTTONDOWN:
                     if PLAY_BACK.checkForInput(PLAY_MOUSE_POS):
                         return  # Go back to the menu
@@ -110,7 +110,7 @@ def test_ai(level, difficulty, is_ai=0, is_test=True):
                             game_state.make_move(x, y, jelly)
                             print(f"A* played move at ({x}, {y}) with jelly {jelly}")
 
-            if test_ai == 5: # Iterative Deepening
+            if is_ai == 5: # Iterative Deepening
                 break
 
             else:  # Human Mode

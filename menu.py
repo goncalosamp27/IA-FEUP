@@ -4,7 +4,7 @@ from game import start_game
 from test_ai import test_ai
 from utils import get_font, draw_microphone_icon, SCREEN, BG, CLICK_SOUND
 
-def play(is_ai = 0):
+def play(is_ai = 0, is_test = False):
     selected_level = 1
     selected_difficulty = 'easy'
 
@@ -71,7 +71,8 @@ def play(is_ai = 0):
                     selected_difficulty = 'medium' if selected_difficulty == 'hard' else 'easy' if selected_difficulty == 'medium' else 'hard'
                 if START_BUTTON.checkForInput(OPTIONS_MOUSE_POS):
                     CLICK_SOUND.play()
-                    start_game(selected_level, selected_difficulty, is_ai)
+                    print("NOT TESTING AI selected")
+                    start_game(selected_level, selected_difficulty, is_ai, is_test)
                 if BACK_BUTTON.checkForInput(OPTIONS_MOUSE_POS):
                     CLICK_SOUND.play()
                     main_menu()
@@ -107,22 +108,26 @@ def choose_ai():
                     CLICK_SOUND.play()
                         # Handle easy AI selection
                     print("AI1 selected")  # You can start the game with easy AI
-                    play(1)
+                    #play(1,is_test=False)
+                    play(is_ai=1, is_test=False) 
                 if AI_2_BUTTON.checkForInput(MENU_MOUSE_POS):
                     CLICK_SOUND.play()
                         # Handle medium AI selection
                     print("AI2 selected")  # You can start the game with medium AI
-                    play(2)
+                    #play(2, is_test=False)
+                    play(is_ai=2, is_test=False) 
                 if AI_3_BUTTON.checkForInput(MENU_MOUSE_POS):
                     CLICK_SOUND.play()
                         # Handle hard AI selection
                     print("AI3 selected")  # You can start the game with hard AI
-                    play(3)
+                    #play(3, is_test=False)
+                    play(is_ai=3, is_test=False) 
                 if AI_4_BUTTON.checkForInput(MENU_MOUSE_POS):
                     CLICK_SOUND.play()
                         # Handle hard AI selection
                     print("AI4 selected")  # You can start the game with hard AI
-                    play(4)
+                    #play(4, is_test=False)
+                    play(is_ai=4, is_test=False) 
                     
                 if TEST_AI_BUTTON.checkForInput(MENU_MOUSE_POS):
                     CLICK_SOUND.play()
@@ -136,7 +141,7 @@ def choose_ai():
             pygame.display.update()
 
 #def test_ai(level, difficulty, is_test=0):
-def test_ai_menu(is_ai=0, is_test = True):
+def test_ai_menu(is_ai=0, is_test =True):
     selected_level = 1
     selected_difficulty = 'easy'
 
@@ -204,7 +209,7 @@ def test_ai_menu(is_ai=0, is_test = True):
                     selected_difficulty = 'medium' if selected_difficulty == 'hard' else 'easy' if selected_difficulty == 'medium' else 'hard'
                 if START_BUTTON.checkForInput(OPTIONS_MOUSE_POS):
                     CLICK_SOUND.play()
-                    test_ai(selected_level, selected_difficulty, is_test)
+                    test_ai(selected_level, selected_difficulty, is_ai, is_test)
                 if BACK_BUTTON.checkForInput(OPTIONS_MOUSE_POS):
                     CLICK_SOUND.play()
                     main_menu()
@@ -217,7 +222,7 @@ def test_choose_ai():
 
         MENU_MOUSE_POS = pygame.mouse.get_pos()
 
-        MENU_TEXT = get_font(100).render("COMPUTER", True, "#ccdbee")
+        MENU_TEXT = get_font(100).render("TEST AI", True, "#ccdbee")
         MENU_RECT = MENU_TEXT.get_rect(center=(640, 100))
 
         AI_1_BUTTON = Button(image=None, pos=(640, 240), text_input="Greedy", font=get_font(30), base_color="#99afd7", hovering_color="White")
@@ -239,22 +244,22 @@ def test_choose_ai():
                     CLICK_SOUND.play()
                         # Handle easy AI selection
                     print("TEST AI1 selected")  # You can start the game with easy AI
-                    test_ai_menu(is_ai=1)
+                    test_ai_menu(is_ai=1, is_test=True) 
                 if AI_2_BUTTON.checkForInput(MENU_MOUSE_POS):
                     CLICK_SOUND.play()
                         # Handle medium AI selection
                     print("TEST AI2 selected")  # You can start the game with medium AI
-                    test_ai_menu(is_ai=2)
+                    test_ai_menu(is_ai=2, is_test=True) 
                 if AI_3_BUTTON.checkForInput(MENU_MOUSE_POS):
                     CLICK_SOUND.play()
                         # Handle hard AI selection
                     print("TEST AI3 selected")  # You can start the game with hard AI
-                    test_ai_menu(is_ai=2)
+                    test_ai_menu(is_ai=3, is_test=True) 
                 if AI_4_BUTTON.checkForInput(MENU_MOUSE_POS):
                     CLICK_SOUND.play()
                         # Handle hard AI selection
                     print("TEST AI4 selected")  # You can start the game with hard AI
-                    test_ai_menu(is_ai=4)
+                    test_ai_menu(is_ai=4, is_test=True) 
     
                 if BACK_BUTTON.checkForInput(MENU_MOUSE_POS):
                     CLICK_SOUND.play()
@@ -417,6 +422,7 @@ def main_menu():
                     play()  # Trigger the game menu
                 if OPTIONS_BUTTON.checkForInput(MENU_MOUSE_POS):
                     CLICK_SOUND.play()
+                    print("NORMAL AI selected")
                     choose_ai()
                 if TEST_AI_BUTTON.checkForInput(MENU_MOUSE_POS):
                     CLICK_SOUND.play()

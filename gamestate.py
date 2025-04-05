@@ -2,19 +2,26 @@ import random, pygame, copy
 from jelly import Jelly
 from utils import COLORS, POP_SOUND, TILE_TEXTURE, HINT_TEXTURE
 from itertools import cycle
+import os
+
 
 class GameState:
     COLORS = COLORS
 
-    def __init__(self, level_file, difficulty, is_test=True):
+    def __init__(self, level_file, difficulty, is_ai=0, is_test=False):
         self.board = self.load_board(level_file)
         self.difficulty = difficulty
+        self.level = self.extract_level_from_filename(level_file) 
         self.objective = self.generate_objective()
         
         if is_test:
             print("Tabuleiro de teste carregado.")
-            self.set_fixed_jellies_positions()
+            #self.set_fixed_jellies_positions()
+            print(f"Tabuleiro de teste para o nível {self.level} carregado.")
+            #self.set_fixed_jellies_positions(self.level, self.difficulty)  #
+            self.set_fixed_jellies_positions(self.level, self.difficulty) 
             self.generate_fixed_playable_jellies()
+            
         else:
             self.randomize_jellies()
             self.generate_playable_jellies() 
@@ -24,9 +31,60 @@ class GameState:
         self.selected_jelly = None
         self.scheduled_actions = []
         
+    def extract_level_from_filename(self, level_file):
+        filename = os.path.basename(level_file) 
+        level_str = filename.replace('level', '').replace('.txt', '') 
+        return int(level_str)  
+        
     #def set_fixed_jellies_positions(self):
-    
-    def set_fixed_jellies_positions(self):
+    def set_fixed_jellies_positions(self, level, difficulty):
+        if level == 1:
+            if difficulty == 'easy':
+                print("Testing level 1 - easy"),
+                self.fixed_jellies = [
+                    Jelly(1, 1, "#e08b8b", "#7fc57b", "#e0c750", "#9a64c0"),
+                    Jelly(2, 2, "#5fb5ae", "#5b97c2", "#e08b8b", "#7fc57b"),
+                    Jelly(3, 3, "#9a64c0", "#e08b8b", "#7fc57b", "#e0c750"),
+                ]
+            elif difficulty == 'medium':
+                print("Testing level 1 - medium"),
+                self.fixed_jellies = [
+                    Jelly(0, 0, "#7fc57b", "#5b97c2", "#e08b8b", "#9a64c0"),
+                    Jelly(1, 2, "#e08b8b", "#9a64c0", "#7fc57b", "#e0c750"),
+                    Jelly(2, 4, "#5fb5ae", "#e0c750", "#9a64c0", "#7fc57b"),
+                ]
+            elif difficulty == 'hard':
+                print("Testing level 1 - hard"),
+                self.fixed_jellies = [
+                    Jelly(0, 1, "#e08b8b", "#7fc57b", "#e0c750", "#9a64c0"),
+                    Jelly(3, 3, "#5fb5ae", "#5b97c2", "#e08b8b", "#7fc57b"),
+                    Jelly(4, 4, "#9a64c0", "#e08b8b", "#7fc57b", "#e0c750"),
+                ]
+        
+        elif level == 2:
+            if difficulty == 'easy':
+                print("Testing level 2 - easy"),
+                self.fixed_jellies = [
+                    Jelly(0, 2, "#5fb5ae", "#5b97c2", "#e08b8b", "#7fc57b"),
+                    Jelly(2, 3, "#9a64c0", "#e08b8b", "#7fc57b", "#e0c750"),
+                    Jelly(4, 0, "#e08b8b", "#7fc57b", "#e0c750", "#9a64c0"),
+                ]
+            elif difficulty == 'medium':
+                print("Testing level 2 - medium"),
+                self.fixed_jellies = [
+                    Jelly(1, 1, "#7fc57b", "#5b97c2", "#e08b8b", "#9a64c0"),
+                    Jelly(2, 2, "#e08b8b", "#9a64c0", "#7fc57b", "#e0c750"),
+                    Jelly(3, 4, "#5fb5ae", "#e0c750", "#9a64c0", "#7fc57b"),
+                ]
+            elif difficulty == 'hard':
+                print("Testing level 3 - hard")
+                self.fixed_jellies = [
+                    Jelly(0, 0, "#e08b8b", "#7fc57b", "#e0c750", "#9a64c0"),
+                    Jelly(2, 3, "#5fb5ae", "#5b97c2", "#e08b8b", "#7fc57b"),
+                    Jelly(4, 4, "#9a64c0", "#e08b8b", "#7fc57b", "#e0c750"),
+                ]
+
+    def generate_fixed_playable_jellies(self):
         jelly1 = Jelly(0, 0, "#e08b8b", "#7fc57b", "#e0c750", "#9a64c0")  # Vermelho, Verde, Amarelo, Roxo
         jelly2 = Jelly(0, 0, "#5fb5ae", "#5b97c2", "#e08b8b", "#7fc57b")  # Ciano, Azul, Vermelho, Verde
         jelly3 = Jelly(0, 0, "#9a64c0", "#e08b8b", "#7fc57b", "#e0c750")  # Roxo, Vermelho, Verde, Amarelo
@@ -39,36 +97,26 @@ class GameState:
         jelly10 = Jelly(0, 0, "#7fc57b", "#9a64c0", "#e08b8b", "#5fb5ae")  # Verde, Roxo, Vermelho, Ciano
 
         self.fixed_jellies = [jelly1, jelly2, jelly3, jelly4, jelly5, jelly6, jelly7, jelly8, jelly9, jelly10]
-
-        #jelly1 = Jelly(0, 0, "#e08b8b", "#7fc57b", "#e0c750", "#9a64c0")  # Vermelho, Verde, Amarelo, Roxo
-        #jelly2 = Jelly(0, 0, "#5fb5ae", "#5b97c2", "#e08b8b", "#7fc57b")  # Ciano, Azul, Vermelho, Verde
-        #jelly3 = Jelly(0, 0, "#9a64c0", "#e08b8b", "#7fc57b", "#e0c750")  # Roxo, Vermelho, Verde, Amarelo
-        #jelly4 = Jelly(0, 0, "#5fb5ae", "#9a64c0", "#7fc57b", "#e0c750")  # Ciano, Roxo, Verde, Amarelo
-        #jelly5 = Jelly(0, 0, "#7fc57b", "#5b97c2", "#e08b8b", "#9a64c0")  # Verde, Azul, Vermelho, Roxo
-
-        #self.fixed_jellies = [jelly1, jelly2, jelly3, jelly4, jelly5]
         self.fixed_jelly_cycle = cycle(self.fixed_jellies)
 
-        # Atribuir as jellies à posição no tabuleiro
-        for y, row in enumerate(self.board):
-            for x in range(len(row)):
-                if row[x] == 'X':  # Se for uma célula jogável
-                    jelly = next(self.fixed_jelly_cycle)
-                    self.board[y][x] = jelly
-                else:
-                    row[x] = ' '  # Deixa as células não jogáveis vazias
-
-    def generate_fixed_playable_jellies(self):
-        # Gerando a lista de 50 jellies usando o ciclo das 5 jellies fixas
+        # Generating a list of 100 jellies for playable cells
         self.playable_jellies = []
-
-        # Criando uma lista de 100 jellies a partir das 5 fixas
-        for _ in range(100):
+        for _ in range(300):  # This will generate a list of 100 jellies
             jelly = next(self.fixed_jelly_cycle)
             self.playable_jellies.append(jelly)
         
-        # Usando itertools.cycle para garantir que a sequência de 5 jellies seja cíclica
+        # Ensuring the cycle is available for AI to use
         self.playable_jelly_cycle = cycle(self.playable_jellies)
+
+        # Atribuir as jellies à posição no tabuleiro
+        print("esta a entrar aqui na função generate_fixed_playable_jellies ")
+        for y, row in enumerate(self.board):
+            for x in range(len(row)):
+                if row[x] == 'X':  # Se for uma célula jogável
+                    jelly = next(self.playable_jelly_cycle)  # Use the playable jellies for AI
+                    self.board[y][x] = jelly
+                else:
+                    row[x] = ' '  # Deixa as células não jogáveis vazias
 
     def load_board(self, level_file):
         with open(level_file, 'r') as file:

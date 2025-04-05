@@ -7,14 +7,15 @@ from informedsearch import value, a_star_best_move
 from dfsbfs import dfs, bfs
 # from dfsbfs import dfs2
 
-def start_game(level, difficulty, is_ai=0):
+def start_game(level, difficulty, is_ai=0, is_test=False):
     level_path = f'levels/level{level}.txt'
-    game_state = GameState(level_path, difficulty)
+    game_state = GameState(level_path, difficulty, is_ai=is_ai, is_test=is_test)
 
     hint_move = None
     hint_start_time = None
 
-    if is_ai: print("AI selecionada: ", is_ai)
+    if is_ai: print("AI selecionada---: ", is_ai)
+    if is_test: print("AI selecionada____: ", is_test)
 
     while True:
         PLAY_MOUSE_POS = pygame.mouse.get_pos()
