@@ -32,9 +32,21 @@ class GameState:
         jelly3 = Jelly(0, 0, "#9a64c0", "#e08b8b", "#7fc57b", "#e0c750")  # Roxo, Vermelho, Verde, Amarelo
         jelly4 = Jelly(0, 0, "#5fb5ae", "#9a64c0", "#7fc57b", "#e0c750")  # Ciano, Roxo, Verde, Amarelo
         jelly5 = Jelly(0, 0, "#7fc57b", "#5b97c2", "#e08b8b", "#9a64c0")  # Verde, Azul, Vermelho, Roxo
+        jelly6 = Jelly(0, 0, "#e08b8b", "#5b97c2", "#7fc57b", "#9a64c0")  # Vermelho, Azul, Verde, Roxo
+        jelly7 = Jelly(0, 0, "#5fb5ae", "#e0c750", "#7fc57b", "#5b97c2")  # Ciano, Amarelo, Verde, Azul
+        jelly8 = Jelly(0, 0, "#9a64c0", "#5fb5ae", "#e08b8b", "#7fc57b")  # Roxo, Ciano, Vermelho, Verde
+        jelly9 = Jelly(0, 0, "#e0c750", "#5fb5ae", "#9a64c0", "#5b97c2")  # Amarelo, Ciano, Roxo, Azul
+        jelly10 = Jelly(0, 0, "#7fc57b", "#9a64c0", "#e08b8b", "#5fb5ae")  # Verde, Roxo, Vermelho, Ciano
 
-        self.fixed_jellies = [jelly1, jelly2, jelly3, jelly4, jelly5]
+        self.fixed_jellies = [jelly1, jelly2, jelly3, jelly4, jelly5, jelly6, jelly7, jelly8, jelly9, jelly10]
 
+        #jelly1 = Jelly(0, 0, "#e08b8b", "#7fc57b", "#e0c750", "#9a64c0")  # Vermelho, Verde, Amarelo, Roxo
+        #jelly2 = Jelly(0, 0, "#5fb5ae", "#5b97c2", "#e08b8b", "#7fc57b")  # Ciano, Azul, Vermelho, Verde
+        #jelly3 = Jelly(0, 0, "#9a64c0", "#e08b8b", "#7fc57b", "#e0c750")  # Roxo, Vermelho, Verde, Amarelo
+        #jelly4 = Jelly(0, 0, "#5fb5ae", "#9a64c0", "#7fc57b", "#e0c750")  # Ciano, Roxo, Verde, Amarelo
+        #jelly5 = Jelly(0, 0, "#7fc57b", "#5b97c2", "#e08b8b", "#9a64c0")  # Verde, Azul, Vermelho, Roxo
+
+        #self.fixed_jellies = [jelly1, jelly2, jelly3, jelly4, jelly5]
         self.fixed_jelly_cycle = cycle(self.fixed_jellies)
 
         # Atribuir as jellies à posição no tabuleiro
@@ -50,8 +62,8 @@ class GameState:
         # Gerando a lista de 50 jellies usando o ciclo das 5 jellies fixas
         self.playable_jellies = []
 
-        # Criando uma lista de 50 jellies a partir das 5 fixas
-        for _ in range(50):
+        # Criando uma lista de 100 jellies a partir das 5 fixas
+        for _ in range(100):
             jelly = next(self.fixed_jelly_cycle)
             self.playable_jellies.append(jelly)
         
