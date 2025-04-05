@@ -1,3 +1,4 @@
+from test_ai import test_ai
 import pygame, sys, menu, time
 from button import Button 
 from gamestate import GameState
@@ -10,7 +11,7 @@ from stats import game_stats
 import time
 
 
-def start_game(level, difficulty, is_ai=0):
+def start_game(algorithm, level, difficulty, is_ai=0):
     
     start_time = time.time()
     game_stats.reset()
@@ -19,7 +20,8 @@ def start_game(level, difficulty, is_ai=0):
     
     
     level_path = f'levels/level{level}.txt'
-    game_state = GameState(level_path, difficulty)
+    #game_state = GameState(level_path, difficulty)
+    game_state = GameState(algorithm, level_path, difficulty)
 
     hint_move = None
     hint_start_time = None
@@ -67,6 +69,8 @@ def start_game(level, difficulty, is_ai=0):
                 if event.type == pygame.MOUSEBUTTONDOWN:
                     if PLAY_BACK.checkForInput(PLAY_MOUSE_POS):
                         return  # Go back to the menu
+                    else:
+                         continue
                 if event.type == pygame.KEYDOWN and event.key == pygame.K_RETURN:
                     if game_state.is_board_normalized() and not game_state.scheduled_actions:
                         best_move = value(game_state)  
@@ -78,6 +82,11 @@ def start_game(level, difficulty, is_ai=0):
                             print(f"AI played move at ({x}, {y}) with jelly {jelly}")
 
             if is_ai == 2:  # DFS
+                if event.type == pygame.MOUSEBUTTONDOWN:
+                     if PLAY_BACK.checkForInput(PLAY_MOUSE_POS):
+                         return  # Go back to the menu
+                     else:
+                         continue
                 if event.type == pygame.KEYDOWN and event.key == pygame.K_RETURN:
                     if game_state.is_board_normalized() and not game_state.scheduled_actions:
                         best_action, _ = dfs(game_state, 2)
@@ -92,6 +101,11 @@ def start_game(level, difficulty, is_ai=0):
                         print(f"DFS -> jelly {jelly_index} em ({x}, {y})")
 
             if is_ai == 3: #BFS
+                if event.type == pygame.MOUSEBUTTONDOWN:
+                     if PLAY_BACK.checkForInput(PLAY_MOUSE_POS):
+                         return  # Go back to the menu
+                     else:
+                         continue
                 if event.type == pygame.KEYDOWN and event.key == pygame.K_RETURN:
                     if game_state.is_board_normalized() and not game_state.scheduled_actions:
                         best_action, _ = bfs(game_state, 2)
@@ -108,6 +122,8 @@ def start_game(level, difficulty, is_ai=0):
                 if event.type == pygame.MOUSEBUTTONDOWN:
                     if PLAY_BACK.checkForInput(PLAY_MOUSE_POS):
                         return  # Go back to the menu
+                    else:
+                         continue
                 if event.type == pygame.KEYDOWN and event.key == pygame.K_RETURN:
                     if game_state.is_board_normalized() and not game_state.scheduled_actions:
                         best_move = a_star_best_move(game_state)  # Use A* to find the best move
@@ -120,7 +136,7 @@ def start_game(level, difficulty, is_ai=0):
 
             if is_ai == 5: # Iterative Deepening
                 break
-
+            
             else:  # Human Mode
                 if event.type == pygame.MOUSEBUTTONDOWN:
                     if game_state.scheduled_actions:

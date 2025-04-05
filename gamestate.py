@@ -2,18 +2,71 @@ import random, pygame, copy
 from jelly import Jelly
 from utils import COLORS, POP_SOUND, TILE_TEXTURE, HINT_TEXTURE
 
+
 class GameState:
     COLORS = COLORS
 
-    def __init__(self, level_file, difficulty):
+    def __init__(self, maps, algorithm, difficulty, disable_randomization=False):
+        
+        level_file = f"levels/level{maps}.txt" 
+        # lógica de inicialização
+        self.algorithm = algorithm
         self.board = self.load_board(level_file)
         self.difficulty = difficulty
         self.objective = self.generate_objective()
-        self.randomize_jellies()
+        
+        if disable_randomization:
+            self.set_fixed_jellies_positions(maps)
+        else:
+            self.randomize_jellies()
+
+        #self.randomize_jellies()
         self.generate_playable_jellies() 
         self.selected_jelly = None
         self.scheduled_actions = []
+        
+  
+    def set_fixed_jellies_positions(self, level_file):
+        # Define fixed jelly positions and colors for different levels
+        fixed_positions = {
+            1: {  # Level 1
+                'map1': [(2, 3), (4, 5), (6, 7)],
+                'map2': [(1, 1), (3, 4), (5, 6)],
+                'colors': [['red', 'green', 'blue', 'yellow'], ['cyan', 'magenta', 'purple', 'blue'], ['green', 'yellow', 'red', 'purple']]
+            },
+            2: {  # Level 2
+                'map1': [(1, 2), (3, 4), (5, 6), (2, 6), (4, 3)],
+                'map2': [(0, 0), (2, 3), (4, 5), (1, 4), (5, 2)],
+                'colors': [['yellow', 'purple', 'orange', 'cyan'], ['magenta', 'green', 'blue', 'red'], ['purple', 'yellow', 'cyan', 'green'], ['red', 'blue', 'orange', 'magenta'], ['yellow', 'cyan', 'purple', 'red']]
+            },
+            3: {  # Level 3
+                'map1': [(1, 1), (2, 3), (4, 5), (6, 7), (3, 4), (5, 6), (7, 8)],
+                'map2': [(0, 0), (2, 3), (4, 6), (3, 5), (1, 2), (6, 7), (5, 4)],
+                'colors': [['red', 'green', 'blue', 'yellow'], ['purple', 'orange', 'cyan', 'blue'], ['green', 'yellow', 'red', 'purple'], ['blue', 'cyan', 'green', 'orange'], ['yellow', 'purple', 'orange', 'green'], ['red', 'blue', 'cyan', 'magenta'], ['green', 'yellow', 'blue', 'red']]
+            }
+        }
 
+        # Get the fixed positions and colors based on the level
+        level_data = fixed_positions.get(level_file, {})
+        
+        if level_data:
+            map1_positions = level_data['map1']
+            map2_positions = level_data['map2']
+            color_sets = level_data['colors']
+            
+            # Create jelly objects with the fixed positions and colors
+            jellies = []
+            for idx, (pos_map1, pos_map2) in enumerate(zip(map1_positions, map2_positions)):
+                colors = color_sets[idx]  # Get the 4 colors for the jelly
+                jelly = Jelly(*pos_map1, *colors)  # Create a Jelly object with 4 colors
+                jellies.append(jelly)
+            
+            return jellies
+        else:
+            print("Level data not found!")
+            return []
+
+    
     def load_board(self, level_file):
         with open(level_file, 'r') as file:
             board = [list(line.strip()) for line in file.readlines()]

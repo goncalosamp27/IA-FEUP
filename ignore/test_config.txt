@@ -1,0 +1,10 @@
+# Game Settings
+board_size=5
+difficulty=medium
+randomization=false  # Whether the board should be randomized
+
+# Algorithms to Test (these could be checked in a list or parsed from the file)
+algorithms=greedy, dfs, bfs, a_star
+
+# Level File (optional, if you want to specify which level to test)
+level_file=levels/level1.txt

@@ -3,6 +3,7 @@ from button import Button
 from game import start_game  
 from utils import get_font, draw_microphone_icon, SCREEN, BG, CLICK_SOUND
 from stats import game_stats
+from test_ai import test_ai
 
 
 def play(is_ai = 0):
@@ -79,6 +80,137 @@ def play(is_ai = 0):
 
         pygame.display.update()
 
+def test_ai_menu():
+    # Initial algorithm is A* (index 3 in list)
+    selected_algorithm = 4  # Corresponds to 'A*' in the list ['Greedy', 'DFS', 'BFS', 'A*']
+    selected_map = 'big'
+    selected_difficulty = 'easy'
+
+    while True:
+        SCREEN.blit(BG, (0, 0))
+        OPTIONS_MOUSE_POS = pygame.mouse.get_pos()
+
+        OPTIONS_TEXT = get_font(45).render("Algorithm - Map - Difficulty", True, "#99afd7")
+        OPTIONS_RECT = OPTIONS_TEXT.get_rect(center=(640, 100))
+        SCREEN.blit(OPTIONS_TEXT, OPTIONS_RECT)
+
+        ALG_TEXT = get_font(30).render(f"Algorithm: {['Greedy', 'DFS', 'BFS', 'A*'][selected_algorithm - 1]}", True, "White")
+        ALG_RECT = ALG_TEXT.get_rect(center=(640, 200))
+        SCREEN.blit(ALG_TEXT, ALG_RECT)
+
+        MAP_TEXT = get_font(30).render(f"Map: {selected_map}", True, "White")
+        MAP_RECT = MAP_TEXT.get_rect(center=(640, 300))
+        SCREEN.blit(MAP_TEXT, MAP_RECT)
+
+        DIFFICULTY_TEXT = get_font(30).render(f"Difficulty: {selected_difficulty.capitalize()}", True, "White")
+        DIFFICULTY_RECT = DIFFICULTY_TEXT.get_rect(center=(640, 400))
+        SCREEN.blit(DIFFICULTY_TEXT, DIFFICULTY_RECT)
+
+        ALG_UP_BUTTON = Button(image=None, pos=(1000, 200),
+                                 text_input=">", font=get_font(30), base_color="#6888be", hovering_color="White")
+        ALG_DOWN_BUTTON = Button(image=None, pos=(280, 200),
+                                   text_input="<", font=get_font(30), base_color="#6888be", hovering_color="White")
+
+        MAP_UP_BUTTON = Button(image=None, pos=(900, 300),
+                                 text_input=">", font=get_font(30), base_color="#6888be", hovering_color="White")
+        MAP_DOWN_BUTTON = Button(image=None, pos=(380, 300),
+                                   text_input="<", font=get_font(30), base_color="#6888be", hovering_color="White")
+
+        DIFFICULTY_UP_BUTTON = Button(image=None, pos=(940, 400),
+                                      text_input=">", font=get_font(30), base_color="#6888be", hovering_color="White")
+        DIFFICULTY_DOWN_BUTTON = Button(image=None, pos=(340, 400),
+                                        text_input="<", font=get_font(30), base_color="#6888be", hovering_color="White")
+
+        START_BUTTON = Button(image=None, pos=(640, 550),
+                              text_input="START", font=get_font(50), base_color="#6888be", hovering_color="White")
+        BACK_BUTTON = Button(image=None, pos=(640, 650),
+                             text_input="Back", font=get_font(40), base_color="#99afd7", hovering_color="White")
+
+        ALG_UP_BUTTON.changeColor(OPTIONS_MOUSE_POS)
+        ALG_UP_BUTTON.update(SCREEN)
+        ALG_DOWN_BUTTON.changeColor(OPTIONS_MOUSE_POS)
+        ALG_DOWN_BUTTON.update(SCREEN)
+        MAP_UP_BUTTON.changeColor(OPTIONS_MOUSE_POS)
+        MAP_UP_BUTTON.update(SCREEN)
+        MAP_DOWN_BUTTON.changeColor(OPTIONS_MOUSE_POS)
+        MAP_DOWN_BUTTON.update(SCREEN)
+        DIFFICULTY_UP_BUTTON.changeColor(OPTIONS_MOUSE_POS)
+        DIFFICULTY_UP_BUTTON.update(SCREEN)
+        DIFFICULTY_DOWN_BUTTON.changeColor(OPTIONS_MOUSE_POS)
+        DIFFICULTY_DOWN_BUTTON.update(SCREEN)
+        START_BUTTON.changeColor(OPTIONS_MOUSE_POS)
+        START_BUTTON.update(SCREEN)
+        BACK_BUTTON.changeColor(OPTIONS_MOUSE_POS)
+        BACK_BUTTON.update(SCREEN)
+
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                pygame.quit()
+                sys.exit()
+            if event.type == pygame.MOUSEBUTTONDOWN:
+
+                if ALG_UP_BUTTON.checkForInput(OPTIONS_MOUSE_POS):
+                    CLICK_SOUND.play()
+                    # Cycle through algorithms and update selected_algorithm
+                    selected_algorithm = (selected_algorithm % 4) + 1
+                if ALG_DOWN_BUTTON.checkForInput(OPTIONS_MOUSE_POS):
+                    CLICK_SOUND.play()
+                    # Cycle through algorithms in reverse order
+                    selected_algorithm = (selected_algorithm - 2) % 4 + 1
+
+                if MAP_UP_BUTTON.checkForInput(OPTIONS_MOUSE_POS):
+                    CLICK_SOUND.play()
+                    selected_map = 'big' if selected_map == 'small' else 'small'
+                if MAP_DOWN_BUTTON.checkForInput(OPTIONS_MOUSE_POS):
+                    CLICK_SOUND.play()
+                    selected_map = 'small' if selected_map == 'big' else 'big'
+
+                if DIFFICULTY_UP_BUTTON.checkForInput(OPTIONS_MOUSE_POS):
+                    CLICK_SOUND.play()
+                    selected_difficulty = 'medium' if selected_difficulty == 'easy' else 'hard' if selected_difficulty == 'medium' else 'easy'
+                if DIFFICULTY_DOWN_BUTTON.checkForInput(OPTIONS_MOUSE_POS):
+                    CLICK_SOUND.play()
+                    selected_difficulty = 'medium' if selected_difficulty == 'hard' else 'easy' if selected_difficulty == 'medium' else 'hard'
+                if START_BUTTON.checkForInput(OPTIONS_MOUSE_POS):
+                    CLICK_SOUND.play()
+                    # Call test_ai with the algorithm index (selected_algorithm)
+                    test_ai(selected_algorithm, selected_map, selected_difficulty)
+                if BACK_BUTTON.checkForInput(OPTIONS_MOUSE_POS):
+                    CLICK_SOUND.play()
+                    main_menu()
+
+        pygame.display.update()
+
+
+"""
+def compare_all_ais():
+    selected_level = 1
+    selected_difficulty = "easy"
+    algorithms = [1, 2, 3, 4]  # Corresponds to Greedy, DFS, BFS, A*
+
+    for ai in algorithms:
+        game_stats.reset()
+        start_game(selected_level, selected_difficulty, ai)
+
+        waiting = True
+        while waiting:
+            SCREEN.blit(BG, (0, 0))
+            NEXT_TEXT = get_font(60).render("Click to run next AI...", True, "White")
+            NEXT_RECT = NEXT_TEXT.get_rect(center=(640, 360))
+            SCREEN.blit(NEXT_TEXT, NEXT_RECT)
+            pygame.display.update()
+
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    pygame.quit()
+                    sys.exit()
+                elif event.type == pygame.MOUSEBUTTONDOWN:
+                    CLICK_SOUND.play()
+                    waiting = False
+
+    # After all AIs are tested, return to main menu
+    main_menu()
+"""
 def choose_ai():
     while True:
         SCREEN.blit(BG, (0, 0))
@@ -88,14 +220,15 @@ def choose_ai():
         MENU_TEXT = get_font(100).render("COMPUTER", True, "#ccdbee")
         MENU_RECT = MENU_TEXT.get_rect(center=(640, 100))
 
-        AI_1_BUTTON = Button(image=None, pos=(640, 240), text_input="Greedy", font=get_font(50), base_color="#99afd7", hovering_color="White")
-        AI_2_BUTTON = Button(image=None, pos=(640, 340), text_input="DFS", font=get_font(50), base_color="#99afd7", hovering_color="White")
-        AI_3_BUTTON = Button(image=None, pos=(640, 440), text_input="BFS", font=get_font(50), base_color="#99afd7", hovering_color="White")
-        AI_4_BUTTON = Button(image=None, pos=(640, 540), text_input="A*", font=get_font(50), base_color="#99afd7", hovering_color="White")
+        AI_1_BUTTON = Button(image=None, pos=(640, 240), text_input="Greedy", font=get_font(30), base_color="#99afd7", hovering_color="White")
+        AI_2_BUTTON = Button(image=None, pos=(640, 300), text_input="DFS", font=get_font(30), base_color="#99afd7", hovering_color="White")
+        AI_3_BUTTON = Button(image=None, pos=(640, 360), text_input="BFS", font=get_font(30), base_color="#99afd7", hovering_color="White")
+        AI_4_BUTTON = Button(image=None, pos=(640, 420), text_input="A*", font=get_font(30), base_color="#99afd7", hovering_color="White")
+        TEST_AI_BUTTON = Button(image=None, pos=(640, 480), text_input="Test AI", font=get_font(30), base_color="#99afd7", hovering_color="White")
         BACK_BUTTON = Button(image=None, pos=(640, 650), text_input="Back", font=get_font(40), base_color="#99afd7", hovering_color="White")
         SCREEN.blit(MENU_TEXT, MENU_RECT)
 
-        for button in [AI_1_BUTTON, AI_2_BUTTON, AI_3_BUTTON, AI_4_BUTTON, BACK_BUTTON]:
+        for button in [AI_1_BUTTON, AI_2_BUTTON, AI_3_BUTTON, AI_4_BUTTON, TEST_AI_BUTTON, BACK_BUTTON]:
             button.changeColor(MENU_MOUSE_POS)
             button.update(SCREEN)
         for event in pygame.event.get():
@@ -123,6 +256,13 @@ def choose_ai():
                         # Handle hard AI selection
                     print("AI4 selected")  # You can start the game with hard AI
                     play(4)
+                    
+                if TEST_AI_BUTTON.checkForInput(MENU_MOUSE_POS):
+                    CLICK_SOUND.play()
+                    print("Test_AI selected")
+                    test_ai_menu()
+
+                    
                 if BACK_BUTTON.checkForInput(MENU_MOUSE_POS):
                     CLICK_SOUND.play()
                     main_menu()  # Go back to the main menu
@@ -277,7 +417,7 @@ def main_menu():
 
         PLAY_BUTTON = Button(image=None, pos=(640, 250), 
                             text_input="PLAY", font=get_font(60), base_color="#ccdbee", hovering_color="White")
-        OPTIONS_BUTTON = Button(image=None, pos=(640, 350), 
+        AI_BUTTON = Button(image=None, pos=(640, 350), 
                             text_input="COMPUTER", font=get_font(60), base_color="#ccdbee", hovering_color="White")
         HTP_BUTTON = Button(image=None, pos=(640, 450), 
                             text_input="HOW TO PLAY", font=get_font(60), base_color="#ccdbee", hovering_color="White")
@@ -288,7 +428,7 @@ def main_menu():
         
         draw_microphone_icon()
 
-        for button in [PLAY_BUTTON, OPTIONS_BUTTON, HTP_BUTTON, QUIT_BUTTON]:
+        for button in [PLAY_BUTTON, AI_BUTTON, HTP_BUTTON, QUIT_BUTTON]:
             button.changeColor(MENU_MOUSE_POS)
             button.update(SCREEN)
         
@@ -300,7 +440,7 @@ def main_menu():
                 if PLAY_BUTTON.checkForInput(MENU_MOUSE_POS):
                     CLICK_SOUND.play()
                     play()  # Trigger the game menu
-                if OPTIONS_BUTTON.checkForInput(MENU_MOUSE_POS):
+                if AI_BUTTON.checkForInput(MENU_MOUSE_POS):
                     CLICK_SOUND.play()
                     choose_ai()
                 if HTP_BUTTON.checkForInput(MENU_MOUSE_POS):
