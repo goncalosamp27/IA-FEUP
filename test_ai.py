@@ -50,6 +50,8 @@ def test_ai(level, difficulty, is_ai=0, is_test=True):
                 sys.exit()
 
             if is_ai == 1:  # GREEDY
+                print("Entrou no TESTE GREEDY")
+                
                 if event.type == pygame.MOUSEBUTTONDOWN:
                     if PLAY_BACK.checkForInput(PLAY_MOUSE_POS):
                         return  # Go back to the menu
@@ -64,6 +66,7 @@ def test_ai(level, difficulty, is_ai=0, is_test=True):
                             print(f"AI played move at ({x}, {y}) with jelly {jelly}")
 
             if is_ai == 2:  # DFS
+                print("Entrou no TESTE DFS")
                 if event.type == pygame.MOUSEBUTTONDOWN:
                     if PLAY_BACK.checkForInput(PLAY_MOUSE_POS):
                         return  # Go back to the menu
@@ -81,6 +84,7 @@ def test_ai(level, difficulty, is_ai=0, is_test=True):
                         print(f"DFS -> jelly {jelly_index} em ({x}, {y})")
 
             if is_ai == 3: #BFS
+                print("Entrou no TESTE BFS")
                 if event.type == pygame.MOUSEBUTTONDOWN:
                     if PLAY_BACK.checkForInput(PLAY_MOUSE_POS):
                         return  # Go back to the menu
@@ -97,6 +101,7 @@ def test_ai(level, difficulty, is_ai=0, is_test=True):
                         print(f"BFS -> jelly {jelly_index} em ({x}, {y})")
 
             if is_ai == 4: # A *
+                print("Entrou no TESTE A*")
                 if event.type == pygame.MOUSEBUTTONDOWN:
                     if PLAY_BACK.checkForInput(PLAY_MOUSE_POS):
                         return  # Go back to the menu
