@@ -25,7 +25,7 @@ def test_ai(level, difficulty, is_ai=0, is_test=True):
         PLAY_BACK.changeColor(PLAY_MOUSE_POS)
         PLAY_BACK.update(SCREEN)
 
-        game_state.draw_board(SCREEN, hint_move)
+        game_state.draw_board(SCREEN, hint_move, is_test=True)
         game_state.update_scheduled_actions()
 
         if hint_start_time and time.time() - hint_start_time > 5:
@@ -90,15 +90,16 @@ def test_ai(level, difficulty, is_ai=0, is_test=True):
                         return  # Go back to the menu
                     else:
                         continue
-                if event.type == pygame.KEYDOWN and event.key == pygame.K_RETURN:
-                    if game_state.is_board_normalized() and not game_state.scheduled_actions:
-                        best_action, _ = bfs(game_state, 2)
+                    
+                print("Entrou no TESTE BFS?????")
+                if game_state.is_board_normalized() and not game_state.scheduled_actions:
+                    best_action, _ = bfs(game_state, 2)
 
-                        x, y, jelly_index = best_action
-                        jelly = game_state.playable_jellies[jelly_index]
+                    x, y, jelly_index = best_action
+                    jelly = game_state.playable_jellies[jelly_index]
 
-                        game_state.make_move(x, y, jelly)
-                        print(f"BFS -> jelly {jelly_index} em ({x}, {y})")
+                    game_state.make_move(x, y, jelly)
+                    print(f"BFS -> jelly {jelly_index} em ({x}, {y})")
 
             if is_ai == 4: # A *
                 print("Entrou no TESTE A*")
