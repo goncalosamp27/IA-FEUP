@@ -3,7 +3,7 @@ from button import Button
 from gamestate import GameState
 from jelly import Jelly
 from utils import get_font, SCREEN, BG, CLICK_SOUND, HINT_SOUND, JELLY_SOUND
-from informedsearch import value, a_star_weighted
+from informedsearch import value, a_star
 from dfsbfs import dfs, bfs
 # from dfsbfs import dfs2
 
@@ -109,13 +109,27 @@ def start_game(level, difficulty, is_ai=0, is_test=False):
                         continue
                 if event.type == pygame.KEYDOWN and event.key == pygame.K_RETURN:
                     if game_state.is_board_normalized() and not game_state.scheduled_actions:
-                        best_move = a_star_weighted(game_state)  # Use A* to find the best move
+                        best_move = a_star(game_state, 2, False)  # Use A* to find the best move
                         if best_move:
                             x, y, jelly = best_move
                             game_state.make_move(x, y, jelly)
                             print(f"A* played move at ({x}, {y}) with jelly {jelly}")
 
-            if is_ai == 5: # Iterative Deepening
+            if is_ai == 5: # Weighted A *
+                 if event.type == pygame.MOUSEBUTTONDOWN:
+                     if PLAY_BACK.checkForInput(PLAY_MOUSE_POS):
+                         return  # Go back to the menu
+                     else:
+                         continue
+                 if event.type == pygame.KEYDOWN and event.key == pygame.K_RETURN:
+                     if game_state.is_board_normalized() and not game_state.scheduled_actions:
+                         best_move = a_star(game_state, 2, True)  # Use A* to find the best move
+                         if best_move:
+                             x, y, jelly = best_move
+                             game_state.make_move(x, y, jelly)
+                             print(f"A* played move at ({x}, {y}) with jelly {jelly}")
+ 
+            if is_ai == 6: # Iterative Deepening
                 break
 
             else:  # Human Mode

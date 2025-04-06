@@ -21,7 +21,7 @@ def value(game_state):
 
 counter = itertools.count()  # Unique counter to break heap ties
 
-def heuristic(game_state):
+def heuristic(game_state, weighted=True):
     OBJECTIVE_WEIGHT = 1000
     h = 0
 
@@ -36,12 +36,15 @@ def heuristic(game_state):
             remaining = game_state.objective[count_key]
             progress = initial_target - remaining
             
-            h -= remaining * OBJECTIVE_WEIGHT
-            h += progress * (OBJECTIVE_WEIGHT // 2)
+            if weighted:
+                h -= remaining * OBJECTIVE_WEIGHT
+                h += progress * (OBJECTIVE_WEIGHT // 2)
+            else:
+                h += progress - remaining
 
     return h
 
-def a_star_weighted(game_state, max_depth=2):
+def a_star(game_state, max_depth=2, weighted=True):
     open_set = []  # Priority queue
     best_move = None
     best_score = float('-inf')
@@ -54,7 +57,7 @@ def a_star_weighted(game_state, max_depth=2):
                     score = game_state.simulate_move(x, y, jelly)  
 
                     if score is not None:
-                        h_score = heuristic(game_state)  # Estimate future cost
+                        h_score = heuristic(game_state, weighted)  # Estimate future cost
                         f_score = score + h_score  # A* f = g + h
 
                         heapq.heappush(open_set, (f_score, next(counter), (x, y, jelly), score, 1))
@@ -77,7 +80,7 @@ def a_star_weighted(game_state, max_depth=2):
                             
                             if new_score is not None:
                                 new_g = g_score + new_score
-                                new_h = heuristic(game_state)  # Recalculate heuristic
+                                new_h = heuristic(game_state, weighted)  # Recalculate heuristic
                                 new_f = new_g + new_h  # Accumulate score
  
                                 heapq.heappush(open_set, (new_f, next(counter), (x2, y2, next_jelly), new_g, depth + 1))
