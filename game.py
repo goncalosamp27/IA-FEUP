@@ -133,6 +133,7 @@ def start_game(level, difficulty, is_ai=0):
                         f.write(f"Difficulty: {difficulty}\n")
                         f.write(f"Time Taken: {elapsed_time:.4f} seconds\n")
                         f.write(f"Memory Used: {memory_kb:.2f} KB\n")
+                        f.write(f"Number of States Generated: {states_generated}\n")
                         f.write(f"Result: {result}\n")
                         f.write(f"Total Moves: {len(ai_moves)}\n\n")
 
@@ -151,7 +152,7 @@ def start_game(level, difficulty, is_ai=0):
 
         if is_ai > 0 and game_state.is_board_normalized() and not game_state.scheduled_actions:
             if is_ai == 1:  # GREEDY
-                best_move = value(game_state)
+                best_move, states_generated = value(game_state)
                 if best_move:
                     x, y, jelly = best_move
                     game_state.make_move(x, y, jelly)
@@ -159,7 +160,7 @@ def start_game(level, difficulty, is_ai=0):
                     print(f"AI played move at ({x}, {y}) with jelly {jelly}")
 
             elif is_ai == 2:  # DFS
-                best_action, _, _ = dfs(game_state, 2)
+                best_action, _, states_generated = dfs(game_state, 2)
                 x, y, jelly_index = best_action
                 jelly = game_state.playable_jellies[jelly_index]
                 game_state.make_move(x, y, jelly)
@@ -167,7 +168,7 @@ def start_game(level, difficulty, is_ai=0):
                 print(f"DFS -> jelly {jelly_index} em ({x}, {y})")
 
             elif is_ai == 3:  # BFS
-                best_action, _, _ = bfs(game_state, 2)
+                best_action, _, states_generated = bfs(game_state, 2)
                 x, y, jelly_index = best_action
                 jelly = game_state.playable_jellies[jelly_index]
                 game_state.make_move(x, y, jelly)
@@ -175,7 +176,7 @@ def start_game(level, difficulty, is_ai=0):
                 print(f"BFS -> jelly {jelly_index} em ({x}, {y})")
 
             elif is_ai == 4:  # A*
-                best_move = a_star(game_state, 2, False)
+                best_move, states_generated = a_star(game_state, 2, False)
                 if best_move:
                     x, y, jelly = best_move
                     game_state.make_move(x, y, jelly)

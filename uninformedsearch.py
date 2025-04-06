@@ -38,7 +38,7 @@ def dfs(state, depth):
     best_score = -float('inf')
     best_action = None  
     
-    states_generated = 1  # contador de estados gerados
+    states_generated = 0  
 
     for jelly_index in range(len(state.playable_jellies)):
         for x, y in get_possible_moves(state):

@@ -3,6 +3,7 @@ import heapq, itertools
 def value(game_state):
     best_score = float('-inf')
     best_move = None
+    states_generated = 0
 
     for y, row in enumerate(game_state.board):
         for x, cell in enumerate(row):
@@ -11,13 +12,14 @@ def value(game_state):
 
                     jelly = game_state.playable_jellies[jelly_index]
                     score = game_state.simulate_move(x, y, jelly)
+                    states_generated += 1
                     print(f"Colocar a Jelly {jelly_index} em {x}, {y} dá {score} pontos")
                 
                     if score is not None and score > best_score:
                         best_score = score
                         best_move = (x, y, jelly)
 
-    return best_move
+    return best_move, states_generated
 
 counter = itertools.count()  # Unique counter to break heap ties
 
@@ -48,6 +50,7 @@ def a_star(game_state, max_depth=2, weighted=True):
     open_set = []  # Priority queue
     best_move = None
     best_score = float('-inf')
+    states_generated = 0
 
     # Add all possible initial moves to the queue
     for y, row in enumerate(game_state.board):
@@ -61,6 +64,7 @@ def a_star(game_state, max_depth=2, weighted=True):
                         f_score = score + h_score  # A* f = g + h
 
                         heapq.heappush(open_set, (f_score, next(counter), (x, y, jelly), score, 1))
+                        states_generated += 1
 
     while open_set:
         _, _, move, g_score, depth = heapq.heappop(open_set)
@@ -84,5 +88,6 @@ def a_star(game_state, max_depth=2, weighted=True):
                                 new_f = new_g + new_h  # Accumulate score
 
                                 heapq.heappush(open_set, (new_f, next(counter), (x2, y2, next_jelly), new_g, depth + 1))
+                                states_generated += 1
 
-    return best_move
+    return best_move, states_generated
