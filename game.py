@@ -68,14 +68,16 @@ def start_game(level, difficulty, is_ai=0):
 
                     output_folder = "results"
                     os.makedirs(output_folder, exist_ok=True)
-                    log_filename = os.path.join(output_folder, f"{algorithm_name}_level{level}.txt")
-                    json_filename = os.path.join(output_folder, f"{algorithm_name}_level{level}.json")
+
+                    # Include difficulty in the filename
+                    log_filename = os.path.join(output_folder, f"{algorithm_name}_level{level}_difficulty{difficulty}.txt")
+                    json_filename = os.path.join(output_folder, f"{algorithm_name}_level{level}_difficulty{difficulty}.json")
 
                     # Save game state as JSON
                     game_state.save_to_file(json_filename)
 
-                    # Save readable log
-                    with open(log_filename, "w") as f:
+                    # Save readable log with a separator between executions
+                    with open(log_filename, "a") as f:  # Open in append mode ('a')
                         f.write(f"Algorithm: {algorithm_name}\n")
                         f.write(f"Level: {level}\n")
                         f.write(f"Difficulty: {difficulty}\n")
@@ -89,8 +91,13 @@ def start_game(level, difficulty, is_ai=0):
                             f.write(f"{move}\n")
 
                         f.write(f"\nFull game state saved to: {json_filename}\n")
+
+                        # Add separator for next execution
+                        f.write("\n===========\n")
+
                 menu.win_screen(is_ai)
                 return
+
             elif game_state.check_game_over():
                 # --- Save AI result on game end ---
                 if is_ai:
@@ -111,14 +118,16 @@ def start_game(level, difficulty, is_ai=0):
 
                     output_folder = "results"
                     os.makedirs(output_folder, exist_ok=True)
-                    log_filename = os.path.join(output_folder, f"{algorithm_name}_level{level}.txt")
-                    json_filename = os.path.join(output_folder, f"{algorithm_name}_level{level}.json")
+
+                    # Include difficulty in the filename
+                    log_filename = os.path.join(output_folder, f"{algorithm_name}_level{level}_{difficulty}.txt")
+                    json_filename = os.path.join(output_folder, f"{algorithm_name}_level{level}_{difficulty}.json")
 
                     # Save game state as JSON
                     game_state.save_to_file(json_filename)
 
-                    # Save readable log
-                    with open(log_filename, "w") as f:
+                    # Save readable log with a separator between executions
+                    with open(log_filename, "a") as f:  # Open in append mode ('a')
                         f.write(f"Algorithm: {algorithm_name}\n")
                         f.write(f"Level: {level}\n")
                         f.write(f"Difficulty: {difficulty}\n")
@@ -132,6 +141,10 @@ def start_game(level, difficulty, is_ai=0):
                             f.write(f"{move}\n")
 
                         f.write(f"\nFull game state saved to: {json_filename}\n")
+
+                        # Add separator for next execution
+                        f.write("\n===========\n")
+
                 menu.game_over_screen(is_ai)
                 return
 
