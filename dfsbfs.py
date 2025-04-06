@@ -35,10 +35,12 @@ def get_possible_moves(state): # retirar as posições vazias
 
 def dfs(state, depth):
     if depth == 0 or state.check_game_over():
-        return None, 0  # nada a fazer
+        return None, 0, 1  # nada a fazer
 
     best_score = -float('inf')
     best_action = None  
+    
+    states_generated = 1  # contador de estados gerados
 
     for jelly_index in range(len(state.playable_jellies)):
         for x, y in get_possible_moves(state):
@@ -53,7 +55,9 @@ def dfs(state, depth):
                 simulated_state.reconstruct_all()
 
                 progresso = compare_game_states(simulated_state, state)
-                _, future_score = dfs(simulated_state, depth - 1)
+                _, future_score, generated_states = dfs(simulated_state, depth - 1)
+                
+                states_generated += generated_states
 
                 if progresso == 0 and future_score == 0:
                     total_score = -10  # penalizar jogadas inúteis (?) -> nao sei se devemos por isto, mas escolhe melhor a jogada
@@ -68,12 +72,13 @@ def dfs(state, depth):
 
                 print(f"SCORE: {total_score}") 
 
-    return best_action, best_score
+    return best_action, best_score, states_generated
 
 def bfs(state, max_depth=2):
     queue = deque()
     best_score = -float('inf')
     best_action = None  
+    states_generated = 0 
 
     for jelly_index in range(len(state.playable_jellies)):
         for x, y in get_possible_moves(state):
@@ -89,6 +94,8 @@ def bfs(state, max_depth=2):
 
                 queue.append((initial_state, (x, y, jelly_index), 1, progresso))
 
+                states_generated += 1 
+                  
                 if progresso > best_score:
                     best_score = progresso
                     best_action = (x, y, jelly_index)
@@ -113,8 +120,10 @@ def bfs(state, max_depth=2):
 
                     queue.append((next_state, initial_action, depth + 1, total_score))
 
+                    states_generated += 1
+                    
                     if total_score > best_score:
                         best_score = total_score
                         best_action = initial_action
 
-    return best_action, best_score
+    return best_action, best_score, states_generated

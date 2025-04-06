@@ -1,0 +1,6 @@
+Mapa,Dificuldade,Algoritmo,Heurística,Parâmetros,Estados Gerados,Tempo(s),Memória(Mb),Qualidade da Solução
+1,easy,BFS,-,Profundidade=2,73560,76.833,511.673,
+1,easy,BFS,-,Profundidade=2,103536,105.263,742.821,
+1,medium,BFS,-,Profundidade=2,73260,82.735,545.8,
+1,medium,BFS,-,Profundidade=2,61488,67.619,466.79,
+1,medium,BFS,-,Profundidade=2,63178,69.488,480.273,

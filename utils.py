@@ -1,4 +1,6 @@
 import pygame
+import csv
+import os
 
 pygame.init()
 SCREEN = pygame.display.set_mode((1280, 720))
@@ -71,3 +73,17 @@ def draw_microphone_icon():
         if icon_x <= mouse_x <= icon_x + icon_width and icon_y <= mouse_y <= icon_y + icon_height:
             toggle_sound() 
             pygame.time.delay(200)
+
+#results
+def save_test_result(data, filename="results.csv"):
+    file_exists = os.path.isfile(filename)
+    headers = [
+        "Mapa", "Dificuldade", "Algoritmo", "Heurística", "Parâmetros",
+        "Estados Gerados", "Tempo(s)", "Memória(Mb)", "Qualidade da Solução"
+    ]
+    
+    with open(filename, mode='a', newline='') as file:
+        writer = csv.DictWriter(file, fieldnames=headers)
+        if not file_exists:
+            writer.writeheader()
+        writer.writerow(data)   

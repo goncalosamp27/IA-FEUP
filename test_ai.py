@@ -6,6 +6,10 @@ from utils import get_font, SCREEN, BG, CLICK_SOUND, JELLY_SOUND
 from informedsearch import value, a_star, iterative_deepening, ucs
 from dfsbfs import dfs, bfs
 # from dfsbfs import dfs2
+import time
+import tracemalloc
+from utils import save_test_result  # já criamos essa
+
 
 def test_ai(level, difficulty, is_ai=0, is_test=True):
     level_path = f'levels/level{level}.txt'
@@ -74,15 +78,35 @@ def test_ai(level, difficulty, is_ai=0, is_test=True):
                         continue
                 #if event.type == pygame.KEYDOWN and event.key == pygame.K_RETURN:
                 if game_state.is_board_normalized() and not game_state.scheduled_actions:
-                    best_action, _ = dfs(game_state, 2)
+                    tracemalloc.start()
+                    start_time = time.time() 
+                           
+                    best_action, states_generated = dfs(game_state, 2)
                     # versao goofy # best_action, _ = dfs2(game_state)
+                    end_time = time.time()
+                    current, peak = tracemalloc.get_traced_memory()
+                    tracemalloc.stop()
 
                     x, y, jelly_index = best_action
                     jelly = game_state.playable_jellies[jelly_index]
 
                     game_state.make_move(x, y, jelly)
                     print(f"DFS -> jelly {jelly_index} em ({x}, {y})")
-
+                    
+                    memory_used = peak / (1024 * 1024)
+                    time_taken = round(end_time - start_time, 3)
+                    #quality = get_solution_quality(game_state)
+                    save_test_result({
+                        "Mapa": level,
+                        "Dificuldade": difficulty,
+                        "Algoritmo": "DFS",
+                        "Heurística": "-",
+                        "Parâmetros": "Profundidade=2",
+                        "Estados Gerados": states_generated,
+                        "Tempo(s)": time_taken,
+                        "Memória(Mb)": round(memory_used, 3)
+                       # "Qualidade da Solução": quality
+                    })
             if is_ai == 3: #BFS
                 print("Entrou no TESTE BFS")
                 if event.type == pygame.MOUSEBUTTONDOWN:
@@ -93,7 +117,15 @@ def test_ai(level, difficulty, is_ai=0, is_test=True):
                     
                 print("Entrou no TESTE BFS?????")
                 if game_state.is_board_normalized() and not game_state.scheduled_actions:
-                    best_action, _ = bfs(game_state, 2)
+                    tracemalloc.start()
+                    start_time = time.time()
+                    
+                    best_action, _, states_generated = bfs(game_state, 2)
+                    
+                    end_time = time.time()
+                    current, peak = tracemalloc.get_traced_memory()
+                    tracemalloc.stop()
+                    
 
                     x, y, jelly_index = best_action
                     jelly = game_state.playable_jellies[jelly_index]
@@ -101,6 +133,21 @@ def test_ai(level, difficulty, is_ai=0, is_test=True):
                     game_state.make_move(x, y, jelly)
                     print(f"BFS -> jelly {jelly_index} em ({x}, {y})")
 
+                    time_taken = round(end_time - start_time, 3)
+                    memory_used = peak / (1024 * 1024)
+                    
+                    save_test_result({
+                        "Mapa": level,
+                        "Dificuldade": difficulty,
+                        "Algoritmo": "BFS",
+                        "Heurística": "-",
+                        "Parâmetros": "Profundidade=2",
+                        "Estados Gerados": states_generated,
+                        "Tempo(s)": time_taken,
+                        "Memória(Mb)": round(memory_used, 3)
+                       # "Qualidade da Solução": best_score
+                    })
+                    
             if is_ai == 4: # A *
                 print("Entrou no TESTE A*")
                 if event.type == pygame.MOUSEBUTTONDOWN:
@@ -110,7 +157,7 @@ def test_ai(level, difficulty, is_ai=0, is_test=True):
                         continue
                 #if event.type == pygame.KEYDOWN and event.key == pygame.K_RETURN:
                 if game_state.is_board_normalized() and not game_state.scheduled_actions:
-                    best_move = a_star_best_move(game_state)  # Use A* to find the best move
+                    best_move = a_star(game_state)  # Use A* to find the best move
                     if best_move:
                         x, y, jelly = best_move
                         game_state.make_move(x, y, jelly)
