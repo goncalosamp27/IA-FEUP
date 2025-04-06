@@ -70,6 +70,7 @@ def play(is_ai = 0):
                     selected_difficulty = 'medium' if selected_difficulty == 'hard' else 'easy' if selected_difficulty == 'medium' else 'hard'
                 if START_BUTTON.checkForInput(OPTIONS_MOUSE_POS):
                     CLICK_SOUND.play()
+                    print("NOT TESTING AI selected")
                     start_game(selected_level, selected_difficulty, is_ai)
                 if BACK_BUTTON.checkForInput(OPTIONS_MOUSE_POS):
                     CLICK_SOUND.play()
@@ -91,27 +92,24 @@ def choose_ai():
         start_y = 160
         font_small = get_font(40)
         font_medium = get_font(45)
-
+ 
         # Botões de IA com espaçamento
-        AI_1_BUTTON = Button(None, (640, start_y + spacing * 0), "Greedy", font_medium, "#99afd7", "White")
-        AI_2_BUTTON = Button(None, (640, start_y + spacing * 1), "DFS", font_medium, "#99afd7", "White")
-        AI_3_BUTTON = Button(None, (640, start_y + spacing * 2), "BFS", font_medium, "#99afd7", "White")
-        AI_4_BUTTON = Button(None, (640, start_y + spacing * 3), "A*", font_medium, "#99afd7", "White")
-        AI_5_BUTTON = Button(None, (640, start_y + spacing * 4), "Weighted A*", font_small, "#99afd7", "White")
-        AI_6_BUTTON = Button(None, (640, start_y + spacing * 5), "Iterative Deepening", font_small, "#99afd7", "White")
-        AI_7_BUTTON = Button(None, (640, start_y + spacing * 6), "UCS", font_medium, "#99afd7", "White")
-
-        BACK_BUTTON = Button(None, (640, start_y + spacing * 7 + 20), "Back", font_small, "#99afd7", "White")
-
+        AI_1_BUTTON = Button(None, (640, start_y + spacing * 1), "Greedy", font_medium, "#99afd7", "White")
+        AI_2_BUTTON = Button(None, (640, start_y + spacing * 2), "DFS", font_medium, "#99afd7", "White")
+        AI_3_BUTTON = Button(None, (640, start_y + spacing * 3), "BFS", font_medium, "#99afd7", "White")
+        AI_4_BUTTON = Button(None, (640, start_y + spacing * 4), "A*", font_medium, "#99afd7", "White")
+        AI_5_BUTTON = Button(None, (640, start_y + spacing * 5), "Weighted A*", font_small, "#99afd7", "White")
+        BACK_BUTTON = Button(None, (640, 640), "Back", font_small, "#99afd7", "White")
+ 
         all_buttons = [
             AI_1_BUTTON, AI_2_BUTTON, AI_3_BUTTON, AI_4_BUTTON,
-            AI_5_BUTTON, AI_6_BUTTON, AI_7_BUTTON, BACK_BUTTON
+            AI_5_BUTTON, BACK_BUTTON
         ]
-
-        for button in all_buttons:
+ 
+        for button in all_buttons: 
             button.changeColor(MENU_MOUSE_POS)
             button.update(SCREEN)
-
+            
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 pygame.quit()
@@ -119,31 +117,31 @@ def choose_ai():
             if event.type == pygame.MOUSEBUTTONDOWN:
                 if AI_1_BUTTON.checkForInput(MENU_MOUSE_POS):
                     CLICK_SOUND.play()
-                    play(1)
+                    print("AI1 selected") 
+                    play(is_ai=1) 
                 if AI_2_BUTTON.checkForInput(MENU_MOUSE_POS):
                     CLICK_SOUND.play()
-                    play(2)
+                    print("AI2 selected")  
+                    play(is_ai=2) 
                 if AI_3_BUTTON.checkForInput(MENU_MOUSE_POS):
                     CLICK_SOUND.play()
-                    play(3)
+                    print("AI3 selected") 
+                    play(is_ai=3) 
                 if AI_4_BUTTON.checkForInput(MENU_MOUSE_POS):
                     CLICK_SOUND.play()
-                    play(4)
+                    print("AI4 selected") 
+                    play(is_ai=4) 
+                    
                 if AI_5_BUTTON.checkForInput(MENU_MOUSE_POS):
                     CLICK_SOUND.play()
-                    play(5)
-                if AI_6_BUTTON.checkForInput(MENU_MOUSE_POS):
-                    CLICK_SOUND.play()
-                    play(6)
-                if AI_7_BUTTON.checkForInput(MENU_MOUSE_POS):
-                    CLICK_SOUND.play()
-                    play(7)
+                    print("AI5 selected") 
+                    play(is_ai=5) 
+    
                 if BACK_BUTTON.checkForInput(MENU_MOUSE_POS):
                     CLICK_SOUND.play()
-                    main_menu()
+                    main_menu() 
 
         pygame.display.update()
-
 
 def how_to_play():
     while True:
@@ -273,13 +271,13 @@ def main_menu():
         MENU_RECT = MENU_TEXT.get_rect(center=(640, 100))
 
         PLAY_BUTTON = Button(image=None, pos=(640, 250), 
-                            text_input="PLAY", font=get_font(60), base_color="#ccdbee", hovering_color="White")
+                            text_input="PLAY", font=get_font(40), base_color="#ccdbee", hovering_color="White")
         OPTIONS_BUTTON = Button(image=None, pos=(640, 350), 
-                            text_input="COMPUTER", font=get_font(60), base_color="#ccdbee", hovering_color="White")
+                            text_input="COMPUTER", font=get_font(40), base_color="#ccdbee", hovering_color="White")
         HTP_BUTTON = Button(image=None, pos=(640, 450), 
-                            text_input="HOW TO PLAY", font=get_font(60), base_color="#ccdbee", hovering_color="White")
+                            text_input="HOW TO PLAY", font=get_font(40), base_color="#ccdbee", hovering_color="White")
         QUIT_BUTTON = Button(image=None, pos=(640, 640), 
-                            text_input="EXIT", font=get_font(60), base_color="#99afd7", hovering_color="White")
+                            text_input="EXIT", font=get_font(40), base_color="#99afd7", hovering_color="White")
 
         SCREEN.blit(MENU_TEXT, MENU_RECT)
         
@@ -299,6 +297,7 @@ def main_menu():
                     play()  # Trigger the game menu
                 if OPTIONS_BUTTON.checkForInput(MENU_MOUSE_POS):
                     CLICK_SOUND.play()
+                    print("NORMAL AI selected")
                     choose_ai()
                 if HTP_BUTTON.checkForInput(MENU_MOUSE_POS):
                     CLICK_SOUND.play()
