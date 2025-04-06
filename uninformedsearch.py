@@ -1,6 +1,4 @@
 from collections import deque
-import heapq
-import itertools
 import copy
 
 def count_objective(state):

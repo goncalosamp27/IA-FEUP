@@ -3,8 +3,8 @@ from button import Button
 from gamestate import GameState
 from jelly import Jelly
 from utils import get_font, SCREEN, BG, CLICK_SOUND, JELLY_SOUND
-from informedsearch import value, a_star, iterative_deepening, ucs
-from dfsbfs import dfs, bfs
+from informedsearch import value, a_star
+from uninformedsearch import dfs, bfs
 # from dfsbfs import dfs2
 import time
 import tracemalloc
@@ -244,77 +244,6 @@ def test_ai(level, difficulty, is_ai=0, is_test=True):
                         "Mapa": level,
                         "Dificuldade": difficulty,
                         "Algoritmo": "Weighted A *",
-                        "Heurística": "-",
-                        "Parâmetros": "-",
-                        "Estados Gerados": states_generated,
-                        "Tempo(s)": time_taken,
-                        "Memória(Mb)": round(memory_used, 3)
-                        # "Qualidade da Solução": quality
-                    })
-            if is_ai == 6:  # Iterative Deepening
-                if event.type == pygame.MOUSEBUTTONDOWN:
-                    if PLAY_BACK.checkForInput(PLAY_MOUSE_POS):
-                        return  # Go back to the menu
-                    else:
-                        continue
-                #if event.type == pygame.KEYDOWN and event.key == pygame.K_RETURN:
-                if game_state.is_board_normalized() and not game_state.scheduled_actions:
-                    tracemalloc.start()
-                    start_time = time.time()
-                    
-                    best_move, states_generated = iterative_deepening(game_state)
-                    if best_move:
-                        x, y, jelly = best_move
-                        game_state.make_move(x, y, jelly)
-                        print(f"IDS -> Move at ({x}, {y}) with jelly {jelly}")
-
-                    #if game_state.check_game_over() or game_state.check_game_win():  
-                    end_time = time.time()
-                    current, peak = tracemalloc.get_traced_memory()
-                    tracemalloc.stop()
-                        
-                    memory_used = peak / (1024 * 1024)
-                    time_taken = round(end_time - start_time, 3)
-                    #quality = get_solution_quality(game_state)
-                    save_test_result({
-                        "Mapa": level,
-                        "Dificuldade": difficulty,
-                        "Algoritmo": "Iterative Deepening",
-                        "Heurística": "-",
-                        "Parâmetros": "-",
-                        "Estados Gerados": states_generated,
-                        "Tempo(s)": time_taken,
-                        "Memória(Mb)": round(memory_used, 3)
-                        # "Qualidade da Solução": quality
-                    })
-                        
-            if is_ai == 7:  # UCS
-                if event.type == pygame.MOUSEBUTTONDOWN:
-                    if PLAY_BACK.checkForInput(PLAY_MOUSE_POS):
-                        return
-                #if event.type == pygame.KEYDOWN and event.key == pygame.K_RETURN:
-                if game_state.is_board_normalized() and not game_state.scheduled_actions:
-                    tracemalloc.start()
-                    start_time = time.time()
-                    
-                    best_move, states_generated = ucs(game_state, max_depth=3)
- 
-                    if best_move:
-                        x, y, jelly = best_move
-                        game_state.make_move(x, y, jelly)
-
-                    #if game_state.check_game_over() or game_state.check_game_win():  
-                    end_time = time.time()
-                    current, peak = tracemalloc.get_traced_memory()
-                    tracemalloc.stop()
-                        
-                    memory_used = peak / (1024 * 1024)
-                    time_taken = round(end_time - start_time, 3)
-                    #quality = get_solution_quality(game_state)
-                    save_test_result({
-                        "Mapa": level,
-                        "Dificuldade": difficulty,
-                        "Algoritmo": "UCS",
                         "Heurística": "-",
                         "Parâmetros": "-",
                         "Estados Gerados": states_generated,

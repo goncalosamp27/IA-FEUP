@@ -1,11 +1,8 @@
 import heapq, itertools
-import copy
-from dfsbfs import compare_game_states
 
 def value(game_state):
     best_score = float('-inf')
     best_move = None
-    states_generated = 0
 
     for y, row in enumerate(game_state.board):
         for x, cell in enumerate(row):
@@ -19,10 +16,8 @@ def value(game_state):
                     if score is not None and score > best_score:
                         best_score = score
                         best_move = (x, y, jelly)
-                        
-                    states_generated += 1 
 
-    return best_move, states_generated
+    return best_move
 
 counter = itertools.count()  # Unique counter to break heap ties
 
@@ -53,7 +48,6 @@ def a_star(game_state, max_depth=2, weighted=True):
     open_set = []  # Priority queue
     best_move = None
     best_score = float('-inf')
-    states_generated = 0
 
     # Add all possible initial moves to the queue
     for y, row in enumerate(game_state.board):
@@ -67,7 +61,6 @@ def a_star(game_state, max_depth=2, weighted=True):
                         f_score = score + h_score  # A* f = g + h
 
                         heapq.heappush(open_set, (f_score, next(counter), (x, y, jelly), score, 1))
-                        states_generated += 1
 
     while open_set:
         _, _, move, g_score, depth = heapq.heappop(open_set)
@@ -89,67 +82,7 @@ def a_star(game_state, max_depth=2, weighted=True):
                                 new_g = g_score + new_score
                                 new_h = heuristic(game_state, weighted)  # Recalculate heuristic
                                 new_f = new_g + new_h  # Accumulate score
- 
+
                                 heapq.heappush(open_set, (new_f, next(counter), (x2, y2, next_jelly), new_g, depth + 1))
-                                states_generated += 1
-    return best_move, states_generated
-def iterative_deepening(game_state, max_total_depth=2, weighted=True):
-    best_move = None
-    best_score = float('-inf')
-    states_generated = 0
- 
-    for depth in range(1, max_total_depth + 1):
-        move, gen_states = a_star(game_state, max_depth=depth, weighted=weighted)
-        states_generated += gen_states
-         
-        if move:
-            x, y, jelly = move
-            simulated = copy.deepcopy(game_state)
-            simulated.make_move(x, y, jelly)
-            score = heuristic(simulated, weighted)
- 
-            if score > best_score:
-                best_score = score
-                best_move = move
- 
-    return best_move, states_generated
- 
- 
-def ucs(game_state, max_depth=2):
-    open_set = []
-    best_move = None
-    best_score = float('-inf')
-    states_generated = 0
-    counter2 = itertools.count()
- 
-    for y, row in enumerate(game_state.board):
-        for x, cell in enumerate(row):
-            if cell == ' ':
-                for jelly in game_state.playable_jellies:
-                    score = game_state.simulate_move(x, y, jelly)
-                    if score is not None:
-                        cost = -score  # inverso do score = custo (menos pontos → mais custo)
-                        heapq.heappush(open_set, (cost, next(counter2), (x, y, jelly), score, 1))
-                        states_generated += 1
- 
-    while open_set:
-        cost, _, move, total_score, depth = heapq.heappop(open_set)
-        x, y, jelly = move
- 
-        if total_score > best_score:
-            best_score = total_score
-            best_move = move
- 
-        if depth < max_depth:
-            for y2, row in enumerate(game_state.board):
-                for x2, cell in enumerate(row):
-                    if cell == ' ':
-                        for next_jelly in game_state.playable_jellies:
-                            score = game_state.simulate_move(x2, y2, next_jelly)
-                            if score is not None:
-                                new_cost = cost - score
-                                new_score = total_score + score
-                                heapq.heappush(open_set, (new_cost, next(counter2), (x2, y2, next_jelly), new_score, depth + 1))
-                                states_generated += 1
- 
-    return best_move, states_generated
+
+    return best_move
