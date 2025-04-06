@@ -1,4 +1,4 @@
-# IA-FEUP - Projeto 1
+# Inteligência Artificial - Trabalho Prático 1
 ## Jelly Field
 
 ## Instruções de compilação e execução:
