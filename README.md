@@ -18,7 +18,6 @@ source venv/bin/activate
 3. **Instalar as dependências necessárias (dentro do ambiente virtual):**
 
 ```bash
-pip install pandas
 pip install pygame
 ```
 
