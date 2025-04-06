@@ -1,0 +1,117 @@
+Algorithm: Greedy
+Level: 2
+Difficulty: easy
+Time Taken: 10.2294 seconds
+Memory Used: 129.03 KB
+Result: Victory
+Total Moves: 10
+
+Moves:
+('Greedy', (1, 0), {'tl': '#e08b8b', 'tr': '#7fc57b', 'bl': '#e0c750', 'br': '#5fb5ae'})
+('Greedy', (3, 0), {'tl': '#e08b8b', 'tr': '#9a64c0', 'bl': '#9a64c0', 'br': '#9a64c0'})
+('Greedy', (1, 1), {'tl': '#e08b8b', 'tr': '#5b97c2', 'bl': '#5b97c2', 'br': '#5fb5ae'})
+('Greedy', (3, 1), {'tl': '#e08b8b', 'tr': '#9a64c0', 'bl': '#9a64c0', 'br': '#e0c750'})
+('Greedy', (3, 0), {'tl': '#7fc57b', 'tr': '#9a64c0', 'bl': '#e08b8b', 'br': '#9a64c0'})
+('Greedy', (4, 1), {'tl': '#e0c750', 'tr': '#7fc57b', 'bl': '#9a64c0', 'br': '#e08b8b'})
+('Greedy', (3, 1), {'tl': '#5b97c2', 'tr': '#5fb5ae', 'bl': '#e08b8b', 'br': '#9a64c0'})
+('Greedy', (0, 1), {'tl': '#5b97c2', 'tr': '#5b97c2', 'bl': '#5fb5ae', 'br': '#5b97c2'})
+('Greedy', (1, 1), {'tl': '#7fc57b', 'tr': '#e08b8b', 'bl': '#5fb5ae', 'br': '#5b97c2'})
+('Greedy', (1, 0), {'tl': '#5b97c2', 'tr': '#e0c750', 'bl': '#5b97c2', 'br': '#5b97c2'})
+
+Full game state saved to: results/Greedy_level2_easy.json
+
+===========
+Algorithm: Greedy
+Level: 2
+Difficulty: easy
+Time Taken: 6.3385 seconds
+Memory Used: 83.04 KB
+Result: Victory
+Total Moves: 7
+
+Moves:
+('Greedy', (1, 0), {'tl': '#9a64c0', 'tr': '#5b97c2', 'bl': '#5b97c2', 'br': '#e08b8b'})
+('Greedy', (3, 0), {'tl': '#9a64c0', 'tr': '#e08b8b', 'bl': '#e0c750', 'br': '#e0c750'})
+('Greedy', (0, 1), {'tl': '#e08b8b', 'tr': '#5fb5ae', 'bl': '#9a64c0', 'br': '#e08b8b'})
+('Greedy', (3, 1), {'tl': '#e0c750', 'tr': '#9a64c0', 'bl': '#5b97c2', 'br': '#7fc57b'})
+('Greedy', (1, 1), {'tl': '#7fc57b', 'tr': '#5b97c2', 'bl': '#5b97c2', 'br': '#e0c750'})
+('Greedy', (2, 1), {'tl': '#5b97c2', 'tr': '#5b97c2', 'bl': '#5b97c2', 'br': '#9a64c0'})
+('Greedy', (2, 1), {'tl': '#5fb5ae', 'tr': '#7fc57b', 'bl': '#e0c750', 'br': '#9a64c0'})
+
+Full game state saved to: results/Greedy_level2_easy.json
+
+===========
+Algorithm: Greedy
+Level: 2
+Difficulty: easy
+Time Taken: 10.1774 seconds
+Memory Used: 89.41 KB
+Result: Victory
+Total Moves: 9
+
+Moves:
+('Greedy', (2, 1), {'tl': '#7fc57b', 'tr': '#9a64c0', 'bl': '#7fc57b', 'br': '#e08b8b'})
+('Greedy', (2, 0), {'tl': '#e0c750', 'tr': '#7fc57b', 'bl': '#5fb5ae', 'br': '#9a64c0'})
+('Greedy', (3, 0), {'tl': '#e0c750', 'tr': '#e08b8b', 'bl': '#5fb5ae', 'br': '#e08b8b'})
+('Greedy', (2, 0), {'tl': '#5b97c2', 'tr': '#e08b8b', 'bl': '#e0c750', 'br': '#e0c750'})
+('Greedy', (1, 0), {'tl': '#e0c750', 'tr': '#5b97c2', 'bl': '#e0c750', 'br': '#5b97c2'})
+('Greedy', (3, 1), {'tl': '#7fc57b', 'tr': '#5b97c2', 'bl': '#e08b8b', 'br': '#e0c750'})
+('Greedy', (3, 0), {'tl': '#9a64c0', 'tr': '#e08b8b', 'bl': '#7fc57b', 'br': '#5fb5ae'})
+('Greedy', (2, 1), {'tl': '#5fb5ae', 'tr': '#e08b8b', 'bl': '#e08b8b', 'br': '#e08b8b'})
+('Greedy', (1, 1), {'tl': '#5fb5ae', 'tr': '#5fb5ae', 'bl': '#9a64c0', 'br': '#7fc57b'})
+
+Full game state saved to: results/Greedy_level2_easy.json
+
+===========
+Algorithm: Greedy
+Level: 2
+Difficulty: easy
+Time Taken: 12.6124 seconds
+Memory Used: 91.31 KB
+Result: Loss
+Total Moves: 14
+
+Moves:
+('Greedy', (2, 2), {'tl': '#5b97c2', 'tr': '#5b97c2', 'bl': '#e08b8b', 'br': '#e0c750'})
+('Greedy', (2, 1), {'tl': '#e0c750', 'tr': '#9a64c0', 'bl': '#9a64c0', 'br': '#e0c750'})
+('Greedy', (2, 0), {'tl': '#e08b8b', 'tr': '#e0c750', 'bl': '#e0c750', 'br': '#7fc57b'})
+('Greedy', (3, 0), {'tl': '#9a64c0', 'tr': '#5b97c2', 'bl': '#7fc57b', 'br': '#9a64c0'})
+('Greedy', (1, 1), {'tl': '#e08b8b', 'tr': '#5b97c2', 'bl': '#5b97c2', 'br': '#5fb5ae'})
+('Greedy', (1, 0), {'tl': '#9a64c0', 'tr': '#5fb5ae', 'bl': '#e0c750', 'br': '#e08b8b'})
+('Greedy', (2, 0), {'tl': '#e08b8b', 'tr': '#7fc57b', 'bl': '#5b97c2', 'br': '#9a64c0'})
+('Greedy', (3, 0), {'tl': '#9a64c0', 'tr': '#9a64c0', 'bl': '#5b97c2', 'br': '#9a64c0'})
+('Greedy', (2, 1), {'tl': '#9a64c0', 'tr': '#e08b8b', 'bl': '#5b97c2', 'br': '#7fc57b'})
+('Greedy', (3, 1), {'tl': '#e0c750', 'tr': '#5b97c2', 'bl': '#7fc57b', 'br': '#e08b8b'})
+('Greedy', (2, 2), {'tl': '#e0c750', 'tr': '#5b97c2', 'bl': '#5b97c2', 'br': '#5fb5ae'})
+('Greedy', (1, 2), {'tl': '#9a64c0', 'tr': '#e0c750', 'bl': '#9a64c0', 'br': '#9a64c0'})
+('Greedy', (3, 2), {'tl': '#5fb5ae', 'tr': '#9a64c0', 'bl': '#7fc57b', 'br': '#9a64c0'})
+('Greedy', (4, 1), {'tl': '#7fc57b', 'tr': '#5fb5ae', 'bl': '#5b97c2', 'br': '#9a64c0'})
+
+Full game state saved to: results/Greedy_level2_easy.json
+
+===========
+
+Algorithm: Greedy
+Level: 2
+Difficulty: easy
+Time Taken: 11.7550 seconds
+Memory Used: 85.77 KB
+Result: Victory
+Total Moves: 11
+
+Moves:
+('Greedy', (3, 0), {'tl': '#9a64c0', 'tr': '#e08b8b', 'bl': '#5fb5ae', 'br': '#9a64c0'})
+('Greedy', (2, 0), {'tl': '#5fb5ae', 'tr': '#5b97c2', 'bl': '#5fb5ae', 'br': '#9a64c0'})
+('Greedy', (2, 1), {'tl': '#5fb5ae', 'tr': '#e0c750', 'bl': '#e0c750', 'br': '#5b97c2'})
+('Greedy', (1, 1), {'tl': '#9a64c0', 'tr': '#9a64c0', 'bl': '#5b97c2', 'br': '#e0c750'})
+('Greedy', (2, 0), {'tl': '#7fc57b', 'tr': '#e0c750', 'bl': '#5fb5ae', 'br': '#e08b8b'})
+('Greedy', (3, 0), {'tl': '#e0c750', 'tr': '#e0c750', 'bl': '#e08b8b', 'br': '#5b97c2'})
+('Greedy', (1, 0), {'tl': '#9a64c0', 'tr': '#e0c750', 'bl': '#5b97c2', 'br': '#9a64c0'})
+('Greedy', (2, 1), {'tl': '#e08b8b', 'tr': '#7fc57b', 'bl': '#e08b8b', 'br': '#5fb5ae'})
+('Greedy', (1, 1), {'tl': '#5fb5ae', 'tr': '#e0c750', 'bl': '#7fc57b', 'br': '#7fc57b'})
+('Greedy', (0, 1), {'tl': '#e08b8b', 'tr': '#e0c750', 'bl': '#e0c750', 'br': '#5fb5ae'})
+('Greedy', (2, 1), {'tl': '#5fb5ae', 'tr': '#e0c750', 'bl': '#7fc57b', 'br': '#e08b8b'})
+
+Full game state saved to: results/Greedy_level2_easy.json
+
+===========
