@@ -6,6 +6,11 @@ from utils import get_font, SCREEN, BG, CLICK_SOUND, HINT_SOUND, JELLY_SOUND
 from informedsearch import value, a_star
 from uninformedsearch import dfs, bfs
 
+import json
+import tracemalloc
+import time
+import os
+
 def start_game(level, difficulty, is_ai=0):
     level_path = f'levels/level{level}.txt'
     game_state = GameState(level_path, difficulty)
@@ -13,7 +18,10 @@ def start_game(level, difficulty, is_ai=0):
     hint_move = None
     hint_start_time = None
 
-    if is_ai: print("AI selecionada: ", is_ai)
+    # --- AI Performance Tracking ---
+    ai_start_time = time.time()
+    tracemalloc.start()
+    ai_moves = []
 
     while True:
         PLAY_MOUSE_POS = pygame.mouse.get_pos()
@@ -41,9 +49,89 @@ def start_game(level, difficulty, is_ai=0):
 
         if game_state.is_board_normalized():
             if game_state.check_game_win():
+                # --- Save AI result on game end ---
+                if is_ai:
+                    ai_end_time = time.time()
+                    current, peak = tracemalloc.get_traced_memory()
+                    tracemalloc.stop()
+
+                    elapsed_time = ai_end_time - ai_start_time
+                    memory_kb = peak / 1024
+                    result = "Victory" if game_state.check_game_win() else "Loss"
+                    algorithm_name = {
+                        1: "Greedy",
+                        2: "DFS",
+                        3: "BFS",
+                        4: "A*",
+                        5: "WeightedA*"
+                    }[is_ai]
+
+                    output_folder = "results"
+                    os.makedirs(output_folder, exist_ok=True)
+                    log_filename = os.path.join(output_folder, f"{algorithm_name}_level{level}.txt")
+                    json_filename = os.path.join(output_folder, f"{algorithm_name}_level{level}.json")
+
+                    # Save game state as JSON
+                    game_state.save_to_file(json_filename)
+
+                    # Save readable log
+                    with open(log_filename, "w") as f:
+                        f.write(f"Algorithm: {algorithm_name}\n")
+                        f.write(f"Level: {level}\n")
+                        f.write(f"Difficulty: {difficulty}\n")
+                        f.write(f"Time Taken: {elapsed_time:.4f} seconds\n")
+                        f.write(f"Memory Used: {memory_kb:.2f} KB\n")
+                        f.write(f"Result: {result}\n")
+                        f.write(f"Total Moves: {len(ai_moves)}\n\n")
+
+                        f.write("Moves:\n")
+                        for move in ai_moves:
+                            f.write(f"{move}\n")
+
+                        f.write(f"\nFull game state saved to: {json_filename}\n")
                 menu.win_screen(is_ai)
                 return
             elif game_state.check_game_over():
+                # --- Save AI result on game end ---
+                if is_ai:
+                    ai_end_time = time.time()
+                    current, peak = tracemalloc.get_traced_memory()
+                    tracemalloc.stop()
+
+                    elapsed_time = ai_end_time - ai_start_time
+                    memory_kb = peak / 1024
+                    result = "Victory" if game_state.check_game_win() else "Loss"
+                    algorithm_name = {
+                        1: "Greedy",
+                        2: "DFS",
+                        3: "BFS",
+                        4: "A*",
+                        5: "WeightedA*"
+                    }[is_ai]
+
+                    output_folder = "results"
+                    os.makedirs(output_folder, exist_ok=True)
+                    log_filename = os.path.join(output_folder, f"{algorithm_name}_level{level}.txt")
+                    json_filename = os.path.join(output_folder, f"{algorithm_name}_level{level}.json")
+
+                    # Save game state as JSON
+                    game_state.save_to_file(json_filename)
+
+                    # Save readable log
+                    with open(log_filename, "w") as f:
+                        f.write(f"Algorithm: {algorithm_name}\n")
+                        f.write(f"Level: {level}\n")
+                        f.write(f"Difficulty: {difficulty}\n")
+                        f.write(f"Time Taken: {elapsed_time:.4f} seconds\n")
+                        f.write(f"Memory Used: {memory_kb:.2f} KB\n")
+                        f.write(f"Result: {result}\n")
+                        f.write(f"Total Moves: {len(ai_moves)}\n\n")
+
+                        f.write("Moves:\n")
+                        for move in ai_moves:
+                            f.write(f"{move}\n")
+
+                        f.write(f"\nFull game state saved to: {json_filename}\n")
                 menu.game_over_screen(is_ai)
                 return
 
@@ -53,6 +141,7 @@ def start_game(level, difficulty, is_ai=0):
                 if best_move:
                     x, y, jelly = best_move
                     game_state.make_move(x, y, jelly)
+                    ai_moves.append(("Greedy", (x, y), jelly.to_dict()))
                     print(f"AI played move at ({x}, {y}) with jelly {jelly}")
 
             elif is_ai == 2:  # DFS
@@ -60,6 +149,7 @@ def start_game(level, difficulty, is_ai=0):
                 x, y, jelly_index = best_action
                 jelly = game_state.playable_jellies[jelly_index]
                 game_state.make_move(x, y, jelly)
+                ai_moves.append(("DFS", (x, y), jelly.to_dict()))
                 print(f"DFS -> jelly {jelly_index} em ({x}, {y})")
 
             elif is_ai == 3:  # BFS
@@ -67,6 +157,7 @@ def start_game(level, difficulty, is_ai=0):
                 x, y, jelly_index = best_action
                 jelly = game_state.playable_jellies[jelly_index]
                 game_state.make_move(x, y, jelly)
+                ai_moves.append(("BFS", (x, y), jelly.to_dict()))
                 print(f"BFS -> jelly {jelly_index} em ({x}, {y})")
 
             elif is_ai == 4:  # A*
@@ -74,6 +165,7 @@ def start_game(level, difficulty, is_ai=0):
                 if best_move:
                     x, y, jelly = best_move
                     game_state.make_move(x, y, jelly)
+                    ai_moves.append(("A*", (x, y), jelly.to_dict()))
                     print(f"A* played move at ({x}, {y}) with jelly {jelly}")
 
             elif is_ai == 5:  # Weighted A*
@@ -81,6 +173,7 @@ def start_game(level, difficulty, is_ai=0):
                 if best_move:
                     x, y, jelly = best_move
                     game_state.make_move(x, y, jelly)
+                    ai_moves.append(("Weighted A*", (x, y), jelly.to_dict()))
                     print(f"A* played move at ({x}, {y}) with jelly {jelly}")
 
         for event in pygame.event.get():

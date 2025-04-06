@@ -143,10 +143,13 @@ class Jelly:
 
             return
 
-            
-        
+    def to_dict(self):
+        return {
+            "tl": self.tl,
+            "tr": self.tr,
+            "bl": self.bl,
+            "br": self.br
+        }
 
-        
-
-
-
+    def from_dict(data):
+        return Jelly(0, 0, data["tl"], data["tr"], data["bl"], data["br"])

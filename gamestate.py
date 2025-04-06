@@ -1,4 +1,4 @@
-import random, pygame, copy
+import random, pygame, copy, json
 from jelly import Jelly
 from utils import COLORS, POP_SOUND, TILE_TEXTURE, HINT_TEXTURE
 
@@ -474,5 +474,22 @@ class GameState:
             score += freed_cells * FREED_CELL_BONUS
 
         return score
+
+    def save_to_file(self, filename):
+        data = {
+            "difficulty": self.difficulty,
+            "objective": self.objective,
+            "board": [
+                [
+                    cell.to_dict() if isinstance(cell, Jelly) else cell
+                    for cell in row
+                ] for row in self.board
+            ],
+            "playable_jellies": [j.to_dict() for j in self.playable_jellies],
+            "selected_jelly": self.selected_jelly.to_dict() if self.selected_jelly else None
+        }
+
+        with open(filename, 'w') as f:
+            json.dump(data, f)
 
 
