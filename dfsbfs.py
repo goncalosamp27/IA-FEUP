@@ -1,4 +1,6 @@
 from collections import deque
+import heapq
+import itertools
 import copy
 
 def count_objective(state):
@@ -116,41 +118,3 @@ def bfs(state, max_depth=2):
                         best_action = initial_action
 
     return best_action, best_score
-
-"""
-def dfs2(state):
-    best_score = -float('inf')
-    best_action = None  # (x, y, jelly_index)
-
-    for first_index in range(2):  # 0 (A) ou 1 (B)
-        second_index = 1 - first_index
-
-        for x1, y1 in get_possible_moves(state):
-            first_state = copy.deepcopy(state)
-            jelly_first = first_state.playable_jellies[first_index]
-
-            if first_state.make_move(x1, y1, jelly_first):
-                first_state.normalize_board()
-                first_state.reconstruct_all()
-                progresso_1 = compare_game_states(first_state, state)
-
-                # Segunda jogada com a jelly que sobrou no mesmo índice
-                for x2, y2 in get_possible_moves(first_state):
-                    second_state = copy.deepcopy(first_state)
-                    jelly_second = second_state.playable_jellies[second_index]
-
-                    if second_state.make_move(x2, y2, jelly_second):
-                        second_state.normalize_board()
-                        second_state.reconstruct_all()
-                        progresso_2 = compare_game_states(second_state, first_state)
-
-                        total_score = progresso_1 + progresso_2
-
-                        print(f"Jelly {first_index} em ({x1},{y1}) → depois jelly {second_index} em ({x2},{y2}) | Total: {total_score}")
-
-                        if total_score > best_score:
-                            best_score = total_score
-                            best_action = (x1, y1, first_index)
-
-    return best_action, best_score
-"""
