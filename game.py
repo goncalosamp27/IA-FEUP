@@ -180,7 +180,7 @@ def start_game(level, difficulty, is_ai=0):
                     print(f"A* played move at ({x}, {y}) with jelly {jelly}")
 
             elif is_ai == 5:  # Weighted A*
-                best_move = a_star(game_state, 2, True)
+                best_move, states_generated = a_star(game_state, 2, True)
                 if best_move:
                     x, y, jelly = best_move
                     game_state.make_move(x, y, jelly)
