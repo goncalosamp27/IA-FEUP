@@ -1,15 +1,10 @@
-import pygame, sys, menu, time
+import pygame, sys, menu, time, tracemalloc, os
 from button import Button 
 from gamestate import GameState
 from jelly import Jelly
 from utils import get_font, SCREEN, BG, CLICK_SOUND, HINT_SOUND, JELLY_SOUND
 from informedsearch import value, a_star
 from uninformedsearch import dfs, bfs
-
-import json
-import tracemalloc
-import time
-import os
 
 def start_game(level, difficulty, is_ai=0):
     level_path = f'levels/level{level}.txt'
@@ -83,6 +78,7 @@ def start_game(level, difficulty, is_ai=0):
                         f.write(f"Difficulty: {difficulty}\n")
                         f.write(f"Time Taken: {elapsed_time:.4f} seconds\n")
                         f.write(f"Memory Used: {memory_kb:.2f} KB\n")
+                        f.write(f"Number of States Generated: {states_generated}\n")
                         f.write(f"Result: {result}\n")
                         f.write(f"Total Moves: {len(ai_moves)}\n\n")
 
