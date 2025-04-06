@@ -1,0 +1,127 @@
+Algorithm: DFS
+Level: 2
+Difficulty: hard
+Time Taken: 8.3352 seconds
+Memory Used: 26.57 KB
+Number of States Generated: 2
+Result: Loss
+Total Moves: 8
+
+Moves:
+('DFS', (3, 1), {'tl': '#5b97c2', 'tr': '#5b97c2', 'bl': '#5fb5ae', 'br': '#5b97c2'})
+('DFS', (1, 0), {'tl': '#e0c750', 'tr': '#7fc57b', 'bl': '#7fc57b', 'br': '#e0c750'})
+('DFS', (2, 1), {'tl': '#e08b8b', 'tr': '#9a64c0', 'bl': '#5b97c2', 'br': '#e08b8b'})
+('DFS', (0, 1), {'tl': '#9a64c0', 'tr': '#e0c750', 'bl': '#e0c750', 'br': '#9a64c0'})
+('DFS', (2, 2), {'tl': '#e0c750', 'tr': '#e0c750', 'bl': '#5fb5ae', 'br': '#5fb5ae'})
+('DFS', (3, 1), {'tl': '#e08b8b', 'tr': '#9a64c0', 'bl': '#5b97c2', 'br': '#5fb5ae'})
+('DFS', (2, 1), {'tl': '#5fb5ae', 'tr': '#e0c750', 'bl': '#9a64c0', 'br': '#5b97c2'})
+('DFS', (2, 2), {'tl': '#9a64c0', 'tr': '#7fc57b', 'bl': '#5b97c2', 'br': '#9a64c0'})
+
+Full game state saved to: results/DFS_level2_hard.json
+
+===========
+
+Algorithm: DFS
+Level: 2
+Difficulty: hard
+Time Taken: 6.8390 seconds
+Memory Used: 23.98 KB
+Number of States Generated: 2
+Result: Loss
+Total Moves: 11
+
+Moves:
+('DFS', (2, 2), {'tl': '#5fb5ae', 'tr': '#7fc57b', 'bl': '#5fb5ae', 'br': '#9a64c0'})
+('DFS', (1, 0), {'tl': '#9a64c0', 'tr': '#e08b8b', 'bl': '#e08b8b', 'br': '#e0c750'})
+('DFS', (3, 2), {'tl': '#7fc57b', 'tr': '#7fc57b', 'bl': '#e08b8b', 'br': '#e08b8b'})
+('DFS', (3, 1), {'tl': '#e08b8b', 'tr': '#5fb5ae', 'bl': '#e08b8b', 'br': '#e08b8b'})
+('DFS', (1, 2), {'tl': '#e08b8b', 'tr': '#e08b8b', 'bl': '#7fc57b', 'br': '#9a64c0'})
+('DFS', (2, 2), {'tl': '#7fc57b', 'tr': '#5b97c2', 'bl': '#5fb5ae', 'br': '#e08b8b'})
+('DFS', (3, 1), {'tl': '#e0c750', 'tr': '#e08b8b', 'bl': '#7fc57b', 'br': '#5fb5ae'})
+('DFS', (3, 2), {'tl': '#5fb5ae', 'tr': '#7fc57b', 'bl': '#e0c750', 'br': '#e0c750'})
+('DFS', (2, 1), {'tl': '#9a64c0', 'tr': '#e08b8b', 'bl': '#e0c750', 'br': '#e08b8b'})
+('DFS', (1, 1), {'tl': '#5b97c2', 'tr': '#7fc57b', 'bl': '#5fb5ae', 'br': '#9a64c0'})
+('DFS', (2, 1), {'tl': '#5b97c2', 'tr': '#9a64c0', 'bl': '#e08b8b', 'br': '#e08b8b'})
+
+Full game state saved to: results/DFS_level2_hard.json
+
+===========
+
+Algorithm: DFS
+Level: 2
+Difficulty: hard
+Time Taken: 4.0850 seconds
+Memory Used: 22.77 KB
+Number of States Generated: 2
+Result: Loss
+Total Moves: 7
+
+Moves:
+('DFS', (3, 0), {'tl': '#9a64c0', 'tr': '#e08b8b', 'bl': '#5b97c2', 'br': '#e0c750'})
+('DFS', (1, 1), {'tl': '#5b97c2', 'tr': '#7fc57b', 'bl': '#e0c750', 'br': '#e0c750'})
+('DFS', (1, 0), {'tl': '#e08b8b', 'tr': '#e0c750', 'bl': '#7fc57b', 'br': '#9a64c0'})
+('DFS', (1, 2), {'tl': '#9a64c0', 'tr': '#5fb5ae', 'bl': '#e08b8b', 'br': '#5fb5ae'})
+('DFS', (2, 2), {'tl': '#e08b8b', 'tr': '#5b97c2', 'bl': '#7fc57b', 'br': '#5fb5ae'})
+('DFS', (2, 1), {'tl': '#9a64c0', 'tr': '#7fc57b', 'bl': '#e0c750', 'br': '#7fc57b'})
+('DFS', (1, 1), {'tl': '#5fb5ae', 'tr': '#e08b8b', 'bl': '#e0c750', 'br': '#e0c750'})
+
+Full game state saved to: results/DFS_level2_hard.json
+
+===========
+
+Algorithm: DFS
+Level: 2
+Difficulty: hard
+Time Taken: 13.6472 seconds
+Memory Used: 26.13 KB
+Number of States Generated: 3
+Result: Loss
+Total Moves: 13
+
+Moves:
+('DFS', (3, 1), {'tl': '#7fc57b', 'tr': '#e0c750', 'bl': '#9a64c0', 'br': '#7fc57b'})
+('DFS', (3, 2), {'tl': '#7fc57b', 'tr': '#5fb5ae', 'bl': '#7fc57b', 'br': '#9a64c0'})
+('DFS', (2, 2), {'tl': '#5b97c2', 'tr': '#5fb5ae', 'bl': '#7fc57b', 'br': '#9a64c0'})
+('DFS', (1, 1), {'tl': '#e08b8b', 'tr': '#5b97c2', 'bl': '#5fb5ae', 'br': '#e08b8b'})
+('DFS', (2, 1), {'tl': '#5b97c2', 'tr': '#5fb5ae', 'bl': '#e08b8b', 'br': '#5b97c2'})
+('DFS', (3, 2), {'tl': '#5fb5ae', 'tr': '#5fb5ae', 'bl': '#9a64c0', 'br': '#e08b8b'})
+('DFS', (3, 1), {'tl': '#5fb5ae', 'tr': '#e08b8b', 'bl': '#5fb5ae', 'br': '#9a64c0'})
+('DFS', (2, 2), {'tl': '#e0c750', 'tr': '#e08b8b', 'bl': '#9a64c0', 'br': '#5fb5ae'})
+('DFS', (0, 1), {'tl': '#7fc57b', 'tr': '#5fb5ae', 'bl': '#5fb5ae', 'br': '#9a64c0'})
+('DFS', (3, 2), {'tl': '#5fb5ae', 'tr': '#e0c750', 'bl': '#5fb5ae', 'br': '#9a64c0'})
+('DFS', (3, 1), {'tl': '#e08b8b', 'tr': '#9a64c0', 'bl': '#5b97c2', 'br': '#9a64c0'})
+('DFS', (2, 1), {'tl': '#e0c750', 'tr': '#7fc57b', 'bl': '#5fb5ae', 'br': '#7fc57b'})
+('DFS', (1, 1), {'tl': '#e0c750', 'tr': '#5b97c2', 'bl': '#7fc57b', 'br': '#7fc57b'})
+
+Full game state saved to: results/DFS_level2_hard.json
+
+===========
+
+Algorithm: DFS
+Level: 2
+Difficulty: hard
+Time Taken: 14.8919 seconds
+Memory Used: 25.12 KB
+Number of States Generated: 28
+Result: Victory
+Total Moves: 14
+
+Moves:
+('DFS', (1, 0), {'tl': '#9a64c0', 'tr': '#e0c750', 'bl': '#5b97c2', 'br': '#5fb5ae'})
+('DFS', (2, 1), {'tl': '#e08b8b', 'tr': '#e08b8b', 'bl': '#5b97c2', 'br': '#5b97c2'})
+('DFS', (2, 1), {'tl': '#5b97c2', 'tr': '#e08b8b', 'bl': '#5b97c2', 'br': '#7fc57b'})
+('DFS', (2, 0), {'tl': '#e08b8b', 'tr': '#e0c750', 'bl': '#5b97c2', 'br': '#e08b8b'})
+('DFS', (1, 2), {'tl': '#e08b8b', 'tr': '#5b97c2', 'bl': '#e08b8b', 'br': '#5fb5ae'})
+('DFS', (1, 1), {'tl': '#e08b8b', 'tr': '#7fc57b', 'bl': '#5b97c2', 'br': '#5b97c2'})
+('DFS', (0, 1), {'tl': '#5b97c2', 'tr': '#5fb5ae', 'bl': '#e08b8b', 'br': '#5fb5ae'})
+('DFS', (3, 0), {'tl': '#e08b8b', 'tr': '#e08b8b', 'bl': '#e08b8b', 'br': '#e08b8b'})
+('DFS', (2, 0), {'tl': '#9a64c0', 'tr': '#5b97c2', 'bl': '#e0c750', 'br': '#7fc57b'})
+('DFS', (2, 1), {'tl': '#e08b8b', 'tr': '#e08b8b', 'bl': '#e08b8b', 'br': '#7fc57b'})
+('DFS', (1, 1), {'tl': '#e0c750', 'tr': '#9a64c0', 'bl': '#7fc57b', 'br': '#5fb5ae'})
+('DFS', (1, 0), {'tl': '#e08b8b', 'tr': '#7fc57b', 'bl': '#9a64c0', 'br': '#e0c750'})
+('DFS', (3, 0), {'tl': '#5fb5ae', 'tr': '#5b97c2', 'bl': '#5fb5ae', 'br': '#e08b8b'})
+('DFS', (2, 0), {'tl': '#e0c750', 'tr': '#7fc57b', 'bl': '#e0c750', 'br': '#e08b8b'})
+
+Full game state saved to: results/DFS_level2_hard.json
+
+===========
