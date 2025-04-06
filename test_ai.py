@@ -72,25 +72,25 @@ def test_ai(level, difficulty, is_ai=0, is_test=True):
                         game_state.make_move(x, y, jelly)
                         print(f"AI played move at ({x}, {y}) with jelly {jelly}")
                     
-                    if game_state.check_game_over() or game_state.check_game_win():  
-                        end_time = time.time()
-                        current, peak = tracemalloc.get_traced_memory()
-                        tracemalloc.stop()
+                    #if game_state.check_game_over() or game_state.check_game_win():  
+                    end_time = time.time()
+                    current, peak = tracemalloc.get_traced_memory()
+                    tracemalloc.stop()
                         
-                        time_taken = round(end_time - start_time, 3)  
-                        memory_used = peak / (1024 * 1024)  
+                    time_taken = round(end_time - start_time, 3)  
+                    memory_used = peak / (1024 * 1024)  
                         
-                        save_test_result({
-                            "Mapa": level,
-                            "Dificuldade": difficulty,
-                            "Algoritmo": "Greedy",
-                            "Heurística": "-", 
-                            "Parâmetros": "-", 
-                            "Estados Gerados": states_generated,  
-                            "Tempo(s)": time_taken,
-                            "Memória(Mb)": round(memory_used, 3)
-                            #"Qualidade da Solução": "-"  
-                        })
+                    save_test_result({
+                        "Mapa": level,
+                        "Dificuldade": difficulty,
+                        "Algoritmo": "Greedy",
+                        "Heurística": "-", 
+                        "Parâmetros": "-", 
+                        "Estados Gerados": states_generated,  
+                        "Tempo(s)": time_taken,
+                        "Memória(Mb)": round(memory_used, 3)
+                        #"Qualidade da Solução": "-"  
+                    })
                     
             if is_ai == 2:  # DFS
                 print("Entrou no TESTE DFS")
@@ -113,25 +113,25 @@ def test_ai(level, difficulty, is_ai=0, is_test=True):
                     game_state.make_move(x, y, jelly)
                     print(f"DFS -> jelly {jelly_index} em ({x}, {y})")
 
-                    if game_state.check_game_over() or game_state.check_game_win():    
-                        end_time = time.time()
-                        current, peak = tracemalloc.get_traced_memory()
-                        tracemalloc.stop()
+                   # if game_state.check_game_over() or game_state.check_game_win():    
+                    end_time = time.time()
+                    current, peak = tracemalloc.get_traced_memory()
+                    tracemalloc.stop()
                         
-                        memory_used = peak / (1024 * 1024)
-                        time_taken = round(end_time - start_time, 3)
-                        #quality = get_solution_quality(game_state)
-                        save_test_result({
-                            "Mapa": level,
-                            "Dificuldade": difficulty,
-                            "Algoritmo": "DFS",
-                            "Heurística": "-",
-                            "Parâmetros": "-",
-                            "Estados Gerados": states_generated,
-                            "Tempo(s)": time_taken,
-                            "Memória(Mb)": round(memory_used, 3)
+                    memory_used = peak / (1024 * 1024)
+                    time_taken = round(end_time - start_time, 3)
+                    #quality = get_solution_quality(game_state)
+                    save_test_result({
+                        "Mapa": level,
+                        "Dificuldade": difficulty,
+                        "Algoritmo": "DFS",
+                        "Heurística": "-",
+                        "Parâmetros": "-",
+                        "Estados Gerados": states_generated,
+                        "Tempo(s)": time_taken,
+                        "Memória(Mb)": round(memory_used, 3)
                         # "Qualidade da Solução": quality
-                        })
+                    })
             if is_ai == 3: #BFS
                 print("Entrou no TESTE BFS")
                 if event.type == pygame.MOUSEBUTTONDOWN:
@@ -192,27 +192,27 @@ def test_ai(level, difficulty, is_ai=0, is_test=True):
                         game_state.make_move(x, y, jelly)
                         print(f"A* played move at ({x}, {y}) with jelly {jelly}")
                     
-                    if game_state.check_game_over() or game_state.check_game_win():  
-                        print("Game Over or Win condition met!") 
-                        end_time = time.time()
-                        current, peak = tracemalloc.get_traced_memory()
-                        tracemalloc.stop()
+                   # if game_state.check_game_over() or game_state.check_game_win():  
+                    #print("Game Over or Win condition met!") 
+                    end_time = time.time()
+                    current, peak = tracemalloc.get_traced_memory()
+                    tracemalloc.stop()
                         
-                        memory_used = peak / (1024 * 1024)
-                        time_taken = round(end_time - start_time, 3)
-                        #quality = get_solution_quality(game_state)
-                        save_test_result({
-                            "Mapa": level,
-                            "Dificuldade": difficulty,
-                            "Algoritmo": "A*",
-                            "Heurística": "-",
-                            "Parâmetros": "-",
-                            "Estados Gerados": states_generated,
-                            "Tempo(s)": time_taken,
-                            "Memória(Mb)": round(memory_used, 3)
-                        # "Qualidade da Solução": quality
-                        })
-                        return
+                    memory_used = peak / (1024 * 1024)
+                    time_taken = round(end_time - start_time, 3)
+                    #quality = get_solution_quality(game_state)
+                    save_test_result({
+                        "Mapa": level,
+                        "Dificuldade": difficulty,
+                        "Algoritmo": "A*",
+                        "Heurística": "-",
+                        "Parâmetros": "-",
+                        "Estados Gerados": states_generated,
+                        "Tempo(s)": time_taken,
+                        "Memória(Mb)": round(memory_used, 3)
+                    # "Qualidade da Solução": quality
+                    })
+                    #return
             if is_ai == 5: # Weighted A *
                 if event.type == pygame.MOUSEBUTTONDOWN:
                     if PLAY_BACK.checkForInput(PLAY_MOUSE_POS):
@@ -230,25 +230,25 @@ def test_ai(level, difficulty, is_ai=0, is_test=True):
                         game_state.make_move(x, y, jelly)
                         print(f"A* played move at ({x}, {y}) with jelly {jelly}")
                     
-                    if game_state.check_game_over() or game_state.check_game_win():   
-                        end_time = time.time()
-                        current, peak = tracemalloc.get_traced_memory()
-                        tracemalloc.stop()
+                    #if game_state.check_game_over() or game_state.check_game_win():   
+                    end_time = time.time()
+                    current, peak = tracemalloc.get_traced_memory()
+                    tracemalloc.stop()
                         
-                        memory_used = peak / (1024 * 1024)
-                        time_taken = round(end_time - start_time, 3)
-                        #quality = get_solution_quality(game_state)
-                        save_test_result({
-                            "Mapa": level,
-                            "Dificuldade": difficulty,
-                            "Algoritmo": "Weighted A *",
-                            "Heurística": "-",
-                            "Parâmetros": "-",
-                            "Estados Gerados": states_generated,
-                            "Tempo(s)": time_taken,
-                            "Memória(Mb)": round(memory_used, 3)
+                    memory_used = peak / (1024 * 1024)
+                    time_taken = round(end_time - start_time, 3)
+                    #quality = get_solution_quality(game_state)
+                    save_test_result({
+                        "Mapa": level,
+                        "Dificuldade": difficulty,
+                        "Algoritmo": "Weighted A *",
+                        "Heurística": "-",
+                        "Parâmetros": "-",
+                        "Estados Gerados": states_generated,
+                        "Tempo(s)": time_taken,
+                        "Memória(Mb)": round(memory_used, 3)
                         # "Qualidade da Solução": quality
-                        })
+                    })
             if is_ai == 6:  # Iterative Deepening
                 if event.type == pygame.MOUSEBUTTONDOWN:
                     if PLAY_BACK.checkForInput(PLAY_MOUSE_POS):
@@ -266,25 +266,25 @@ def test_ai(level, difficulty, is_ai=0, is_test=True):
                         game_state.make_move(x, y, jelly)
                         print(f"IDS -> Move at ({x}, {y}) with jelly {jelly}")
 
-                    if game_state.check_game_over() or game_state.check_game_win():  
-                        end_time = time.time()
-                        current, peak = tracemalloc.get_traced_memory()
-                        tracemalloc.stop()
+                    #if game_state.check_game_over() or game_state.check_game_win():  
+                    end_time = time.time()
+                    current, peak = tracemalloc.get_traced_memory()
+                    tracemalloc.stop()
                         
-                        memory_used = peak / (1024 * 1024)
-                        time_taken = round(end_time - start_time, 3)
-                        #quality = get_solution_quality(game_state)
-                        save_test_result({
-                            "Mapa": level,
-                            "Dificuldade": difficulty,
-                            "Algoritmo": "Iterative Deepening",
-                            "Heurística": "-",
-                            "Parâmetros": "-",
-                            "Estados Gerados": states_generated,
-                            "Tempo(s)": time_taken,
-                            "Memória(Mb)": round(memory_used, 3)
+                    memory_used = peak / (1024 * 1024)
+                    time_taken = round(end_time - start_time, 3)
+                    #quality = get_solution_quality(game_state)
+                    save_test_result({
+                        "Mapa": level,
+                        "Dificuldade": difficulty,
+                        "Algoritmo": "Iterative Deepening",
+                        "Heurística": "-",
+                        "Parâmetros": "-",
+                        "Estados Gerados": states_generated,
+                        "Tempo(s)": time_taken,
+                        "Memória(Mb)": round(memory_used, 3)
                         # "Qualidade da Solução": quality
-                        })
+                    })
                         
             if is_ai == 7:  # UCS
                 if event.type == pygame.MOUSEBUTTONDOWN:
@@ -301,25 +301,25 @@ def test_ai(level, difficulty, is_ai=0, is_test=True):
                         x, y, jelly = best_move
                         game_state.make_move(x, y, jelly)
 
-                    if game_state.check_game_over() or game_state.check_game_win():  
-                        end_time = time.time()
-                        current, peak = tracemalloc.get_traced_memory()
-                        tracemalloc.stop()
+                    #if game_state.check_game_over() or game_state.check_game_win():  
+                    end_time = time.time()
+                    current, peak = tracemalloc.get_traced_memory()
+                    tracemalloc.stop()
                         
-                        memory_used = peak / (1024 * 1024)
-                        time_taken = round(end_time - start_time, 3)
-                        #quality = get_solution_quality(game_state)
-                        save_test_result({
-                            "Mapa": level,
-                            "Dificuldade": difficulty,
-                            "Algoritmo": "UCS",
-                            "Heurística": "-",
-                            "Parâmetros": "-",
-                            "Estados Gerados": states_generated,
-                            "Tempo(s)": time_taken,
-                            "Memória(Mb)": round(memory_used, 3)
+                    memory_used = peak / (1024 * 1024)
+                    time_taken = round(end_time - start_time, 3)
+                    #quality = get_solution_quality(game_state)
+                    save_test_result({
+                        "Mapa": level,
+                        "Dificuldade": difficulty,
+                        "Algoritmo": "UCS",
+                        "Heurística": "-",
+                        "Parâmetros": "-",
+                        "Estados Gerados": states_generated,
+                        "Tempo(s)": time_taken,
+                        "Memória(Mb)": round(memory_used, 3)
                         # "Qualidade da Solução": quality
-                        })
+                    })
             else:  # Human Mode
                 if event.type == pygame.MOUSEBUTTONDOWN:
                     if game_state.scheduled_actions:

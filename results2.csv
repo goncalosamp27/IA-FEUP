@@ -15,3 +15,5 @@ Mapa,Dificuldade,Algoritmo,Heurística,Parâmetros,Estados Gerados,Tempo(s),Mem�
 
 1,easy,BFS,-,-,73560,73.534,511.696,
 1,easy,BFS,-,-,94694,91.708,679.23,
+1,easy,BFS,-,-,73560,72.169,511.622,
+1,easy,BFS,-,-,138098,156.035,996.985,

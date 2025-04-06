@@ -62,7 +62,7 @@ def start_game(level, difficulty, is_ai=0, is_test=False):
                         continue
                 if event.type == pygame.KEYDOWN and event.key == pygame.K_RETURN:
                     if game_state.is_board_normalized() and not game_state.scheduled_actions:
-                        best_move = value(game_state)  
+                        best_move, _ = value(game_state)  
                         if best_move:
                             x, y, jelly = best_move
                             game_state.make_move(x, y, jelly)
@@ -76,7 +76,7 @@ def start_game(level, difficulty, is_ai=0, is_test=False):
                         continue
                 if event.type == pygame.KEYDOWN and event.key == pygame.K_RETURN:
                     if game_state.is_board_normalized() and not game_state.scheduled_actions:
-                        best_action, _ = dfs(game_state, 2)
+                        best_action,_, _ = dfs(game_state, 2)
                         # versao goofy # best_action, _ = dfs2(game_state)
 
                         x, y, jelly_index = best_action
@@ -93,7 +93,7 @@ def start_game(level, difficulty, is_ai=0, is_test=False):
                         continue
                 if event.type == pygame.KEYDOWN and event.key == pygame.K_RETURN:
                     if game_state.is_board_normalized() and not game_state.scheduled_actions:
-                        best_action, _ = bfs(game_state, 2)
+                        best_action, _, _ = bfs(game_state, 2)
 
                         x, y, jelly_index = best_action
                         jelly = game_state.playable_jellies[jelly_index]
@@ -109,7 +109,7 @@ def start_game(level, difficulty, is_ai=0, is_test=False):
                         continue
                 if event.type == pygame.KEYDOWN and event.key == pygame.K_RETURN:
                     if game_state.is_board_normalized() and not game_state.scheduled_actions:
-                        best_move = a_star(game_state, 2, False)  # Use A* to find the best move
+                        best_move, _ = a_star(game_state, 2, False)  # Use A* to find the best move
                         if best_move:
                             x, y, jelly = best_move
                             game_state.make_move(x, y, jelly)
@@ -123,7 +123,7 @@ def start_game(level, difficulty, is_ai=0, is_test=False):
                         continue
                 if event.type == pygame.KEYDOWN and event.key == pygame.K_RETURN:
                     if game_state.is_board_normalized() and not game_state.scheduled_actions:
-                        best_move = a_star(game_state, 2, True)  # Use A* to find the best move
+                        best_move, _ = a_star(game_state, 2, True)  # Use A* to find the best move
                         if best_move:
                             x, y, jelly = best_move
                             game_state.make_move(x, y, jelly)
@@ -137,7 +137,7 @@ def start_game(level, difficulty, is_ai=0, is_test=False):
                         continue
                 if event.type == pygame.KEYDOWN and event.key == pygame.K_RETURN:
                     if game_state.is_board_normalized() and not game_state.scheduled_actions:
-                        best_move = iterative_deepening(game_state)
+                        best_move, _ = iterative_deepening(game_state)
                         if best_move:
                             x, y, jelly = best_move
                             game_state.make_move(x, y, jelly)
@@ -150,7 +150,7 @@ def start_game(level, difficulty, is_ai=0, is_test=False):
                 if event.type == pygame.KEYDOWN and event.key == pygame.K_RETURN:
                     if game_state.is_board_normalized() and not game_state.scheduled_actions:
  
-                        best_move = ucs(game_state, max_depth=3)
+                        best_move, _ = ucs(game_state, max_depth=3)
  
                         if best_move:
                             x, y, jelly = best_move

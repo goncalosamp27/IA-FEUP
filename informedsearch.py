@@ -99,7 +99,7 @@ def iterative_deepening(game_state, max_total_depth=2, weighted=True):
     states_generated = 0
  
     for depth in range(1, max_total_depth + 1):
-        move, gen_states, _,_ = a_star(game_state, max_depth=depth, weighted=weighted)
+        move, gen_states = a_star(game_state, max_depth=depth, weighted=weighted)
         states_generated += gen_states
          
         if move:
