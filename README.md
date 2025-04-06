@@ -33,4 +33,6 @@ Este comando irá abrir um menu, no qual, utilizando o rato, podemos escolher v�
 - "Computer" se quisermos testar as IA's implementadas no jogo;
 - "How to play" para se quisermos aceder às instruções e regras do jogo.
 
+Podemos executar um movimento selecionando uma das duas peças na parte inferior do ecrã e uma posição livre no tabuleiro do jogo (jogar a peça selecionada no local vazio). As regras e objetivos do jogo estão expostas em "How to Play".
+
 Os resultados produzidos pela utilização das IA's são armazenados em /results.
