@@ -20,10 +20,7 @@ class GameState:
         self.predefined_fixed_jellies = []
         
         if is_test==True:
-            print("Tabuleiro de teste carregado.")
-            #self.set_fixed_jellies_positions()
             print(f"Tabuleiro de teste para o nível {self.level} carregado.")
-            #self.set_fixed_jellies_positions(self.level, self.difficulty)  #
             self.set_fixed_jellies_positions(self.level, self.difficulty) 
             #self.generate_fixed_playable_jellies()
             
@@ -47,6 +44,7 @@ class GameState:
         
         # If the fixed jellies have already been set, do nothing
         if self.is_fixed_set:
+            print("entrou em set_fixed_jellies_positions mas já está set")
             return
         
         if level == 1:
