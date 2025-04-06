@@ -186,8 +186,10 @@ def test_ai(level, difficulty, is_ai=0, is_test=True):
                     tracemalloc.start()
                     start_time = time.time()
                     
-                    best_move, states_generated = a_star(game_state)  # Use A* to find the best move
+                    print("Entrou no TESTE A*")
+                    best_move, states_generated = a_star(game_state, 2, False)  # Use A* to find the best move
                     if best_move:
+                        print("Entrou if best_move")
                         x, y, jelly = best_move
                         game_state.make_move(x, y, jelly)
                         print(f"A* played move at ({x}, {y}) with jelly {jelly}")
