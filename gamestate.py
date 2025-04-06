@@ -597,9 +597,9 @@ class GameState:
     def evaluate_state(self, normalization_triggered=False, freed_cells=0):
         WIN_SCORE = 1_000_000  
         LOSS_SCORE = -1_000_000  
-        OBJECTIVE_WEIGHT = 250 
+        OBJECTIVE_WEIGHT = 1000 
         NORMALIZATION_WEIGHT = 50  
-        FREED_CELL_BONUS = 10
+        FREED_CELL_BONUS = 15
 
         if self.check_game_win():
             return WIN_SCORE

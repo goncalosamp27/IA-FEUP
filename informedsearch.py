@@ -22,7 +22,7 @@ def value(game_state):
 counter = itertools.count()  # Unique counter to break heap ties
 
 def heuristic(game_state):
-    OBJECTIVE_WEIGHT = 250  
+    OBJECTIVE_WEIGHT = 1000
     h = 0
 
     for i in range(1, 4):
@@ -41,7 +41,7 @@ def heuristic(game_state):
 
     return h
 
-def a_star_best_move(game_state, max_depth=2):
+def a_star_weighted(game_state, max_depth=2):
     open_set = []  # Priority queue
     best_move = None
     best_score = float('-inf')
@@ -76,7 +76,10 @@ def a_star_best_move(game_state, max_depth=2):
                             new_score = game_state.simulate_move(x2, y2, next_jelly)  
                             
                             if new_score is not None:
-                                new_f = g_score + new_score + heuristic(game_state)  # Accumulate score
-                                heapq.heappush(open_set, (new_f, next(counter), (x2, y2, next_jelly), new_score, depth + 1))
+                                new_g = g_score + new_score
+                                new_h = heuristic(game_state)  # Recalculate heuristic
+                                new_f = new_g + new_h  # Accumulate score
+ 
+                                heapq.heappush(open_set, (new_f, next(counter), (x2, y2, next_jelly), new_g, depth + 1))
 
     return best_move

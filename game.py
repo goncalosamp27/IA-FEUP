@@ -3,7 +3,7 @@ from button import Button
 from gamestate import GameState
 from jelly import Jelly
 from utils import get_font, SCREEN, BG, CLICK_SOUND, HINT_SOUND, JELLY_SOUND
-from informedsearch import value, a_star_best_move
+from informedsearch import value, a_star_weighted
 from dfsbfs import dfs, bfs
 # from dfsbfs import dfs2
 
@@ -109,7 +109,7 @@ def start_game(level, difficulty, is_ai=0, is_test=False):
                         continue
                 if event.type == pygame.KEYDOWN and event.key == pygame.K_RETURN:
                     if game_state.is_board_normalized() and not game_state.scheduled_actions:
-                        best_move = a_star_best_move(game_state)  # Use A* to find the best move
+                        best_move = a_star_weighted(game_state)  # Use A* to find the best move
                         if best_move:
                             x, y, jelly = best_move
                             game_state.make_move(x, y, jelly)
