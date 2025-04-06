@@ -245,13 +245,16 @@ def test_choose_ai():
         MENU_RECT = MENU_TEXT.get_rect(center=(640, 100))
 
         AI_1_BUTTON = Button(image=None, pos=(640, 240), text_input="Greedy", font=get_font(30), base_color="#99afd7", hovering_color="White")
-        AI_2_BUTTON = Button(image=None, pos=(640, 300), text_input="DFS", font=get_font(30), base_color="#99afd7", hovering_color="White")
-        AI_3_BUTTON = Button(image=None, pos=(640, 360), text_input="BFS", font=get_font(30), base_color="#99afd7", hovering_color="White")
-        AI_4_BUTTON = Button(image=None, pos=(640, 420), text_input="A*", font=get_font(30), base_color="#99afd7", hovering_color="White")
+        AI_2_BUTTON = Button(image=None, pos=(640, 290), text_input="DFS", font=get_font(30), base_color="#99afd7", hovering_color="White")
+        AI_3_BUTTON = Button(image=None, pos=(640, 340), text_input="BFS", font=get_font(30), base_color="#99afd7", hovering_color="White")
+        AI_4_BUTTON = Button(image=None, pos=(640, 390), text_input="A*", font=get_font(30), base_color="#99afd7", hovering_color="White")
+        AI_5_BUTTON = Button(image=None, pos=(640, 440), text_input="Weighted A*", font=get_font(30), base_color="#99afd7", hovering_color="White")
+        AI_6_BUTTON = Button(image=None, pos=(640, 490), text_input="Iterative Deepening", font=get_font(30), base_color="#99afd7", hovering_color="White")
+        AI_7_BUTTON = Button(image=None, pos=(640, 540), text_input="UCS", font=get_font(30), base_color="#99afd7", hovering_color="White")
         BACK_BUTTON = Button(image=None, pos=(640, 650), text_input="Back", font=get_font(40), base_color="#99afd7", hovering_color="White")
         SCREEN.blit(MENU_TEXT, MENU_RECT)
 
-        for button in [AI_1_BUTTON, AI_2_BUTTON, AI_3_BUTTON, AI_4_BUTTON, BACK_BUTTON]:
+        for button in [AI_1_BUTTON, AI_2_BUTTON, AI_3_BUTTON, AI_4_BUTTON, AI_5_BUTTON, AI_6_BUTTON, AI_7_BUTTON, BACK_BUTTON]:
             button.changeColor(MENU_MOUSE_POS)
             button.update(SCREEN)
         for event in pygame.event.get():
@@ -261,24 +264,32 @@ def test_choose_ai():
             if event.type == pygame.MOUSEBUTTONDOWN:
                 if AI_1_BUTTON.checkForInput(MENU_MOUSE_POS):
                     CLICK_SOUND.play()
-                        # Handle easy AI selection
-                    print("TEST AI1 selected")  # You can start the game with easy AI
+                    print("TEST AI1 selected")  
                     test_ai_menu(is_ai=1, is_test=True) 
                 if AI_2_BUTTON.checkForInput(MENU_MOUSE_POS):
                     CLICK_SOUND.play()
-                        # Handle medium AI selection
-                    print("TEST AI2 selected")  # You can start the game with medium AI
+                    print("TEST AI2 selected")  
                     test_ai_menu(is_ai=2, is_test=True) 
                 if AI_3_BUTTON.checkForInput(MENU_MOUSE_POS):
                     CLICK_SOUND.play()
-                        # Handle hard AI selection
-                    print("TEST AI3 selected")  # You can start the game with hard AI
+                    print("TEST AI3 selected")  
                     test_ai_menu(is_ai=3, is_test=True) 
                 if AI_4_BUTTON.checkForInput(MENU_MOUSE_POS):
                     CLICK_SOUND.play()
-                        # Handle hard AI selection
-                    print("TEST AI4 selected")  # You can start the game with hard AI
+                    print("TEST AI4 selected")  
                     test_ai_menu(is_ai=4, is_test=True) 
+                if AI_5_BUTTON.checkForInput(MENU_MOUSE_POS):
+                    CLICK_SOUND.play()
+                    print("TEST AI5 selected")  
+                    test_ai_menu(is_ai=5, is_test=True) 
+                if AI_6_BUTTON.checkForInput(MENU_MOUSE_POS):
+                    CLICK_SOUND.play()
+                    print("TEST AI6 selected")  
+                    test_ai_menu(is_ai=6, is_test=True) 
+                if AI_7_BUTTON.checkForInput(MENU_MOUSE_POS):
+                    CLICK_SOUND.play()
+                    print("TEST AI7 selected")  
+                    test_ai_menu(is_ai=7, is_test=True) 
     
                 if BACK_BUTTON.checkForInput(MENU_MOUSE_POS):
                     CLICK_SOUND.play()

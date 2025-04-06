@@ -3,7 +3,7 @@ from button import Button
 from gamestate import GameState
 from jelly import Jelly
 from utils import get_font, SCREEN, BG, CLICK_SOUND, JELLY_SOUND
-from informedsearch import value, a_star_best_move
+from informedsearch import value, a_star, iterative_deepening, ucs
 from dfsbfs import dfs, bfs
 # from dfsbfs import dfs2
 
@@ -57,13 +57,13 @@ def test_ai(level, difficulty, is_ai=0, is_test=True):
                         return  # Go back to the menu
                     else:
                         continue
-                if event.type == pygame.KEYDOWN and event.key == pygame.K_RETURN:
-                    if game_state.is_board_normalized() and not game_state.scheduled_actions:
-                        best_move = value(game_state)  
-                        if best_move:
-                            x, y, jelly = best_move
-                            game_state.make_move(x, y, jelly)
-                            print(f"AI played move at ({x}, {y}) with jelly {jelly}")
+                #if event.type == pygame.KEYDOWN and event.key == pygame.K_RETURN:
+                if game_state.is_board_normalized() and not game_state.scheduled_actions:
+                    best_move = value(game_state)  
+                    if best_move:
+                        x, y, jelly = best_move
+                        game_state.make_move(x, y, jelly)
+                        print(f"AI played move at ({x}, {y}) with jelly {jelly}")
 
             if is_ai == 2:  # DFS
                 print("Entrou no TESTE DFS")
@@ -72,16 +72,16 @@ def test_ai(level, difficulty, is_ai=0, is_test=True):
                         return  # Go back to the menu
                     else:
                         continue
-                if event.type == pygame.KEYDOWN and event.key == pygame.K_RETURN:
-                    if game_state.is_board_normalized() and not game_state.scheduled_actions:
-                        best_action, _ = dfs(game_state, 2)
-                        # versao goofy # best_action, _ = dfs2(game_state)
+                #if event.type == pygame.KEYDOWN and event.key == pygame.K_RETURN:
+                if game_state.is_board_normalized() and not game_state.scheduled_actions:
+                    best_action, _ = dfs(game_state, 2)
+                    # versao goofy # best_action, _ = dfs2(game_state)
 
-                        x, y, jelly_index = best_action
-                        jelly = game_state.playable_jellies[jelly_index]
+                    x, y, jelly_index = best_action
+                    jelly = game_state.playable_jellies[jelly_index]
 
-                        game_state.make_move(x, y, jelly)
-                        print(f"DFS -> jelly {jelly_index} em ({x}, {y})")
+                    game_state.make_move(x, y, jelly)
+                    print(f"DFS -> jelly {jelly_index} em ({x}, {y})")
 
             if is_ai == 3: #BFS
                 print("Entrou no TESTE BFS")
@@ -108,16 +108,54 @@ def test_ai(level, difficulty, is_ai=0, is_test=True):
                         return  # Go back to the menu
                     else:
                         continue
-                if event.type == pygame.KEYDOWN and event.key == pygame.K_RETURN:
-                    if game_state.is_board_normalized() and not game_state.scheduled_actions:
-                        best_move = a_star_best_move(game_state)  # Use A* to find the best move
-                        if best_move:
-                            x, y, jelly = best_move
-                            game_state.make_move(x, y, jelly)
-                            print(f"A* played move at ({x}, {y}) with jelly {jelly}")
+                #if event.type == pygame.KEYDOWN and event.key == pygame.K_RETURN:
+                if game_state.is_board_normalized() and not game_state.scheduled_actions:
+                    best_move = a_star_best_move(game_state)  # Use A* to find the best move
+                    if best_move:
+                        x, y, jelly = best_move
+                        game_state.make_move(x, y, jelly)
+                        print(f"A* played move at ({x}, {y}) with jelly {jelly}")
 
-            if is_ai == 5: # Iterative Deepening
-                break
+            if is_ai == 5: # Weighted A *
+                if event.type == pygame.MOUSEBUTTONDOWN:
+                    if PLAY_BACK.checkForInput(PLAY_MOUSE_POS):
+                        return  # Go back to the menu
+                    else:
+                        continue
+                #if event.type == pygame.KEYDOWN and event.key == pygame.K_RETURN:
+                if game_state.is_board_normalized() and not game_state.scheduled_actions:
+                    best_move = a_star(game_state, 2, True)  # Use A* to find the best move
+                    if best_move:
+                        x, y, jelly = best_move
+                        game_state.make_move(x, y, jelly)
+                        print(f"A* played move at ({x}, {y}) with jelly {jelly}")
+ 
+            if is_ai == 6:  # Iterative Deepening
+                if event.type == pygame.MOUSEBUTTONDOWN:
+                    if PLAY_BACK.checkForInput(PLAY_MOUSE_POS):
+                        return  # Go back to the menu
+                    else:
+                        continue
+                #if event.type == pygame.KEYDOWN and event.key == pygame.K_RETURN:
+                if game_state.is_board_normalized() and not game_state.scheduled_actions:
+                    best_move = iterative_deepening(game_state)
+                    if best_move:
+                        x, y, jelly = best_move
+                        game_state.make_move(x, y, jelly)
+                        print(f"IDS -> Move at ({x}, {y}) with jelly {jelly}")
+             
+            if is_ai == 7:  # UCS
+                if event.type == pygame.MOUSEBUTTONDOWN:
+                    if PLAY_BACK.checkForInput(PLAY_MOUSE_POS):
+                        return
+                #if event.type == pygame.KEYDOWN and event.key == pygame.K_RETURN:
+                if game_state.is_board_normalized() and not game_state.scheduled_actions:
+ 
+                    best_move = ucs(game_state, max_depth=3)
+ 
+                    if best_move:
+                        x, y, jelly = best_move
+                        game_state.make_move(x, y, jelly)
 
             else:  # Human Mode
                 if event.type == pygame.MOUSEBUTTONDOWN:

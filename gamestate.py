@@ -10,19 +10,22 @@ class GameState:
 
     def __init__(self, level_file, difficulty, is_ai=0, is_test=False):
         self.board = self.load_board(level_file)
+        print(f"Tamanho do tabuleiro: {len(self.board)} linhas x {len(self.board[0])} colunas")
         self.difficulty = difficulty
         self.level = self.extract_level_from_filename(level_file) 
         self.objective = self.generate_objective()
-        self.is_ai = is_ai
-        self.is_test = is_test 
+        #self.is_ai = is_ai
+        #self.is_test = is_test 
+        self.is_fixed_set = False  # Flag to track if fixed jellies have been set
+        self.predefined_fixed_jellies = []
         
-        if is_test:
+        if is_test==True:
             print("Tabuleiro de teste carregado.")
             #self.set_fixed_jellies_positions()
             print(f"Tabuleiro de teste para o nível {self.level} carregado.")
             #self.set_fixed_jellies_positions(self.level, self.difficulty)  #
             self.set_fixed_jellies_positions(self.level, self.difficulty) 
-            self.generate_fixed_playable_jellies()
+            #self.generate_fixed_playable_jellies()
             
         else:
             self.randomize_jellies()
@@ -40,6 +43,12 @@ class GameState:
 
     
     def set_fixed_jellies_positions(self, level, difficulty):
+        print("Entering set_fixed_jellies_positions")
+        
+        # If the fixed jellies have already been set, do nothing
+        if self.is_fixed_set:
+            return
+        
         if level == 1:
             if difficulty == 'easy':
                 print("Testing level 1 - easy")
@@ -48,7 +57,7 @@ class GameState:
                     Jelly(2, 2, "#5fb5ae", "#5b97c2", "#e08b8b", "#7fc57b"),
                     Jelly(3, 3, "#9a64c0", "#e08b8b", "#7fc57b", "#e0c750"),
                 ]
-                print("entrou nas jellys level1 - easy")
+                print("saiu nas jellys level1 - easy")
             elif difficulty == 'medium':
                 print("Testing level 1 - medium")
                 self.predefined_fixed_jellies = [
@@ -58,7 +67,7 @@ class GameState:
                     Jelly(3, 1, "#7fc57b", "#e0c750", "#9a64c0", "#5fb5ae"),
                     Jelly(4, 3, "#9a64c0", "#7fc57b", "#e08b8b", "#5fb5ae"),
                 ]
-                print("entrou nas jellys level1 - medium")
+                print("saiu nas jellys level1 - medium")
                 
             elif difficulty == 'hard':
                 print("Testing level 1 - hard")
@@ -71,48 +80,72 @@ class GameState:
                     Jelly(1, 3, "#7fc57b", "#e0c750", "#e08b8b", "#5fb5ae"),
                     Jelly(3, 0, "#9a64c0", "#5fb5ae", "#7fc57b", "#e08b8b"),
                 ]
-                print("entrou nas jellys level1 - hard")
+                print("saiu nas jellys level1 - hard")
 
         elif level == 2:
             if difficulty == 'easy':
                 print("Testing level 2 - easy")
                 self.predefined_fixed_jellies = [
-                    Jelly(0, 2, "#5fb5ae", "#5b97c2", "#e08b8b", "#7fc57b"),
-                    Jelly(2, 3, "#9a64c0", "#e08b8b", "#7fc57b", "#e0c750"),
-                    Jelly(4, 0, "#e08b8b", "#7fc57b", "#e0c750", "#9a64c0"),
+                    Jelly(1, 0, "#5fb5ae", "#5b97c2", "#e08b8b", "#7fc57b"),
+                    Jelly(2, 1, "#9a64c0", "#e08b8b", "#7fc57b", "#e0c750"),
+                    Jelly(3, 2, "#e08b8b", "#7fc57b", "#e0c750", "#9a64c0"),
                 ]
-                print("entrou nas jellys level2 - easy")
+                print("saiu nas jellys level2 - easy")
             elif difficulty == 'medium':
                 print("Testing level 2 - medium")
                 self.predefined_fixed_jellies = [
                     Jelly(1, 1, "#7fc57b", "#5b97c2", "#e08b8b", "#9a64c0"),
                     Jelly(2, 2, "#e08b8b", "#9a64c0", "#7fc57b", "#e0c750"),
-                    Jelly(3, 4, "#5fb5ae", "#e0c750", "#9a64c0", "#7fc57b"),
-                    Jelly(0, 0, "#5fb5ae", "#7fc57b", "#e08b8b", "#9a64c0"),
-                    Jelly(1, 3, "#9a64c0", "#e08b8b", "#7fc57b", "#e0c750"),
+                    Jelly(3, 1, "#5fb5ae", "#e0c750", "#9a64c0", "#7fc57b"),
+                    Jelly(2, 0, "#5fb5ae", "#7fc57b", "#e08b8b", "#9a64c0"),
+                    Jelly(1, 2, "#9a64c0", "#e08b8b", "#7fc57b", "#e0c750"),
                 ]
-                print("entrou nas jellys level2 - medium")
+                print("saiu nas jellys level2 - medium")
             elif difficulty == 'hard':
                 print("Testing level 2 - hard")
                 self.predefined_fixed_jellies = [
-                    Jelly(0, 0, "#e08b8b", "#7fc57b", "#e0c750", "#9a64c0"),
-                    Jelly(2, 3, "#5fb5ae", "#5b97c2", "#e08b8b", "#7fc57b"),
-                    Jelly(4, 4, "#9a64c0", "#e08b8b", "#7fc57b", "#e0c750"),
-                    Jelly(1, 0, "#5fb5ae", "#e08b8b", "#7fc57b", "#9a64c0"),
-                    Jelly(2, 1, "#9a64c0", "#7fc57b", "#e0c750", "#5fb5ae"),
-                    Jelly(3, 2, "#e08b8b", "#7fc57b", "#9a64c0", "#5fb5ae"),
-                    Jelly(0, 3, "#e0c750", "#5fb5ae", "#9a64c0", "#7fc57b"),
+                    Jelly(0, 1, "#e08b8b", "#7fc57b", "#e0c750", "#9a64c0"),
+                    Jelly(1, 0, "#5fb5ae", "#5b97c2", "#e08b8b", "#7fc57b"),
+                    Jelly(1, 2, "#9a64c0", "#e08b8b", "#7fc57b", "#e0c750"),
+                    Jelly(2, 1, "#5fb5ae", "#e08b8b", "#7fc57b", "#9a64c0"),
+                    Jelly(2, 3, "#9a64c0", "#7fc57b", "#e0c750", "#5fb5ae"),
+                    Jelly(0, 3, "#e08b8b", "#7fc57b", "#9a64c0", "#5fb5ae"),
+                    Jelly(1, 4, "#e0c750", "#5fb5ae", "#9a64c0", "#7fc57b"),
                 ]
-                print("entrou nas jellys level2 - hard")
-        self.place_fixed_jellies() 
-
-    def place_fixed_jellies(self):
+                print("saiu nas jellys level2 - hard")
+        
+        print("Fixed jellies set:")
         for jelly in self.predefined_fixed_jellies:
-            posX, posY = jelly.get_position()  # Get position from Jelly object
-            self.board[posY][posX] = jelly 
-            print(f"Placing jelly at {posY}, {posX}")
+            print(jelly)
+            
+        self.is_fixed_set = True
+        self.place_fixed_jellies() 
+        
+        self.generate_fixed_playable_jellies()
+    
+    def place_fixed_jellies(self):
+        print("Tabuleiro atual:")
+        for row in self.board:
+            print(row)
+
+        for jelly in self.predefined_fixed_jellies:
+            posX, posY = jelly.get_position()
+            if posY < 0 or posY >= len(self.board) or posX < 0 or posX >= len(self.board[0]):
+                print(f"Error: Attempted to place jelly at out-of-range position ({posX}, {posY})")
+            else:
+             
+                if self.board[posY][posX] != 'X': 
+                    print(f"Error: Position ({posX}, {posY}) is not available for a jelly.")
+                else:
+                    print(f"Placing jelly at ({posX}, {posY})")
+                    self.board[posY][posX] = jelly 
+
+        print("Updated board after placing jellies:")
+        for row in self.board:
+            print(row)
 
     def generate_fixed_playable_jellies(self):
+        print("Entering generate_fixed_playable_jellies")
         jelly1 = Jelly(0, 0, "#e08b8b", "#7fc57b", "#e0c750", "#9a64c0")  # Vermelho, Verde, Amarelo, Roxo
         jelly2 = Jelly(0, 0, "#5fb5ae", "#5b97c2", "#e08b8b", "#7fc57b")  # Ciano, Azul, Vermelho, Verde
         jelly3 = Jelly(0, 0, "#9a64c0", "#e08b8b", "#7fc57b", "#e0c750")  # Roxo, Vermelho, Verde, Amarelo
@@ -127,9 +160,9 @@ class GameState:
         self.predefined_playable_jellies = [jelly1, jelly2, jelly3, jelly4, jelly5, jelly6, jelly7, jelly8, jelly9, jelly10]
         self.fixed_jelly_cycle = cycle(self.predefined_playable_jellies)
 
-        # Generating a list of 300 jellies for playable cells
+        # Generating list of 300 jellies for playable cells
         self.playable_jellies = []
-        for _ in range(300):  # This will generate a list of 100 jellies
+        for _ in range(300): 
             jelly = next(self.fixed_jelly_cycle)
             self.playable_jellies.append(jelly)
         
@@ -137,19 +170,16 @@ class GameState:
         self.playable_jelly_cycle = cycle(self.playable_jellies)
 
         # Atribuir as jellies à posição no tabuleiro
-        print("esta a entrar aqui na função generate_fixed  playable_jellies ")
+        print("esta a entrar aqui na função generate_fixed playable_jellies ")
         for y, row in enumerate(self.board):
             for x in range(len(row)):
-                if row[x] == 'X':  # If it's a playable cell
+                if row[x] == 'X': 
                     jelly = next(self.playable_jelly_cycle)
                     self.board[y][x] = jelly
                 elif row[x] != ' ':  # Ensure non-playable cells are clean
                     row[x] = ' '  # Empty out non-playable cells
 
         
-        
-    
-    
     def load_board(self, level_file):
         with open(level_file, 'r') as file:
             board = [list(line.strip()) for line in file.readlines()]
@@ -317,16 +347,18 @@ class GameState:
         offset_x, offset_y, board_width, board_height = self.get_board_offsets(screen)
 
         for y, row in enumerate(self.board):
+            #print("Entrou para desenhar initial board")
             for x, cell in enumerate(row):
                 if cell == ' ' or isinstance(cell, Jelly):
                     draw_x, draw_y = self.get_cell_position(x, y, offset_x, offset_y)
                     is_hint = hint_move and hint_move[0] == x and hint_move[1] == y
                     self.draw_cell(screen, cell, draw_x, draw_y, is_hint=is_hint)
 
-        if is_test:
-            print("------- Entrou para desenhar as fixed ---------")
+        if is_test==True and self.is_fixed_set==False:
+            #print("------- Entrou para desenhar as fixed ---------")
             self.set_fixed_jellies_positions(self.level, self.difficulty)  # Defina as jellies fixas
-       #     self.draw_fixed_jellies(screen, offset_x, offset_y)
+            #self.is_fixed_set = True
+            #self.draw_fixed_jellies(screen, offset_x, offset_y)        
         else:
             self.draw_playable_jellies(screen, offset_x, offset_y, board_width, board_height, hint_move)
 
