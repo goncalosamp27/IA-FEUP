@@ -8,7 +8,6 @@ def count_objective(state):
         count_key = f"count{i}"
         if count_key in state.objective:
             total_count += state.objective[count_key]
-    print(f"[count_objective] Estado atual do objetivo: {state.objective}")
     return total_count
 
 def compare_game_states(estado_simulado, estado_atual):
@@ -21,13 +20,11 @@ def compare_game_states(estado_simulado, estado_atual):
 def get_possible_moves(state): # retirar as posições vazias
     moves = []
     i = 0
-    print("MOVES POSSÍVEIS!\n")
     for y, row in enumerate(state.board):
         for x, cell in enumerate(row):
             if cell == ' ':  
                 i += 1
                 moves.append((x, y))
-                print(f"{i}: ({x}, {y})")
 	
     return moves
 
@@ -44,9 +41,7 @@ def dfs(state, depth):
         for x, y in get_possible_moves(state):
             simulated_state = copy.deepcopy(state)
             simulated_jelly = simulated_state.playable_jellies[jelly_index]
-            
-            print(f"Jelly {jelly_index} em ({x}, {y})")
-            
+                        
             if simulated_state.make_move(x, y, simulated_jelly):
                 
                 simulated_state.normalize_board()
@@ -58,17 +53,12 @@ def dfs(state, depth):
                 states_generated += generated_states
 
                 if progresso == 0 and future_score == 0:
-                    total_score = -10  # penalizar jogadas inúteis (?) -> nao sei se devemos por isto, mas escolhe melhor a jogada
+                    total_score = -10  # penalizar jogadas inúteis 
                 else: total_score = progresso + future_score
-
-                print(f"Progress: {progresso}") 
-                print(f"Possível Futuro: {future_score}") 
 
                 if total_score > best_score:
                     best_score = total_score
                     best_action = (x, y, jelly_index)
-
-                print(f"SCORE: {total_score}") 
 
     return best_action, best_score, states_generated
 

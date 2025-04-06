@@ -13,7 +13,6 @@ def start_game(level, difficulty, is_ai=0):
     hint_move = None
     hint_start_time = None
 
-    # --- AI Performance Tracking ---
     ai_start_time = time.time()
     tracemalloc.start()
     ai_moves = []
@@ -44,10 +43,9 @@ def start_game(level, difficulty, is_ai=0):
 
         if game_state.is_board_normalized():
             if game_state.check_game_win():
-                # --- Save AI result on game end ---
                 if is_ai:
                     ai_end_time = time.time()
-                    current, peak = tracemalloc.get_traced_memory()
+                    _, peak = tracemalloc.get_traced_memory()
                     tracemalloc.stop()
 
                     elapsed_time = ai_end_time - ai_start_time
@@ -64,15 +62,12 @@ def start_game(level, difficulty, is_ai=0):
                     output_folder = "results"
                     os.makedirs(output_folder, exist_ok=True)
 
-                    # Include difficulty in the filename
                     log_filename = os.path.join(output_folder, f"{algorithm_name}_level{level}_{difficulty}.txt")
                     json_filename = os.path.join(output_folder, f"{algorithm_name}_level{level}_{difficulty}.json")
 
-                    # Save game state as JSON
                     game_state.save_to_file(json_filename)
 
-                    # Save readable log with a separator between executions
-                    with open(log_filename, "a") as f:  # Open in append mode ('a')
+                    with open(log_filename, "a") as f: 
                         f.write(f"Algorithm: {algorithm_name}\n")
                         f.write(f"Level: {level}\n")
                         f.write(f"Difficulty: {difficulty}\n")
@@ -88,14 +83,13 @@ def start_game(level, difficulty, is_ai=0):
 
                         f.write(f"\nFull game state saved to: {json_filename}\n")
 
-                        # Add separator for next execution
                         f.write("\n===========\n")
+                        f.write("\n")
 
                 menu.win_screen(is_ai)
                 return
 
             elif game_state.check_game_over():
-                # --- Save AI result on game end ---
                 if is_ai:
                     ai_end_time = time.time()
                     current, peak = tracemalloc.get_traced_memory()
@@ -115,15 +109,12 @@ def start_game(level, difficulty, is_ai=0):
                     output_folder = "results"
                     os.makedirs(output_folder, exist_ok=True)
 
-                    # Include difficulty in the filename
                     log_filename = os.path.join(output_folder, f"{algorithm_name}_level{level}_{difficulty}.txt")
                     json_filename = os.path.join(output_folder, f"{algorithm_name}_level{level}_{difficulty}.json")
 
-                    # Save game state as JSON
                     game_state.save_to_file(json_filename)
 
-                    # Save readable log with a separator between executions
-                    with open(log_filename, "a") as f:  # Open in append mode ('a')
+                    with open(log_filename, "a") as f: 
                         f.write(f"Algorithm: {algorithm_name}\n")
                         f.write(f"Level: {level}\n")
                         f.write(f"Difficulty: {difficulty}\n")
@@ -139,7 +130,6 @@ def start_game(level, difficulty, is_ai=0):
 
                         f.write(f"\nFull game state saved to: {json_filename}\n")
 
-                        # Add separator for next execution
                         f.write("\n===========\n")
                         f.write("\n")
 
@@ -200,7 +190,7 @@ def start_game(level, difficulty, is_ai=0):
                         return  # Go back to the menu
                     if HINT_BUTTON.checkForInput(PLAY_MOUSE_POS):
                         HINT_SOUND.play()
-                        hint_move = value(game_state)
+                        hint_move, _ = a_star(game_state, 2, True)
                         hint_start_time = time.time()
                         continue
 
@@ -226,5 +216,9 @@ def start_game(level, difficulty, is_ai=0):
                                             hint_start_time = None
                                             print("Normalized")
                                         break
+            else:
+                if event.type == pygame.MOUSEBUTTONDOWN:
+                    if PLAY_BACK.checkForInput(PLAY_MOUSE_POS):
+                        return
 
         pygame.display.update()

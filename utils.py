@@ -1,7 +1,4 @@
 import pygame
-import csv
-import os
-import pandas as pd
 
 pygame.init()
 SCREEN = pygame.display.set_mode((1280, 720))
@@ -50,16 +47,16 @@ def toggle_sound():
     global sound_on
     if sound_on:
         pygame.mixer.music.pause()  # Pause music
-        print("Sound Paused")  # Debug message
+        print("Sound Paused")  
     else:
         pygame.mixer.music.unpause()  # Unpause music
-        print("Sound Unpaused")  # Debug message
+        print("Sound Unpaused")  
     sound_on = not sound_on  # Toggle sound state
 
 
 def draw_microphone_icon():
     icon_width, icon_height = 50, 50
-    icon_x, icon_y = 10, SCREEN.get_height() - icon_height - 10  # bottom-left corner
+    icon_x, icon_y = 10, SCREEN.get_height() - icon_height - 10  
 
     resized_unmute = pygame.transform.scale(UNMUTE, (icon_width, icon_height))
     resized_mute = pygame.transform.scale(MUTE, (icon_width, icon_height))
@@ -74,33 +71,3 @@ def draw_microphone_icon():
         if icon_x <= mouse_x <= icon_x + icon_width and icon_y <= mouse_y <= icon_y + icon_height:
             toggle_sound() 
             pygame.time.delay(200)
-
-#results
-#def save_test_result(data, filename="results.csv"):
-   # file_exists = os.path.isfile(filename)
-   # headers = [
-   #     "Mapa", "Dificuldade", "Algoritmo", "Heurística", "Parâmetros",
-   #     "Estados Gerados", "Tempo(s)", "Memória(Mb)", "Qualidade da Solução"
-   # ]
-    
-   # with open(filename, mode='a', newline='') as file:
-   #     writer = csv.DictWriter(file, fieldnames=headers)
-   #     if not file_exists:
-    #        writer.writeheader()
-        #writer.writerow(data)
-def save_test_result(data, filename="results2.csv"):
-    file_exists = os.path.isfile(filename)
-    headers = [
-        "Mapa", "Dificuldade", "Algoritmo", "Heurística", "Parâmetros",
-        "Estados Gerados", "Tempo(s)", "Memória(Mb)", "Qualidade da Solução"
-    ] 
-    
-    # Convert dictionary into a pandas DataFrame
-    df = pd.DataFrame([data], columns=headers)
-
-    if not file_exists:
-        df.to_csv(filename, mode='w', index=False, header=True)
-    else:
-        df.to_csv(filename, mode='a', index=False, header=False)
-
-    print(f"Data saved to {filename}")

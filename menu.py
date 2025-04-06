@@ -87,13 +87,12 @@ def choose_ai():
         MENU_RECT = MENU_TEXT.get_rect(center=(640, 70))
         SCREEN.blit(MENU_TEXT, MENU_RECT)
 
-        # Ajuste de tamanhos e espaçamentos
+        # Tamanhos e espaçamentos
         spacing = 70
         start_y = 160
         font_small = get_font(40)
         font_medium = get_font(45)
  
-        # Botões de IA com espaçamento
         AI_1_BUTTON = Button(None, (640, start_y + spacing * 1), "Greedy", font_medium, "#99afd7", "White")
         AI_2_BUTTON = Button(None, (640, start_y + spacing * 2), "DFS", font_medium, "#99afd7", "White")
         AI_3_BUTTON = Button(None, (640, start_y + spacing * 3), "BFS", font_medium, "#99afd7", "White")
@@ -150,12 +149,10 @@ def how_to_play():
         SCREEN.fill("pink")
         SCREEN.blit(BG, (0, 0))
 
-        # Title Text: "How to Play"
         TITLE_TEXT = get_font(100).render("HOW TO PLAY", True, "#FFFFFF")
         TITLE_RECT = TITLE_TEXT.get_rect(center=(640, 100))
         SCREEN.blit(TITLE_TEXT, TITLE_RECT)
 
-        # Instruction Text: Explanation of Jelly Field Game
         INSTRUCTION_TEXT = get_font(25).render("Jelly field is about merging Jellies!", True, "#FFFFFF")
         INSTRUCTION_TEXT_RECT = INSTRUCTION_TEXT.get_rect(center=(640, 200))
         SCREEN.blit(INSTRUCTION_TEXT, INSTRUCTION_TEXT_RECT)
@@ -176,14 +173,12 @@ def how_to_play():
         INSTRUCTION_TEXT_RECT5 = INSTRUCTION_TEXT5.get_rect(center=(640, 480))
         SCREEN.blit(INSTRUCTION_TEXT5, INSTRUCTION_TEXT_RECT5)
 
-        # Button for Back: Allows going back to the main menu
         BACK_BUTTON = Button(image=None, pos=(640, 600), 
                              text_input="Back", font=get_font(50), base_color="#99afd7", hovering_color="White")
         
         BACK_BUTTON.changeColor(OPTIONS_MOUSE_POS)
         BACK_BUTTON.update(SCREEN)
 
-        # Event handling: If the back button is clicked, go back to main menu
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 pygame.quit()
@@ -193,7 +188,6 @@ def how_to_play():
                     CLICK_SOUND.play()
                     main_menu()
 
-        # Update the display
         pygame.display.update()
 
 
@@ -294,7 +288,7 @@ def main_menu():
             if event.type == pygame.MOUSEBUTTONDOWN:
                 if PLAY_BUTTON.checkForInput(MENU_MOUSE_POS):
                     CLICK_SOUND.play()
-                    play()  # Trigger the game menu
+                    play()  
                 if OPTIONS_BUTTON.checkForInput(MENU_MOUSE_POS):
                     CLICK_SOUND.play()
                     print("NORMAL AI selected")

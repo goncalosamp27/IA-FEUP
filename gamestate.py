@@ -130,7 +130,6 @@ class GameState:
             }
         
     """ Drawing Functions """
-        
     def get_board_offsets(self, screen):
         board_width = len(self.board[0]) * Jelly.SIZE
         board_height = len(self.board) * Jelly.SIZE
@@ -191,7 +190,6 @@ class GameState:
 
 
     """ Movement Functions """
-
     def select_jelly(self, jelly):
         self.selected_jelly = None if self.selected_jelly == jelly else jelly
 
@@ -212,7 +210,6 @@ class GameState:
                 break
 
     """ Objective and End Game Functions """
-
     def decrement_objective(self, destroyed_color1, destroyed_color2, destroyed_color3):
         destroyed_colors = [destroyed_color1, destroyed_color2, destroyed_color3]  
 
@@ -237,7 +234,6 @@ class GameState:
         return True
 
     """ Normalization Functions """
-
     def is_board_normalized(self):
         for y in range(len(self.board)):
             for x in range(len(self.board[y])):
