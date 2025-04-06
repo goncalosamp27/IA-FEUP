@@ -489,7 +489,11 @@ class GameState:
             "selected_jelly": self.selected_jelly.to_dict() if self.selected_jelly else None
         }
 
-        with open(filename, 'w') as f:
+        with open(filename, 'a') as f:
+            f.seek(0, 2) 
+            if f.tell() > 0:  
+                f.write("\n===========\n") 
+            
             json.dump(data, f)
-
+            f.write("\n")  
 
